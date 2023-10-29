@@ -30,7 +30,7 @@
     "email": "nikola@nikolahristov.tech",
     "url": "https://nikolahristov.tech"
   },
-  "publisher": "vsciot-vscode",
+  "publisher": "playform",
   "type": "module",
   "main": "./dist/extension",
   "scripts": {
