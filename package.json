@@ -832,7 +832,7 @@
     "fs-extra": "9.0.1",
     "glob": "7.1.6",
     "iview": "3.5.4",
-    "jquery": "3.3.1",
+    "jquery": "3.5.0",
     "keytar": "7.9.0",
     "replace-in-file": "6.1.0",
     "strip-json-comments": "3.1.1",
