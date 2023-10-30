@@ -6,18 +6,17 @@ import { INode } from "../INode";
 import { BuiltInEndpointItemNode } from "./BuiltInEndpointItemNode";
 
 export class BuiltInEndpointLabelNode implements INode {
-    constructor() {
-    }
+	constructor() {}
 
-    public getTreeItem(): vscode.TreeItem {
-        return {
-            label: "Built-in endpoints",
-            collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
-            contextValue: "built-in-endpoint-label",
-        };
-    }
+	public getTreeItem(): vscode.TreeItem {
+		return {
+			label: "Built-in endpoints",
+			collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
+			contextValue: "built-in-endpoint-label",
+		};
+	}
 
-    public getChildren(): INode[] {
-        return [new BuiltInEndpointItemNode()];
-    }
+	public getChildren(): INode[] {
+		return [new BuiltInEndpointItemNode()];
+	}
 }

@@ -6,27 +6,29 @@ import * as vscode from "vscode";
 import { Constants } from "../src/constants";
 
 suite("Extension Tests", () => {
+	test("should be present", () => {
+		assert.ok(vscode.extensions.getExtension(Constants.ExtensionId));
+	});
 
-    test("should be present", () => {
-        assert.ok(vscode.extensions.getExtension(Constants.ExtensionId));
-    });
+	// tslint:disable-next-line:only-arrow-functions
+	test("should be able to activate the extension", function (done) {
+		this.timeout(60 * 1000);
+		const extension = vscode.extensions.getExtension(Constants.ExtensionId);
+		if (!extension.isActive) {
+			extension.activate().then(
+				(api) => {
+					done();
+				},
+				() => {
+					done("Failed to activate extension");
+				}
+			);
+		} else {
+			done();
+		}
+	});
 
-    // tslint:disable-next-line:only-arrow-functions
-    test("should be able to activate the extension", function (done) {
-        this.timeout(60 * 1000);
-        const extension = vscode.extensions.getExtension(Constants.ExtensionId);
-        if (!extension.isActive) {
-            extension.activate().then((api) => {
-                done();
-            }, () => {
-                done("Failed to activate extension");
-            });
-        } else {
-            done();
-        }
-    });
-
-    /* This test only works when extensionDependencies are installed, so disable it in CI
+	/* This test only works when extensionDependencies are installed, so disable it in CI
     test("should be able to register iot hub toolkit commands", () => {
         return vscode.commands.getCommands(true).then((commands) => {
             const COMMANDS = [
