@@ -6,21 +6,21 @@ import { DeviceNode } from "./DeviceNode";
 import { INode } from "./INode";
 
 export class DistributedTracingSettingNode implements INode {
-	constructor(
-		private readonly label: string,
-		public readonly parent: INode,
-		private readonly contextValue: string,
-		public readonly deviceNode: DeviceNode
-	) {}
+    constructor(
+        private readonly label: string,
+        public readonly parent: INode,
+        private readonly contextValue: string,
+        public readonly deviceNode: DeviceNode) {
+    }
 
-	public getTreeItem(): vscode.TreeItem {
-		return {
-			label: this.label,
-			contextValue: this.contextValue,
-		};
-	}
+    public getTreeItem(): vscode.TreeItem {
+        return {
+            label: this.label,
+            contextValue: this.contextValue,
+        };
+    }
 
-	public getChildren(): INode[] {
-		return [];
-	}
+    public getChildren(): INode[] {
+        return [];
+    }
 }

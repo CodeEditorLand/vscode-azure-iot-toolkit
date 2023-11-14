@@ -6,13 +6,14 @@ import { CustomEndpointItem } from "../../Model/CustomEndpointItem";
 import { INode } from "../INode";
 
 export class CustomEndpointItemNode implements INode {
-	constructor(private name: string) {}
+    constructor(private name: string) {
+    }
 
-	public getTreeItem(): vscode.TreeItem {
-		return new CustomEndpointItem(this.name);
-	}
+    public getTreeItem(): vscode.TreeItem {
+        return new CustomEndpointItem(this.name);
+    }
 
-	public getChildren(): INode[] {
-		return [];
-	}
+    public getChildren(): INode[] {
+        return [];
+    }
 }
