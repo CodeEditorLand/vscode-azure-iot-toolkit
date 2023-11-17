@@ -7,18 +7,17 @@ import { TreeUtils } from "../Utility/treeUtils";
 import { INode } from "./INode";
 
 export class IoTHubLabelNode implements INode {
-    constructor(private iotHubConnectionString: string) {
-    }
+	constructor(private iotHubConnectionString: string) {}
 
-    public getTreeItem(): vscode.TreeItem {
-        return {
-            label: Utility.getIoTHubName(this.iotHubConnectionString),
-            contextValue: "iothub-label",
-            iconPath: TreeUtils.getThemedIconPath("iothub"),
-        };
-    }
+	public getTreeItem(): vscode.TreeItem {
+		return {
+			label: Utility.getIoTHubName(this.iotHubConnectionString),
+			contextValue: "iothub-label",
+			iconPath: TreeUtils.getThemedIconPath("iothub"),
+		};
+	}
 
-    public async getChildren(): Promise<INode[]> {
-        return [];
-    }
+	public async getChildren(): Promise<INode[]> {
+		return [];
+	}
 }
