@@ -2,19 +2,19 @@
   "name": "azure-iot-toolkit",
   "displayName": "Azure IoT Hub",
   "description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service (DPS).",
-  "version": "2.17.3",
-  "publisher": "vsciot-vscode",
+  "version": "0.0.1",
+  "publisher": "playform",
   "aiKey": "0caaff90-cc1c-4def-b64c-3ef33615bc9b",
   "icon": "logo.png",
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vscode-azure-iot-toolkit.git"
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
   },
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-azure-iot-toolkit/issues"
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
   },
-  "homepage": "https://github.com/Microsoft/vscode-azure-iot-toolkit/blob/master/README.md",
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
   "activationEvents": [
     "*",
     "onView:iotHubDevices",
@@ -774,7 +774,8 @@
     "welcome:clean": "rimraf resources/welcome/scripts",
     "resources:clean": "npm run simulator:clean && npm run welcome:clean",
     "webpack": "rimraf dist && npm run resources:clean && webpack --mode development",
-    "webpack-dev": "rimraf dist && npm run resources:clean && webpack --mode development --watch"
+    "webpack-dev": "rimraf dist && npm run resources:clean && webpack --mode development --watch",
+    "prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
   },
   "devDependencies": {
     "@opentelemetry/tracing": "0.18.2",
@@ -797,7 +798,8 @@
     "tslint": "6.1.3",
     "typescript": "5.3.2",
     "webpack": "5.89.0",
-    "webpack-cli": "5.1.4"
+    "webpack-cli": "5.1.4",
+    "typescript-esbuild": "0.3.1"
   },
   "dependencies": {
     "@azure/arm-deviceprovisioningservices": "5.1.0",
@@ -829,5 +831,15 @@
   },
   "extensionDependencies": [
     "ms-vscode.azure-account"
-  ]
+  ],
+  "type": "module",
+  "private": "false",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
+  }
 }
