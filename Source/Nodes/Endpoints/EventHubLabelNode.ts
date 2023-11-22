@@ -9,18 +9,25 @@ import { INode } from "../INode";
 import { EventHubItemNode } from "./EventHubItemNode";
 
 export class EventHubLabelNode implements INode {
-    constructor(private azureSubscription: AzureSubscription, private eventHubProperties: IotHubModels.RoutingEventHubProperties[]) {
-    }
+	constructor(
+		private azureSubscription: AzureSubscription,
+		private eventHubProperties: IotHubModels.RoutingEventHubProperties[]
+	) {}
 
-    public getTreeItem(): vscode.TreeItem {
-        return {
-            label: "Event Hubs",
-            collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
-            contextValue: "event-hub-label",
-        };
-    }
+	public getTreeItem(): vscode.TreeItem {
+		return {
+			label: "Event Hubs",
+			collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
+			contextValue: "event-hub-label",
+		};
+	}
 
-    public getChildren(): INode[] {
-        return this.eventHubProperties.map((eventHubProperty) => new EventHubItemNode(new EventHubItem(this.azureSubscription, eventHubProperty)));
-    }
+	public getChildren(): INode[] {
+		return this.eventHubProperties.map(
+			(eventHubProperty) =>
+				new EventHubItemNode(
+					new EventHubItem(this.azureSubscription, eventHubProperty)
+				)
+		);
+	}
 }
