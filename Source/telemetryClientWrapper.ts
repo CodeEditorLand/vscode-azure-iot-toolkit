@@ -5,18 +5,26 @@ import { TelemetryClient } from "./telemetryClient";
 
 // Instan
 export class TelemetryClientWrapper {
+	private _eventNamePrefix: string;
 
-    private _eventNamePrefix: string;
+	constructor(eventNamePrefix?: string) {
+		this._eventNamePrefix = eventNamePrefix;
+	}
 
-    constructor(eventNamePrefix?: string) {
-        this._eventNamePrefix = eventNamePrefix;
-    }
+	public async sendTelemetryEvent(
+		eventName: string,
+		properties?: { [key: string]: string },
+		measurements?: { [key: string]: number }
+	): Promise<void> {
+		if (this._eventNamePrefix) {
+			eventName = this._eventNamePrefix + eventName;
+		}
 
-    public async sendTelemetryEvent(eventName: string, properties?: { [key: string]: string }, measurements?: { [key: string]: number }): Promise<void> {
-        if (this._eventNamePrefix) {
-            eventName = this._eventNamePrefix + eventName;
-        }
-
-        TelemetryClient.sendEvent(eventName, properties, undefined, measurements);
-    }
+		TelemetryClient.sendEvent(
+			eventName,
+			properties,
+			undefined,
+			measurements
+		);
+	}
 }
