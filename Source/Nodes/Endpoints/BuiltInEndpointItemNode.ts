@@ -5,16 +5,17 @@ import * as vscode from "vscode";
 import { INode } from "../INode";
 
 export class BuiltInEndpointItemNode implements INode {
-	constructor() {}
+    constructor() {
+    }
 
-	public getTreeItem(): vscode.TreeItem {
-		return {
-			label: "events",
-			contextValue: "events",
-		};
-	}
+    public getTreeItem(): vscode.TreeItem {
+        return {
+            label: "events",
+            contextValue: "events",
+        };
+    }
 
-	public getChildren(): INode[] {
-		return [];
-	}
+    public getChildren(): INode[] {
+        return [];
+    }
 }

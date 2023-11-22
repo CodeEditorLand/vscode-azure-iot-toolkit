@@ -5,31 +5,25 @@ import * as vscode from "vscode";
 import { INode } from "./INode";
 
 export class CommandNode implements INode {
-	constructor(
-		private readonly label: string,
-		private readonly command: string,
-		private args?: any[]
-	) {}
 
-	public getTreeItem(): vscode.TreeItem {
-		return this.createCommandItem(this.label, this.command, this.args);
-	}
+    constructor(private readonly label: string, private readonly command: string, private args?: any[]) {
+    }
 
-	public getChildren(): INode[] {
-		return [];
-	}
+    public getTreeItem(): vscode.TreeItem {
+        return this.createCommandItem(this.label, this.command, this.args);
+    }
 
-	private createCommandItem(
-		label: string,
-		command: string,
-		args: any[]
-	): vscode.TreeItem {
-		const commandItem = new vscode.TreeItem(label);
-		commandItem.command = {
-			command,
-			title: "",
-			arguments: args,
-		};
-		return commandItem;
-	}
+    public getChildren(): INode[] {
+        return [];
+    }
+
+    private createCommandItem(label: string, command: string, args: any[]): vscode.TreeItem {
+        const commandItem = new vscode.TreeItem(label);
+        commandItem.command = {
+            command,
+            title: "",
+            arguments: args,
+        };
+        return commandItem;
+    }
 }
