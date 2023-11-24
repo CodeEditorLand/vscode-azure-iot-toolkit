@@ -20,12 +20,12 @@ namespace simulatedDevice
             try
             {
                 Console.WriteLine("Connecting to hub");
-                DeviceClient Client = DeviceClient.CreateFromConnectionString(DeviceConnectionString, 
+                DeviceClient Client = DeviceClient.CreateFromConnectionString(DeviceConnectionString,
                     TransportType.Mqtt);
                 Console.WriteLine("Retrieving twin");
                 var twin = await Client.GetTwinAsync();
                 await Client.SetDesiredPropertyUpdateCallbackAsync(OnDesiredPropertyChanged, null);
-                
+
                 var reportedProperties = new TwinCollection();
                 var weather = new TwinCollection();
                 weather["temperature"] = 72;
@@ -46,7 +46,8 @@ namespace simulatedDevice
 
         private static async Task OnDesiredPropertyChanged(TwinCollection desiredProperties, object userContext)
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 Console.WriteLine("New desired properties received:");
                 Console.WriteLine(desiredProperties.ToJson());
             });
