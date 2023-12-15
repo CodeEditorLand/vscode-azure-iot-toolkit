@@ -226,7 +226,7 @@ export class Utility {
 				? path.join(
 						vscode.workspace.workspaceFolders[0].uri.fsPath,
 						filename
-				  )
+					)
 				: `*/${filename}`;
 			return vscode.Uri.file(defaultPath);
 		} else {
@@ -324,7 +324,7 @@ export class Utility {
 								? this.getModuleRuntimeStatus(
 										moduleId,
 										reportedTwin.systemModules
-								  )
+									)
 								: undefined,
 							iconPath,
 							"edge-module"
@@ -344,7 +344,7 @@ export class Utility {
 								? this.getModuleRuntimeStatus(
 										module.moduleId,
 										reportedTwin.modules
-								  )
+									)
 								: undefined,
 							iconPath,
 							"edge-module"

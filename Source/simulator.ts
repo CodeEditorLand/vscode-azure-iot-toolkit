@@ -438,7 +438,7 @@ export class Simulator {
 				? `User aborted.`
 				: `All device(s) finished sending in ${
 						(endTime.getTime() - startTime.getTime()) / 1000
-				  } second(s).`
+					} second(s).`
 		);
 		while (
 			!this.cancelToken &&
