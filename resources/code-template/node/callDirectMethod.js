@@ -37,11 +37,15 @@ client.invokeDeviceMethod(deviceId, methodParams, function (err, result) {
 			"Failed to invoke method '" +
 				methodParams.methodName +
 				"': " +
-				err.message
+				err.message,
 		);
 	} else {
 		console.log(
-			"Response from " + methodParams.methodName + " on " + deviceId + ":"
+			"Response from " +
+				methodParams.methodName +
+				" on " +
+				deviceId +
+				":",
 		);
 		console.log(JSON.stringify(result, null, 2));
 	}

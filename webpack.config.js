@@ -89,13 +89,13 @@ const extensionConfig = {
 		new webpack.ContextReplacementPlugin(
 			/applicationinsights[\/\\]out[\/\\]AutoCollection/,
 			false,
-			/$^/
+			/$^/,
 		),
 		new webpack.ContextReplacementPlugin(/ms-rest[\/\\]lib/, false, /$^/),
 		new webpack.ContextReplacementPlugin(
 			/applicationinsights[\/\\]out[\/\\]Library/,
 			false,
-			/$^/
+			/$^/,
 		),
 		// Pack node_modules/getos/logic/*.js
 		new webpack.ContextReplacementPlugin(/getos/, /logic[\/\\].*\.js/),

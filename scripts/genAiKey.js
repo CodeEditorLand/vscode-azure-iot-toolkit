@@ -2,7 +2,7 @@ const fs = require("fs");
 
 if (process.env.TRAVIS_TAG) {
 	const ISPROD = new RegExp(process.env.ISPRODTAG).test(
-		process.env.TRAVIS_TAG || ""
+		process.env.TRAVIS_TAG || "",
 	);
 	const packageJson = JSON.parse(fs.readFileSync("package.json"));
 	if (ISPROD) {
@@ -12,7 +12,7 @@ if (process.env.TRAVIS_TAG) {
 	}
 	fs.writeFileSync(
 		"package.json",
-		JSON.stringify(packageJson, null, 2) + "\n"
+		JSON.stringify(packageJson, null, 2) + "\n",
 	);
 	console.log("Updated AiKey");
 } else {

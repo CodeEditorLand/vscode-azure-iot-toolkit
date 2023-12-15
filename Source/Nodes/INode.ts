@@ -8,6 +8,6 @@ export interface INode {
 
 	getChildren(
 		context?: vscode.ExtensionContext,
-		iotHubConnectionString?: string
+		iotHubConnectionString?: string,
 	): Promise<INode[]> | INode[];
 }

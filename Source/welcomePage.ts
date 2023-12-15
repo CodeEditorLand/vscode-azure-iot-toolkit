@@ -37,21 +37,21 @@ export class WelcomePage {
 					enableCommandUris: true,
 					enableScripts: true,
 					retainContextWhenHidden: true,
-				}
+				},
 			);
 			let html = fs.readFileSync(
 				this.context.asAbsolutePath(
-					path.join("resources", "welcome", "index.html")
+					path.join("resources", "welcome", "index.html"),
 				),
-				"utf8"
+				"utf8",
 			);
 			html = html.replace(
 				/{{root}}/g,
 				this.panel.webview
 					.asWebviewUri(
-						vscode.Uri.file(this.context.asAbsolutePath("."))
+						vscode.Uri.file(this.context.asAbsolutePath(".")),
 					)
-					.toString()
+					.toString(),
 			);
 			this.panel.webview.html = html;
 			this.panel.onDidDispose(() => {

@@ -19,14 +19,14 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 		super(
 			outputChannel,
 			"$(primitive-square) Stop Monitoring built-in event endpoint",
-			"azure-iot-toolkit.stopMonitorIoTHubMessage"
+			"azure-iot-toolkit.stopMonitorIoTHubMessage",
 		);
 	}
 
 	public async sendD2CMessage(deviceItem?: DeviceItem) {
 		deviceItem = await Utility.getInputDevice(
 			deviceItem,
-			Constants.IoTHubAIMessageStartEvent
+			Constants.IoTHubAIMessageStartEvent,
 		);
 		if (!deviceItem || !deviceItem.connectionString) {
 			return;
@@ -42,21 +42,21 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 					this._outputChannel.show();
 					try {
 						const client = clientFromConnectionString(
-							deviceConnectionString
+							deviceConnectionString,
 						);
 						const stringify = Utility.getConfig<boolean>(
-							Constants.IoTHubD2CMessageStringifyKey
+							Constants.IoTHubD2CMessageStringifyKey,
 						);
 						client.sendEvent(
 							new Message(
-								stringify ? JSON.stringify(message) : message
+								stringify ? JSON.stringify(message) : message,
 							),
 							this.sendEventDone(
 								client,
 								Constants.IoTHubMessageLabel,
 								Constants.IoTHub,
-								Constants.IoTHubAIMessageDoneEvent
-							)
+								Constants.IoTHubAIMessageDoneEvent,
+							),
 						);
 					} catch (e) {
 						this.outputLine(Constants.IoTHubMessageLabel, e);
@@ -70,7 +70,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			this._outputChannel.show();
 			this.outputLine(
 				Constants.IoTHubMonitorLabel,
-				"There is a running job to monitor built-in event endpoint. Please stop it first."
+				"There is a running job to monitor built-in event endpoint. Please stop it first.",
 			);
 			return;
 		}
@@ -79,7 +79,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			Constants.IotHubEventHubConnectionStringKey,
 			Constants.IotHubEventHubConnectionStringTitle,
 			true,
-			"iot-hub-event-hub-connection-string.md"
+			"iot-hub-event-hub-connection-string.md",
 		);
 		if (!connectionString) {
 			return;
@@ -95,7 +95,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 				: "all devices";
 			this.outputLine(
 				Constants.IoTHubMonitorLabel,
-				`Start monitoring message arrived in built-in endpoint for ${deviceLabel} ...`
+				`Start monitoring message arrived in built-in endpoint for ${deviceLabel} ...`,
 			);
 			TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, {
 				deviceType: deviceItem ? deviceItem.contextValue : "",
@@ -103,7 +103,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			await this.startMonitor(
 				Constants.IoTHubMonitorLabel,
 				consumerGroup,
-				deviceItem
+				deviceItem,
 			);
 			this.updateMonitorStatus(true);
 		} catch (e) {
@@ -121,32 +121,32 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			Constants.IoTHubMonitorLabel,
 			Constants.IoTHubAIStopMonitorEvent,
 			this._eventHubClient,
-			"built-in event endpoint"
+			"built-in event endpoint",
 		);
 	}
 
 	private async startMonitor(
 		label: string,
 		consumerGroup: string,
-		deviceItem?: DeviceItem
+		deviceItem?: DeviceItem,
 	) {
 		if (this._eventHubCompatibleEndpointConnectionString) {
 			this._eventHubClient = new EventHubConsumerClient(
 				consumerGroup,
-				this._eventHubCompatibleEndpointConnectionString
+				this._eventHubCompatibleEndpointConnectionString,
 			);
 			const monitorD2CBeforeNowInMinutes =
 				Utility.getConfiguration().get<number>(
-					"monitorD2CBeforeNowInMinutes"
+					"monitorD2CBeforeNowInMinutes",
 				);
 			const startAfterTime = new Date(
-				Date.now() - 1000 * 60 * monitorD2CBeforeNowInMinutes
+				Date.now() - 1000 * 60 * monitorD2CBeforeNowInMinutes,
 			);
 			const partitionIds = await this._eventHubClient.getPartitionIds();
 			partitionIds.forEach((partitionId) => {
 				this.outputLine(
 					label,
-					`Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`
+					`Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`,
 				);
 				this._eventHubClient.subscribe(
 					partitionId,
@@ -156,7 +156,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 					},
 					{
 						startPosition: { enqueuedOn: startAfterTime },
-					}
+					},
 				);
 			});
 		}
@@ -169,7 +169,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 				await this._eventHubClient.close();
 				this.outputLine(
 					label,
-					"Message monitoring stopped. Please try to start monitoring again or use a different consumer group to monitor."
+					"Message monitoring stopped. Please try to start monitoring again or use a different consumer group to monitor.",
 				);
 				this.updateMonitorStatus(false);
 			}
@@ -194,7 +194,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 					: deviceId;
 				this.outputLine(
 					label,
-					`${timeMessage}Message received from [${messageSource}]:`
+					`${timeMessage}Message received from [${messageSource}]:`,
 				);
 				this._outputChannel.appendLine(JSON.stringify(result, null, 2));
 			});

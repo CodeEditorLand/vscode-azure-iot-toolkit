@@ -23,7 +23,7 @@ export class DeviceNode implements INode {
 
 	public async getChildren(
 		context: vscode.ExtensionContext,
-		iotHubConnectionString: string
+		iotHubConnectionString: string,
 	): Promise<INode[]> {
 		const nodeList: INode[] = [];
 		nodeList.push(new ModuleLabelNode(this));
@@ -36,7 +36,7 @@ export class DeviceNode implements INode {
 		}
 		TelemetryClient.sendEvent(
 			Constants.IoTHubAILoadLabelInDeviceTreeDoneEvent,
-			{ Result: "Success" }
+			{ Result: "Success" },
 		);
 		return nodeList;
 	}

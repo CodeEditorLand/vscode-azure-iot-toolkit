@@ -38,7 +38,7 @@ export class SimulatorWebview {
 				true,
 				{
 					reload: "True",
-				}
+				},
 			);
 		}
 		await this.openSimulatorWebviewPage();
@@ -55,22 +55,22 @@ export class SimulatorWebview {
 					enableCommandUris: true,
 					enableScripts: true,
 					retainContextWhenHidden: true,
-				}
+				},
 			);
 			let html = fs.readFileSync(
 				this.context.asAbsolutePath(
-					path.join("resources", "simulator", "index.html")
+					path.join("resources", "simulator", "index.html"),
 				),
-				"utf8"
+				"utf8",
 			);
 			html = html
 				.replace(
 					/{{root}}/g,
 					this.panel.webview
 						.asWebviewUri(
-							vscode.Uri.file(this.context.asAbsolutePath("."))
+							vscode.Uri.file(this.context.asAbsolutePath(".")),
 						)
-						.toString()
+						.toString(),
 				)
 				.replace(/{{endpoint}}/g, this.localServer.getServerUri());
 			this.panel.webview.html = html;
@@ -80,7 +80,7 @@ export class SimulatorWebview {
 					true,
 					{
 						reload: "False",
-					}
+					},
 				);
 				this.panel = undefined;
 				this.localServer.stopServer();

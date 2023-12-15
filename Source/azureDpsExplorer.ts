@@ -15,31 +15,31 @@ export class AzureDpsExplorer {
 
 	constructor(
 		outputChannel: vscode.OutputChannel,
-		dpsTreeDataProvider: AzExtTreeDataProvider
+		dpsTreeDataProvider: AzExtTreeDataProvider,
 	) {
 		this._dpsResourceExplorer = new DpsResourceExplorer(
 			outputChannel,
-			dpsTreeDataProvider
+			dpsTreeDataProvider,
 		);
 	}
 
 	public async viewProperties(
 		actionContext: IActionContext,
-		node?: DpsResourceTreeItem
+		node?: DpsResourceTreeItem,
 	): Promise<void> {
 		return this._dpsResourceExplorer.viewProperties(actionContext, node);
 	}
 
 	public async loadMore(
 		actionContext: IActionContext,
-		node: AzureTreeItem
+		node: AzureTreeItem,
 	): Promise<void> {
 		return this._dpsResourceExplorer.loadMore(actionContext, node);
 	}
 
 	public async refresh(
 		actionContext: IActionContext,
-		node?: AzureTreeItem
+		node?: AzureTreeItem,
 	): Promise<void> {
 		return this._dpsResourceExplorer.refresh(actionContext, node);
 	}

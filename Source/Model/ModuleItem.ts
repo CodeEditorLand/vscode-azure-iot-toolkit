@@ -13,7 +13,7 @@ export class ModuleItem extends TreeItem {
 		public readonly connectionState: string,
 		public readonly runtimeStatus: string,
 		public readonly iconPath: string,
-		public readonly contextValue: string
+		public readonly contextValue: string,
 	) {
 		super(moduleId);
 		this.deviceId = deviceItem.deviceId;

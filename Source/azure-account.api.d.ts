@@ -61,6 +61,6 @@ export interface CloudShell {
 	readonly uploadFile: (
 		filename: string,
 		stream: ReadStream,
-		options?: UploadOptions
+		options?: UploadOptions,
 	) => Promise<void>;
 }

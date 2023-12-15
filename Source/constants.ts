@@ -257,11 +257,11 @@ export class Constants {
 			: os.tmpdir();
 		Constants.ModuleTwinJosnFilePath = path.join(
 			directory,
-			Constants.ModuleTwinJosnFileName
+			Constants.ModuleTwinJosnFileName,
 		);
 		Constants.DeviceTwinJosnFilePath = path.join(
 			directory,
-			Constants.DeviceTwinJosnFileName
+			Constants.DeviceTwinJosnFileName,
 		);
 		Constants.ResourcesFolderPath = context.asAbsolutePath("resources");
 	}

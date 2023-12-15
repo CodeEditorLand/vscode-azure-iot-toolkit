@@ -16,7 +16,7 @@ export class DpsResourceTreeItem extends AzureTreeItem {
 	public readonly dps: IotDpsModels.ProvisioningServiceDescription;
 	constructor(
 		parent: AzureParentTreeItem,
-		dps: IotDpsModels.ProvisioningServiceDescription
+		dps: IotDpsModels.ProvisioningServiceDescription,
 	) {
 		super(parent);
 		this.dps = dps;

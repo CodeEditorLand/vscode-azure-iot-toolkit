@@ -20,7 +20,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 	public async invokeDeviceDirectMethod(deviceItem: DeviceItem) {
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle
+			Constants.IotHubConnectionStringTitle,
 		);
 		if (!iotHubConnectionString) {
 			return;
@@ -28,7 +28,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 
 		deviceItem = await Utility.getInputDevice(
 			deviceItem,
-			Constants.IoTHubAIInvokeDeviceMethodEvent
+			Constants.IoTHubAIInvokeDeviceMethodEvent,
 		);
 		if (!deviceItem) {
 			return;
@@ -40,7 +40,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 	public async invokeModuleDirectMethod(moduleItem: ModuleItem) {
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle
+			Constants.IotHubConnectionStringTitle,
 		);
 		if (!iotHubConnectionString) {
 			return;
@@ -50,14 +50,14 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 		this.invokeDirectMethod(
 			iotHubConnectionString,
 			moduleItem.deviceId,
-			moduleItem.moduleId
+			moduleItem.moduleId,
 		);
 	}
 
 	private invokeDirectMethod(
 		iotHubConnectionString: string,
 		deviceId: string,
-		moduleId?: string
+		moduleId?: string,
 	) {
 		const target = moduleId ? `[${deviceId}/${moduleId}]` : `[${deviceId}]`;
 
@@ -90,18 +90,18 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 						};
 						const serviceClient =
 							ServiceClient.fromConnectionString(
-								iotHubConnectionString
+								iotHubConnectionString,
 							);
 						this._outputChannel.show();
 						this.outputLine(
 							Constants.IoTHubDirectMethodLabel,
-							`Invoking Direct Method [${methodName}] to ${target} ...`
+							`Invoking Direct Method [${methodName}] to ${target} ...`,
 						);
 						serviceClient.open((error) => {
 							if (error) {
 								this.outputLine(
 									Constants.IoTHubDirectMethodLabel,
-									error.message
+									error.message,
 								);
 							} else {
 								this.invokeDirectMethodWithServiceClient(
@@ -112,19 +112,19 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 										if (err) {
 											this.outputLine(
 												Constants.IoTHubDirectMethodLabel,
-												`Failed to invoke Direct Method: ${err.message}`
+												`Failed to invoke Direct Method: ${err.message}`,
 											);
 										} else {
 											this.outputLine(
 												Constants.IoTHubDirectMethodLabel,
-												`Response from ${target}:`
+												`Response from ${target}:`,
 											);
 											this._outputChannel.appendLine(
-												JSON.stringify(result, null, 2)
+												JSON.stringify(result, null, 2),
 											);
 										}
 									},
-									moduleId
+									moduleId,
 								);
 							}
 						});
@@ -137,14 +137,14 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 		deviceId: string,
 		methodParams: DeviceMethodParams,
 		done?: IncomingMessageCallback<any>,
-		moduleId?: string
+		moduleId?: string,
 	) {
 		if (moduleId) {
 			serviceClient.invokeDeviceMethod(
 				deviceId,
 				moduleId,
 				methodParams,
-				done
+				done,
 			);
 		} else {
 			serviceClient.invokeDeviceMethod(deviceId, methodParams, done);

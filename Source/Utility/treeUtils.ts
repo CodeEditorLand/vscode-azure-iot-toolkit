@@ -15,12 +15,12 @@ export class TreeUtils {
 			light: path.join(
 				Constants.ResourcesFolderPath,
 				"light",
-				`${iconName}.svg`
+				`${iconName}.svg`,
 			),
 			dark: path.join(
 				Constants.ResourcesFolderPath,
 				"dark",
-				`${iconName}.svg`
+				`${iconName}.svg`,
 			),
 		};
 	}

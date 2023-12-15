@@ -33,13 +33,13 @@ function onSetTelemetryInterval(request, response) {
 		if (err) {
 			console.error(
 				"An error ocurred when sending a method response:\n" +
-					err.toString()
+					err.toString(),
 			);
 		} else {
 			console.log(
 				"Response to method '" +
 					request.methodName +
-					"' sent successfully."
+					"' sent successfully.",
 			);
 		}
 	}
@@ -54,7 +54,7 @@ function onSetTelemetryInterval(request, response) {
 		response.send(
 			400,
 			"Invalid direct method parameter: " + request.payload,
-			directMethodResponse
+			directMethodResponse,
 		);
 	} else {
 		// Reset the interval timer
@@ -65,7 +65,7 @@ function onSetTelemetryInterval(request, response) {
 		response.send(
 			200,
 			"Telemetry interval set: " + request.payload,
-			directMethodResponse
+			directMethodResponse,
 		);
 	}
 }
@@ -78,14 +78,14 @@ function sendMessage() {
 		JSON.stringify({
 			temperature: temperature,
 			humidity: 60 + Math.random() * 20,
-		})
+		}),
 	);
 
 	// Add a custom application property to the message.
 	// An IoT hub can filter on these properties without access to the message body.
 	message.properties.add(
 		"temperatureAlert",
-		temperature > 30 ? "true" : "false"
+		temperature > 30 ? "true" : "false",
 	);
 
 	console.log("Sending message: " + message.getData());

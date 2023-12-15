@@ -49,7 +49,7 @@ var ehClient;
 EventHubClient.createFromIotHubConnectionString(connectionString)
 	.then(function (client) {
 		console.log(
-			"Successully created the EventHub Client from iothub connection string."
+			"Successully created the EventHub Client from iothub connection string.",
 		);
 		ehClient = client;
 		return ehClient.getPartitionIds();
