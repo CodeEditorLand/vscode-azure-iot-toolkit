@@ -2,7 +2,7 @@
 	"name": "azure-iot-toolkit",
 	"displayName": "Azure IoT Hub",
 	"version": "0.0.1",
-	"private": "false",
+	"private": false,
 	"description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service (DPS).",
 	"homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
 	"bugs": {
