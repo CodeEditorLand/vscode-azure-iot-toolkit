@@ -2,7 +2,7 @@
 
 $curl = curl_init();
 
-while(1) {
+while (1) {
 	$message = new stdClass();
 	$message->temperature = rand(20, 35);
 	$message->humidity = rand(60, 80);
@@ -20,15 +20,15 @@ while(1) {
 			"authorization: {{deviceSasToken}}",
 		),
 	));
-	echo "Sending message: ".$payload."\n";
+	echo "Sending message: " . $payload . "\n";
 	$response = curl_exec($curl);
 	$err = curl_error($curl);
 	$httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-	if($err) {
+	if ($err) {
 		echo $err;
 		exit(1);
 	} else {
-		echo "IoT Hub responded to message with status: ".$httpcode."\n";
+		echo "IoT Hub responded to message with status: " . $httpcode . "\n";
 	}
 	sleep(1);
 }
