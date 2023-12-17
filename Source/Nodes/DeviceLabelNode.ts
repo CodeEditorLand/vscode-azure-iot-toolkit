@@ -27,20 +27,20 @@ export class DeviceLabelNode implements INode {
 		try {
 			const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(
 				this.iotHubConnectionString,
-				Constants.ExtensionContext,
+				Constants.ExtensionContext
 			);
 
 			const deviceNode: INode[] = deviceList.map(
-				(item) => new DeviceNode(item as DeviceItem),
+				(item) => new DeviceNode(item as DeviceItem)
 			);
 
 			if (deviceNode.length === 0) {
 				deviceNode.push(
 					new InfoNode(
 						`No devices in ${Utility.getHostName(
-							this.iotHubConnectionString,
-						)}`,
-					),
+							this.iotHubConnectionString
+						)}`
+					)
 				);
 			}
 
@@ -57,7 +57,7 @@ export class DeviceLabelNode implements INode {
 			});
 			return Utility.getErrorMessageTreeItems(
 				"IoT Hub devices",
-				err.message,
+				err.message
 			);
 		}
 	}

@@ -19,7 +19,7 @@ export class SnippetManager extends BaseExplorer {
 	}
 
 	public replaceConnectionString(
-		event: vscode.TextDocumentChangeEvent,
+		event: vscode.TextDocumentChangeEvent
 	): void {
 		if (!event.contentChanges[0]) {
 			return;
@@ -38,7 +38,7 @@ export class SnippetManager extends BaseExplorer {
 			this.connectionStringKeys.forEach(async (connectionStringKey) => {
 				const connectionStringValue =
 					await Utility.getConnectionStringWithId(
-						connectionStringKey,
+						connectionStringKey
 					);
 				const connectionStringKeyWithAngleBracket =
 					this.getTextWithAngleBracket(connectionStringKey);
@@ -49,7 +49,7 @@ export class SnippetManager extends BaseExplorer {
 					!connectionStringValue.startsWith("<<insert")
 				) {
 					let offset = text.indexOf(
-						connectionStringKeyWithAngleBracket,
+						connectionStringKeyWithAngleBracket
 					);
 					while (offset > -1) {
 						editor.edit((editBuilder) => {
@@ -58,19 +58,19 @@ export class SnippetManager extends BaseExplorer {
 									document.positionAt(offset),
 									document.positionAt(
 										offset +
-											connectionStringKeyWithAngleBracket.length,
-									),
+											connectionStringKeyWithAngleBracket.length
+									)
 								),
-								connectionStringValue,
+								connectionStringValue
 							);
 							TelemetryClient.sendEvent(
 								`Snippet.ReplaceConnectionString`,
-								{ Type: connectionStringKey },
+								{ Type: connectionStringKey }
 							);
 						});
 						offset = text.indexOf(
 							connectionStringKeyWithAngleBracket,
-							offset + 1,
+							offset + 1
 						);
 					}
 				}

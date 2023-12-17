@@ -46,7 +46,7 @@ registry.getTwin(deviceId, function (err, twin) {
 							console.log(JSON.stringify(twin, null, 2));
 							process.exit(0);
 						}
-					},
+					}
 				);
 			}
 		});

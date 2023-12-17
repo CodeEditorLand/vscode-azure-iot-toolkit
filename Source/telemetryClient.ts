@@ -9,7 +9,7 @@ import { NSAT } from "./nsat";
 import { Utility } from "./utility";
 
 const packageJSON = vscode.extensions.getExtension(
-	Constants.ExtensionId,
+	Constants.ExtensionId
 ).packageJSON;
 const extensionVersion: string = packageJSON.version;
 const aiKey: string = packageJSON.aiKey;
@@ -23,11 +23,11 @@ export class TelemetryClient {
 		eventName: string,
 		properties?: { [key: string]: string },
 		iotHubConnectionString?: string,
-		measurements?: { [key: string]: number },
+		measurements?: { [key: string]: number }
 	) {
 		properties = await this.addCommonProperties(
 			properties,
-			iotHubConnectionString,
+			iotHubConnectionString
 		);
 		const errorProperties = Object.values(Constants.errorProperties);
 		if (this.hasErrorProperties(properties, errorProperties)) {
@@ -35,13 +35,13 @@ export class TelemetryClient {
 				eventName,
 				properties,
 				measurements,
-				errorProperties,
+				errorProperties
 			);
 		} else {
 			this._client.sendTelemetryEvent(
 				eventName,
 				properties,
-				measurements,
+				measurements
 			);
 		}
 
@@ -59,24 +59,24 @@ export class TelemetryClient {
 		Constants.ExtensionId,
 		extensionVersion,
 		aiKey,
-		true,
+		true
 	);
 	private static _extensionContext: vscode.ExtensionContext;
 	private static _isInternal: boolean = TelemetryClient.isInternalUser();
 
 	private static async addCommonProperties(
 		properties?: { [key: string]: string },
-		iotHubConnectionString?: string,
+		iotHubConnectionString?: string
 	) {
 		const newProperties = properties ? properties : {};
 		if (!iotHubConnectionString) {
 			iotHubConnectionString = await Utility.getConnectionStringWithId(
-				Constants.IotHubConnectionStringKey,
+				Constants.IotHubConnectionStringKey
 			);
 			if (!iotHubConnectionString) {
 				iotHubConnectionString =
 					await Utility.getConnectionStringWithId(
-						Constants.DeviceConnectionStringKey,
+						Constants.DeviceConnectionStringKey
 					);
 			}
 		}
@@ -104,7 +104,7 @@ export class TelemetryClient {
 
 	private static hasErrorProperties(
 		properties: { [key: string]: string },
-		errorProperties: string[],
+		errorProperties: string[]
 	): boolean {
 		const propertyKeys = Object.keys(properties);
 		return errorProperties.some((value) => propertyKeys.includes(value));

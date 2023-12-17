@@ -45,7 +45,7 @@ setInterval(function () {
 	// An IoT hub can filter on these properties without access to the message body.
 	message.properties.add(
 		"temperatureAlert",
-		temperature > 30 ? "true" : "false",
+		temperature > 30 ? "true" : "false"
 	);
 	console.log("Sending message: " + message.getData());
 

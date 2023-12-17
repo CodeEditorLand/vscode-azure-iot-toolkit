@@ -73,8 +73,8 @@ const app = new Vue({
 					if (s.charAt(i) < "0" || s.charAt(i) > "9") {
 						callback(
 							new Error(
-								"You cannot enter any character other than 0-9.",
-							),
+								"You cannot enter any character other than 0-9."
+							)
 						);
 					}
 				}
@@ -84,8 +84,8 @@ const app = new Vue({
 				} else {
 					callback(
 						new Error(
-							"Don't you think this should be a positive integer?",
-						),
+							"Don't you think this should be a positive integer?"
+						)
 					);
 				}
 			}
@@ -349,7 +349,7 @@ const app = new Vue({
 							.includes(query)
 					) {
 						this.filteredInputDeviceList.push(
-							this.inputDeviceList[i],
+							this.inputDeviceList[i]
 						);
 					}
 				}

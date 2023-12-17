@@ -22,20 +22,20 @@ export class IotHubModuleExplorer extends BaseExplorer {
 		const label = "Module";
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle,
+			Constants.IotHubConnectionStringTitle
 		);
 		if (!iotHubConnectionString) {
 			return;
 		}
 
 		const registry: iothub.Registry = iothub.Registry.fromConnectionString(
-			iotHubConnectionString,
+			iotHubConnectionString
 		);
 
 		this._outputChannel.show();
 		this.outputLine(
 			label,
-			`Querying module [${moduleItem.deviceId}/${moduleItem.moduleId}]...`,
+			`Querying module [${moduleItem.deviceId}/${moduleItem.moduleId}]...`
 		);
 
 		registry.getModule(
@@ -49,20 +49,20 @@ export class IotHubModuleExplorer extends BaseExplorer {
 						{
 							Result: "Fail",
 							[Constants.errorProperties.Message]: err.message,
-						},
+						}
 					);
 				}
 				if (module) {
 					this.outputLine(
 						label,
-						`Module info: ${JSON.stringify(module, null, 2)}`,
+						`Module info: ${JSON.stringify(module, null, 2)}`
 					);
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAIDGetModuleDoneEvent,
-						{ Result: "Success" },
+						{ Result: "Success" }
 					);
 				}
-			},
+			}
 		);
 	}
 
@@ -70,7 +70,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 		const label = "Module";
 		const deviceItem = await Utility.getInputDevice(
 			deviceNode ? deviceNode.deviceItem : undefined,
-			Constants.IoTHubAICreateModuleStartEvent,
+			Constants.IoTHubAICreateModuleStartEvent
 		);
 		if (!deviceItem) {
 			return;
@@ -78,14 +78,14 @@ export class IotHubModuleExplorer extends BaseExplorer {
 
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle,
+			Constants.IotHubConnectionStringTitle
 		);
 		if (!iotHubConnectionString) {
 			return;
 		}
 
 		const registry: iothub.Registry = iothub.Registry.fromConnectionString(
-			iotHubConnectionString,
+			iotHubConnectionString
 		);
 
 		const moduleId: string = await vscode.window.showInputBox({
@@ -109,23 +109,23 @@ export class IotHubModuleExplorer extends BaseExplorer {
 						{
 							Result: "Fail",
 							[Constants.errorProperties.Message]: err.message,
-						},
+						}
 					);
 				} else {
 					this.outputLine(
 						label,
-						`Created: ${JSON.stringify(module, null, 2)}`,
+						`Created: ${JSON.stringify(module, null, 2)}`
 					);
 					vscode.commands.executeCommand(
 						"azure-iot-toolkit.refresh",
-						deviceNode,
+						deviceNode
 					);
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAICreateModuleDoneEvent,
-						{ Result: "Success" },
+						{ Result: "Success" }
 					);
 				}
-			},
+			}
 		);
 	}
 
@@ -141,7 +141,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 		const label = "Module";
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle,
+			Constants.IotHubConnectionStringTitle
 		);
 		if (!iotHubConnectionString) {
 			return;
@@ -150,20 +150,20 @@ export class IotHubModuleExplorer extends BaseExplorer {
 		const result = await vscode.window.showWarningMessage(
 			`${Constants.DeleteMessage} "${moduleItemNode.moduleItem.moduleId}"?`,
 			{ modal: true },
-			Constants.DeleteLabel,
+			Constants.DeleteLabel
 		);
 		if (result !== Constants.DeleteLabel) {
 			return;
 		}
 
 		const registry: iothub.Registry = iothub.Registry.fromConnectionString(
-			iotHubConnectionString,
+			iotHubConnectionString
 		);
 
 		this._outputChannel.show();
 		this.outputLine(
 			label,
-			`Deleting '${moduleItemNode.moduleItem.moduleId}'`,
+			`Deleting '${moduleItemNode.moduleItem.moduleId}'`
 		);
 
 		registry.removeModule(
@@ -177,23 +177,23 @@ export class IotHubModuleExplorer extends BaseExplorer {
 						{
 							Result: "Fail",
 							[Constants.errorProperties.Message]: err.message,
-						},
+						}
 					);
 				} else {
 					this.outputLine(
 						label,
-						`Deleted '${moduleItemNode.moduleItem.moduleId}'`,
+						`Deleted '${moduleItemNode.moduleItem.moduleId}'`
 					);
 					vscode.commands.executeCommand(
 						"azure-iot-toolkit.refresh",
-						moduleItemNode.moduleLabelNode,
+						moduleItemNode.moduleLabelNode
 					);
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAIDeleteModuleDoneEvent,
-						{ Result: "Success" },
+						{ Result: "Success" }
 					);
 				}
-			},
+			}
 		);
 	}
 }

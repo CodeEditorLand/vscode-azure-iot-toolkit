@@ -9,7 +9,7 @@ import { ModuleLabelNode } from "./ModuleLabelNode";
 export class ModuleItemNode implements INode {
 	constructor(
 		public readonly moduleItem: ModuleItem,
-		public readonly moduleLabelNode: ModuleLabelNode,
+		public readonly moduleLabelNode: ModuleLabelNode
 	) {}
 
 	public getTreeItem(): vscode.TreeItem {

@@ -10,7 +10,7 @@ export class DistributedTracingSettingNode implements INode {
 		private readonly label: string,
 		public readonly parent: INode,
 		private readonly contextValue: string,
-		public readonly deviceNode: DeviceNode,
+		public readonly deviceNode: DeviceNode
 	) {}
 
 	public getTreeItem(): vscode.TreeItem {

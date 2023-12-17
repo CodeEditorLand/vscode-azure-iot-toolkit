@@ -16,7 +16,7 @@ export class IoTHubResourceTreeItem extends AzureTreeItem {
 	public readonly iotHub: IotHubModels.IotHubDescription;
 	constructor(
 		parent: AzureParentTreeItem,
-		iotHub: IotHubModels.IotHubDescription,
+		iotHub: IotHubModels.IotHubDescription
 	) {
 		super(parent);
 		this.iotHub = iotHub;

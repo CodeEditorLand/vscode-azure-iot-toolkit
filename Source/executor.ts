@@ -8,7 +8,7 @@ import * as vscode from "vscode";
 export class Executor {
 	public static runInTerminal(
 		command: string,
-		terminal: string = "Azure IoT Hub",
+		terminal: string = "Azure IoT Hub"
 	): void {
 		if (this.terminals[terminal] === undefined) {
 			this.terminals[terminal] = vscode.window.createTerminal(terminal);

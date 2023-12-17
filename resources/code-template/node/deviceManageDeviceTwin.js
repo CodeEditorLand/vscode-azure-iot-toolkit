@@ -48,7 +48,7 @@ client.open(function (err) {
 				twin.properties.reported.update(patch, function (err) {
 					if (err) {
 						console.error(
-							"unable to update twin: " + err.toString(),
+							"unable to update twin: " + err.toString()
 						);
 						process.exit(-1);
 					} else {

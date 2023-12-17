@@ -26,13 +26,13 @@ export class EndpointsLabelNode implements INode {
 
 	public async getChildren(): Promise<INode[]> {
 		TelemetryClient.sendEvent(
-			Constants.IoTHubAILoadEndpointsTreeStartEvent,
+			Constants.IoTHubAILoadEndpointsTreeStartEvent
 		);
 
 		try {
 			const accountApi = Utility.getAzureAccountApi();
 			const subscriptionId = Constants.ExtensionContext.globalState.get(
-				Constants.StateKeySubsID,
+				Constants.StateKeySubsID
 			);
 			if (!subscriptionId || !(await accountApi.waitForLogin())) {
 				return [this.getSelectIoTHubCommandNode()];
@@ -40,7 +40,7 @@ export class EndpointsLabelNode implements INode {
 
 			const subscription = accountApi.subscriptions.find(
 				(element) =>
-					element.subscription.subscriptionId === subscriptionId,
+					element.subscription.subscriptionId === subscriptionId
 			);
 			const client = createAzureClient(
 				{
@@ -48,19 +48,19 @@ export class EndpointsLabelNode implements INode {
 					subscriptionId: subscription.subscription.subscriptionId,
 					environment: subscription.session.environment,
 				},
-				IotHubClient,
+				IotHubClient
 			);
 			const iotHubs = await client.iotHubResource.listBySubscription();
 			const iothub = iotHubs.find(
 				(element) =>
 					element.id ===
 					Constants.ExtensionContext.globalState.get(
-						Constants.StateKeyIoTHubID,
-					),
+						Constants.StateKeyIoTHubID
+					)
 			);
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAILoadEndpointsTreeDoneEvent,
-				{ Result: "Success" },
+				{ Result: "Success" }
 			);
 
 			if (!iothub) {
@@ -71,19 +71,19 @@ export class EndpointsLabelNode implements INode {
 				new BuiltInEndpointLabelNode(),
 				new EventHubLabelNode(
 					subscription,
-					iothub.properties.routing.endpoints.eventHubs,
+					iothub.properties.routing.endpoints.eventHubs
 				),
 				new CustomEndpointLabelNode(
 					"Service Bus queue",
-					iothub.properties.routing.endpoints.serviceBusQueues,
+					iothub.properties.routing.endpoints.serviceBusQueues
 				),
 				new CustomEndpointLabelNode(
 					"Service Bus topic",
-					iothub.properties.routing.endpoints.serviceBusTopics,
+					iothub.properties.routing.endpoints.serviceBusTopics
 				),
 				new CustomEndpointLabelNode(
 					"Blob storage",
-					iothub.properties.routing.endpoints.storageContainers,
+					iothub.properties.routing.endpoints.storageContainers
 				),
 			];
 		} catch (err) {
@@ -92,7 +92,7 @@ export class EndpointsLabelNode implements INode {
 				{
 					Result: "Fail",
 					[Constants.errorProperties.Message]: err.message,
-				},
+				}
 			);
 			return Utility.getErrorMessageTreeItems("endpoints", err.message);
 		}
@@ -101,7 +101,7 @@ export class EndpointsLabelNode implements INode {
 	private getSelectIoTHubCommandNode(): CommandNode {
 		return new CommandNode(
 			"-> Please select an IoT Hub",
-			"azure-iot-toolkit.selectIoTHub",
+			"azure-iot-toolkit.selectIoTHub"
 		);
 	}
 }

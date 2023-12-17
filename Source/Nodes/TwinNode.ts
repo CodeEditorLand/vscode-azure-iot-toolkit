@@ -17,7 +17,10 @@ export class TwinNode implements INode {
 	private readonly DISTRIBUTED_TRACING_SAMPLING_RATE: string =
 		"Sampling Rate: ";
 
-	constructor(private twinItem: TwinItem, public deviceNode: DeviceNode) {}
+	constructor(
+		private twinItem: TwinItem,
+		public deviceNode: DeviceNode
+	) {}
 
 	public getTreeItem(): vscode.TreeItem {
 		return this.twinItem;
@@ -25,23 +28,23 @@ export class TwinNode implements INode {
 
 	public async getChildren(
 		context: vscode.ExtensionContext,
-		iotHubConnectionString: string,
+		iotHubConnectionString: string
 	): Promise<INode[]> {
 		const registry = iothub.Registry.fromConnectionString(
-			iotHubConnectionString,
+			iotHubConnectionString
 		);
 
 		TelemetryClient.sendEvent(
 			Constants.IoTHubAILoadDistributedTracingSettingTreeStartEvent,
 			null,
-			iotHubConnectionString,
+			iotHubConnectionString
 		);
 		const items: INode[] = [];
 
 		try {
 			const twin = await Utility.getTwin(
 				registry,
-				this.deviceNode.deviceId,
+				this.deviceNode.deviceId
 			);
 			let samplingRate = null;
 			let enabled = null;
@@ -58,8 +61,8 @@ export class TwinNode implements INode {
 									: Constants.DisabledLabel),
 							this,
 							"desired-mode-property",
-							this.deviceNode,
-						),
+							this.deviceNode
+						)
 					);
 					items.push(
 						new DistributedTracingSettingNode(
@@ -69,8 +72,8 @@ export class TwinNode implements INode {
 									: Constants.NotSetLabel),
 							this,
 							"desired-sampling-rate-property",
-							this.deviceNode,
-						),
+							this.deviceNode
+						)
 					);
 				} else {
 					items.push(
@@ -79,8 +82,8 @@ export class TwinNode implements INode {
 								Constants.DisabledLabel,
 							this,
 							"desired-mode-property",
-							this.deviceNode,
-						),
+							this.deviceNode
+						)
 					);
 					items.push(
 						new DistributedTracingSettingNode(
@@ -88,8 +91,8 @@ export class TwinNode implements INode {
 								Constants.NotSetLabel,
 							this,
 							"desired-sampling-rate-property",
-							this.deviceNode,
-						),
+							this.deviceNode
+						)
 					);
 				}
 			} else if (this.twinItem.type === DeviceTwinPropertyType.Reported) {
@@ -105,8 +108,8 @@ export class TwinNode implements INode {
 									: Constants.DisabledLabel),
 							this,
 							"reported-mode-property",
-							this.deviceNode,
-						),
+							this.deviceNode
+						)
 					);
 					items.push(
 						new DistributedTracingSettingNode(
@@ -116,8 +119,8 @@ export class TwinNode implements INode {
 									: Constants.NotSetLabel),
 							this,
 							"reported-sampling-rate-property",
-							this.deviceNode,
-						),
+							this.deviceNode
+						)
 					);
 				} else {
 					items.push(
@@ -126,8 +129,8 @@ export class TwinNode implements INode {
 								Constants.DisabledLabel,
 							this,
 							"reported-mode-property",
-							this.deviceNode,
-						),
+							this.deviceNode
+						)
 					);
 					items.push(
 						new DistributedTracingSettingNode(
@@ -135,15 +138,15 @@ export class TwinNode implements INode {
 								Constants.NotSetLabel,
 							this,
 							"reported-sampling-rate-property",
-							this.deviceNode,
-						),
+							this.deviceNode
+						)
 					);
 				}
 			}
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAILoadDistributedTracingSettingTreeDoneEvent,
 				{ Result: "Success" },
-				iotHubConnectionString,
+				iotHubConnectionString
 			);
 		} catch (err) {
 			TelemetryClient.sendEvent(
@@ -152,7 +155,7 @@ export class TwinNode implements INode {
 					Result: "Fail",
 					[Constants.errorProperties.Message]: err.message,
 				},
-				iotHubConnectionString,
+				iotHubConnectionString
 			);
 		}
 

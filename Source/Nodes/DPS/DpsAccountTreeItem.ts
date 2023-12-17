@@ -12,7 +12,7 @@ import { DpsSubscriptionTreeItem } from "./DpsSubscriptionTreeItem";
 export class DpsAccountTreeItem extends AzureAccountTreeItemBase {
 	// Creates the subscription item
 	public async createSubscriptionTreeItem(
-		root: ISubscriptionContext,
+		root: ISubscriptionContext
 	): Promise<SubscriptionTreeItemBase> {
 		return new DpsSubscriptionTreeItem(this, root);
 	}

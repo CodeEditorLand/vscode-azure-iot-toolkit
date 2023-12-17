@@ -27,28 +27,28 @@ export class ModuleLabelNode implements INode {
 
 	public async getChildren(
 		context: vscode.ExtensionContext,
-		iotHubConnectionString: string,
+		iotHubConnectionString: string
 	): Promise<INode[]> {
 		if (this.deviceNode.deviceItem.contextValue === "edge") {
 			TelemetryClient.sendEvent(
-				Constants.IoTHubAILoadEdgeModuleTreeStartEvent,
+				Constants.IoTHubAILoadEdgeModuleTreeStartEvent
 			);
 			try {
 				const moduleList: vscode.TreeItem[] =
 					await Utility.getModuleItemsForEdge(
 						iotHubConnectionString,
 						this.deviceNode.deviceItem,
-						context,
+						context
 					);
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAILoadEdgeModuleTreeDoneEvent,
-					{ Result: "Success" },
+					{ Result: "Success" }
 				);
 
 				const moduleNodeList: INode[] = [];
 				moduleList.forEach((item) => {
 					moduleNodeList.push(
-						new ModuleItemNode(item as ModuleItem, this),
+						new ModuleItemNode(item as ModuleItem, this)
 					);
 				});
 				return moduleNodeList;
@@ -58,24 +58,24 @@ export class ModuleLabelNode implements INode {
 					{
 						Result: "Fail",
 						[Constants.errorProperties.Message]: err.message,
-					},
+					}
 				);
 				return Utility.getErrorMessageTreeItems("modules", err.message);
 			}
 		} else if (this.deviceNode.deviceItem.contextValue === "device") {
 			TelemetryClient.sendEvent(
-				Constants.IoTHubAILoadModuleTreeStartEvent,
+				Constants.IoTHubAILoadModuleTreeStartEvent
 			);
 			try {
 				const moduleList: vscode.TreeItem[] =
 					await Utility.getModuleItems(
 						iotHubConnectionString,
 						this.deviceNode.deviceItem,
-						context,
+						context
 					);
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAILoadModuleTreeDoneEvent,
-					{ Result: "Success" },
+					{ Result: "Success" }
 				);
 				if (moduleList.length === 0) {
 					moduleList.push(new vscode.TreeItem(`No Modules`));
@@ -84,7 +84,7 @@ export class ModuleLabelNode implements INode {
 				const moduleNodeList: INode[] = [];
 				moduleList.forEach((item) => {
 					moduleNodeList.push(
-						new ModuleItemNode(item as ModuleItem, this),
+						new ModuleItemNode(item as ModuleItem, this)
 					);
 				});
 				return moduleNodeList;
@@ -94,7 +94,7 @@ export class ModuleLabelNode implements INode {
 					{
 						Result: "Fail",
 						[Constants.errorProperties.Message]: err.message,
-					},
+					}
 				);
 				return Utility.getErrorMessageTreeItems("modules", err.message);
 			}
