@@ -808,7 +808,7 @@
 		"vscode-azureextensionui": "0.35.0",
 		"vscode-extension-telemetry": "0.1.6",
 		"vscode-test": "1.4.1",
-		"vue": "3.3.11"
+		"vue": "3.3.12"
 	},
 	"devDependencies": {
 		"@opentelemetry/tracing": "0.18.2",
@@ -817,7 +817,7 @@
 		"@types/fs-extra": "11.0.4",
 		"@types/keytar": "4.4.2",
 		"@types/mocha": "10.0.6",
-		"@types/node": "20.10.4",
+		"@types/node": "20.10.5",
 		"@types/node-fetch": "2.6.9",
 		"@types/terser-webpack-plugin": "5.0.4",
 		"@types/vscode": "1.85.0",
