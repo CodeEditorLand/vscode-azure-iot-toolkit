@@ -1,13 +1,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
-import * as fs from "fs-extra";
 import * as path from "path";
+import * as fs from "fs-extra";
 import * as replace from "replace-in-file";
 import * as vscode from "vscode";
-import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
+import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -17,7 +16,7 @@ export class CodeManager {
 	public async generateCode(deviceItem: DeviceItem) {
 		deviceItem = await Utility.getInputDevice(
 			deviceItem,
-			"AZ.Generate.Code.Start"
+			"AZ.Generate.Code.Start",
 		);
 		if (!deviceItem) {
 			return;
@@ -25,7 +24,7 @@ export class CodeManager {
 
 		const language = await vscode.window.showQuickPick(
 			Object.keys(Constants.CodeTemplates),
-			{ placeHolder: "Select language", ignoreFocusOut: true }
+			{ placeHolder: "Select language", ignoreFocusOut: true },
 		);
 		if (!language) {
 			return;
@@ -33,21 +32,21 @@ export class CodeManager {
 
 		const type = await vscode.window.showQuickPick(
 			Object.keys(Constants.CodeTemplates[language]),
-			{ placeHolder: "Select code type", ignoreFocusOut: true }
+			{ placeHolder: "Select code type", ignoreFocusOut: true },
 		);
 		if (!type) {
 			return;
 		}
 
 		const iotHubConnectionString = await Utility.getConnectionStringWithId(
-			Constants.IotHubConnectionStringKey
+			Constants.IotHubConnectionStringKey,
 		);
 		const template = this.context.asAbsolutePath(
 			path.join(
 				"resources",
 				"code-template",
-				Constants.CodeTemplates[language][type]
-			)
+				Constants.CodeTemplates[language][type],
+			),
 		);
 		const replacements = new Map([
 			[/{{deviceConnectionString}}/g, deviceItem.connectionString],
@@ -90,7 +89,7 @@ export class CodeManager {
 			await vscode.commands.executeCommand(
 				"vscode.openFolder",
 				vscode.Uri.file(folder),
-				true
+				true,
 			);
 		}
 

@@ -10,7 +10,7 @@ export class DeviceItem extends TreeItem implements QuickPickItem {
 		public readonly connectionString: string,
 		public iconPath: string,
 		public readonly connectionState: string,
-		public description: string
+		public description: string,
 	) {
 		super(deviceId);
 		this.contextValue = "device";

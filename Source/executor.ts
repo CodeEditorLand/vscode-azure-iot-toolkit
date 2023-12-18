@@ -1,14 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
 import { exec, execSync } from "child_process";
 import * as vscode from "vscode";
 
 export class Executor {
 	public static runInTerminal(
 		command: string,
-		terminal: string = "Azure IoT Hub"
+		terminal = "Azure IoT Hub",
 	): void {
 		if (this.terminals[terminal] === undefined) {
 			this.terminals[terminal] = vscode.window.createTerminal(terminal);

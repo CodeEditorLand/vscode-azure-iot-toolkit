@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
 import * as os from "os";
 import * as path from "path";
 import * as vscode from "vscode";
@@ -257,11 +256,11 @@ export class Constants {
 			: os.tmpdir();
 		Constants.ModuleTwinJosnFilePath = path.join(
 			directory,
-			Constants.ModuleTwinJosnFileName
+			Constants.ModuleTwinJosnFileName,
 		);
 		Constants.DeviceTwinJosnFilePath = path.join(
 			directory,
-			Constants.DeviceTwinJosnFileName
+			Constants.DeviceTwinJosnFileName,
 		);
 		Constants.ResourcesFolderPath = context.asAbsolutePath("resources");
 	}

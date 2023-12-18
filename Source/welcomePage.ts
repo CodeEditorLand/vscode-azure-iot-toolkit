@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
@@ -27,7 +26,9 @@ export class WelcomePage {
 	}
 
 	public show() {
-		if (!this.panel) {
+		if (this.panel) {
+			this.panel.reveal(vscode.ViewColumn.One);
+		} else {
 			const startTime = new Date();
 			this.panel = vscode.window.createWebviewPanel(
 				"welcomePage",
@@ -37,21 +38,21 @@ export class WelcomePage {
 					enableCommandUris: true,
 					enableScripts: true,
 					retainContextWhenHidden: true,
-				}
+				},
 			);
 			let html = fs.readFileSync(
 				this.context.asAbsolutePath(
-					path.join("resources", "welcome", "index.html")
+					path.join("resources", "welcome", "index.html"),
 				),
-				"utf8"
+				"utf8",
 			);
 			html = html.replace(
 				/{{root}}/g,
 				this.panel.webview
 					.asWebviewUri(
-						vscode.Uri.file(this.context.asAbsolutePath("."))
+						vscode.Uri.file(this.context.asAbsolutePath(".")),
 					)
-					.toString()
+					.toString(),
 			);
 			this.panel.webview.html = html;
 			this.panel.onDidDispose(() => {
@@ -67,8 +68,6 @@ export class WelcomePage {
 					href: message.href,
 				});
 			});
-		} else {
-			this.panel.reveal(vscode.ViewColumn.One);
 		}
 	}
 }

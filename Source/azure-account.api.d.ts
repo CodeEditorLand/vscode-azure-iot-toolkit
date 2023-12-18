@@ -3,11 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Event, Terminal, Progress, CancellationToken } from "vscode";
+import { ReadStream } from "fs";
 import { SubscriptionModels } from "@azure/arm-subscriptions";
 import { Environment } from "@azure/ms-rest-azure-env";
-import { ReadStream } from "fs";
 import { TokenCredentialsBase } from "@azure/ms-rest-nodeauth";
+import { CancellationToken, Event, Progress, Terminal } from "vscode";
 
 export type AzureLoginStatus =
 	| "Initializing"
@@ -61,6 +61,6 @@ export interface CloudShell {
 	readonly uploadFile: (
 		filename: string,
 		stream: ReadStream,
-		options?: UploadOptions
+		options?: UploadOptions,
 	) => Promise<void>;
 }

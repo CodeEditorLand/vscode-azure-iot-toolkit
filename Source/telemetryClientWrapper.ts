@@ -14,7 +14,7 @@ export class TelemetryClientWrapper {
 	public async sendTelemetryEvent(
 		eventName: string,
 		properties?: { [key: string]: string },
-		measurements?: { [key: string]: number }
+		measurements?: { [key: string]: number },
 	): Promise<void> {
 		if (this._eventNamePrefix) {
 			eventName = this._eventNamePrefix + eventName;
@@ -24,7 +24,7 @@ export class TelemetryClientWrapper {
 			eventName,
 			properties,
 			undefined,
-			measurements
+			measurements,
 		);
 	}
 }

@@ -3,15 +3,15 @@
 
 import { IotHubModels } from "@azure/arm-iothub";
 import * as vscode from "vscode";
-import { AzureSubscription } from "../../azure-account.api";
 import { EventHubItem } from "../../Model/EventHubItem";
+import { AzureSubscription } from "../../azure-account.api";
 import { INode } from "../INode";
 import { EventHubItemNode } from "./EventHubItemNode";
 
 export class EventHubLabelNode implements INode {
 	constructor(
 		private azureSubscription: AzureSubscription,
-		private eventHubProperties: IotHubModels.RoutingEventHubProperties[]
+		private eventHubProperties: IotHubModels.RoutingEventHubProperties[],
 	) {}
 
 	public getTreeItem(): vscode.TreeItem {
@@ -26,8 +26,8 @@ export class EventHubLabelNode implements INode {
 		return this.eventHubProperties.map(
 			(eventHubProperty) =>
 				new EventHubItemNode(
-					new EventHubItem(this.azureSubscription, eventHubProperty)
-				)
+					new EventHubItem(this.azureSubscription, eventHubProperty),
+				),
 		);
 	}
 }

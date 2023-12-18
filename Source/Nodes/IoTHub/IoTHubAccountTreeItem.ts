@@ -12,7 +12,7 @@ import { IoTHubSubscriptionTreeItem } from "./IoTHubSubscriptionTreeItem";
 export class IoTHubAccountTreeItem extends AzureAccountTreeItemBase {
 	// Creates the subscription item
 	public async createSubscriptionTreeItem(
-		root: ISubscriptionContext
+		root: ISubscriptionContext,
 	): Promise<SubscriptionTreeItemBase> {
 		return new IoTHubSubscriptionTreeItem(this, root);
 	}

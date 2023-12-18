@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
 import * as vscode from "vscode";
 import { TelemetryClient } from "./telemetryClient";
 
@@ -15,7 +14,7 @@ export class BaseExplorer {
 	protected output(
 		label: string,
 		message: string,
-		outputChannel: vscode.OutputChannel = this._outputChannel
+		outputChannel: vscode.OutputChannel = this._outputChannel,
 	): void {
 		outputChannel.append(`[${label}] ${message}`);
 	}
@@ -23,7 +22,7 @@ export class BaseExplorer {
 	protected outputLine(
 		label: string,
 		message: string,
-		outputChannel: vscode.OutputChannel = this._outputChannel
+		outputChannel: vscode.OutputChannel = this._outputChannel,
 	): void {
 		outputChannel.appendLine(`[${label}] ${message}`);
 	}
@@ -32,7 +31,7 @@ export class BaseExplorer {
 		client,
 		label: string,
 		target: string,
-		aiEventName: string
+		aiEventName: string,
 	) {
 		this.outputLine(label, `Sending message to [${target}] ...`);
 

@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
 import * as keytarType from "keytar";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
@@ -20,12 +19,12 @@ export class CredentialStore {
 			await this.keytar.setPassword(
 				Constants.ExtensionId,
 				account,
-				password
+				password,
 			);
 		} catch (error) {
 			await Constants.ExtensionContext.globalState.update(
 				account,
-				password
+				password,
 			);
 		}
 	}
@@ -39,7 +38,7 @@ export class CredentialStore {
 	private static getCoreNodeModule(moduleName: string) {
 		try {
 			return require(
-				`${vscode.env.appRoot}/node_modules.asar/${moduleName}`
+				`${vscode.env.appRoot}/node_modules.asar/${moduleName}`,
 			);
 		} catch (err) {}
 

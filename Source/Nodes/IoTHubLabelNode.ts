@@ -2,8 +2,8 @@
 // Licensed under the MIT license.
 
 import * as vscode from "vscode";
-import { Utility } from "../utility";
 import { TreeUtils } from "../Utility/treeUtils";
+import { Utility } from "../utility";
 import { INode } from "./INode";
 
 export class IoTHubLabelNode implements INode {

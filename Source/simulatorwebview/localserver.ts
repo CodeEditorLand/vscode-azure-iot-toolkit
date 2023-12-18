@@ -1,11 +1,11 @@
-import * as bodyParser from "body-parser";
-import express from "express";
 import * as http from "http";
 import { AddressInfo } from "net";
-import * as vscode from "vscode";
+import * as bodyParser from "body-parser";
 import dummyjson from "dummy-json";
-import { Constants } from "../constants";
+import express from "express";
+import * as vscode from "vscode";
 import { DeviceItem } from "../Model/DeviceItem";
+import { Constants } from "../constants";
 import { SendStatus } from "../sendStatus";
 import { Simulator } from "../simulator";
 
@@ -51,37 +51,37 @@ export class LocalServer {
 		this.router.get(
 			"/api/getinputdevicelist",
 			async (req, res, next) =>
-				await this.getInputDeviceList(req, res, next)
+				await this.getInputDeviceList(req, res, next),
 		);
 		this.router.get(
 			"/api/polling",
-			async (req, res, next) => await this.polling(req, res, next)
+			async (req, res, next) => await this.polling(req, res, next),
 		);
 		this.router.get(
 			"/api/getpersistedinputs",
 			async (req, res, next) =>
-				await this.getPersistedInputs(req, res, next)
+				await this.getPersistedInputs(req, res, next),
 		);
 		this.router.post(
 			"/api/send",
-			async (req, res, next) => await this.send(req, res, next)
+			async (req, res, next) => await this.send(req, res, next),
 		);
 		this.router.post(
 			"/api/generaterandomjson",
 			async (req, res, next) =>
-				await this.generateRandomJson(req, res, next)
+				await this.generateRandomJson(req, res, next),
 		);
 		this.router.post(
 			"/api/cancel",
-			async (req, res, next) => await this.cancel(req, res, next)
+			async (req, res, next) => await this.cancel(req, res, next),
 		);
 		this.router.post(
 			"/api/presistinputs",
-			async (req, res, next) => await this.persistInputs(req, res, next)
+			async (req, res, next) => await this.persistInputs(req, res, next),
 		);
 		this.router.post(
 			"/api/telemetry",
-			async (req, res, next) => await this.telemetry(req, res, next)
+			async (req, res, next) => await this.telemetry(req, res, next),
 		);
 	}
 
@@ -91,11 +91,11 @@ export class LocalServer {
 			res.setHeader("Access-Control-Allow-Origin", "*");
 			res.setHeader(
 				"Access-Control-Allow-Methods",
-				"GET, PUT, POST, DELETE, PATCH, OPTIONS"
+				"GET, PUT, POST, DELETE, PATCH, OPTIONS",
 			);
 			res.setHeader(
 				"Access-Control-Allow-Headers",
-				"Origin, X-Requested-With, Content-Type, Accept, Authorization"
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization",
 			);
 			res.setHeader("Access-Control-Allow-Credentials", "true");
 			if (req.method === "OPTIONS") {
@@ -123,7 +123,7 @@ export class LocalServer {
 	private async cancel(
 		req: express.Request,
 		res: express.Response,
-		next: express.NextFunction
+		next: express.NextFunction,
 	) {
 		try {
 			const data = req.body;
@@ -140,7 +140,7 @@ export class LocalServer {
 	private async persistInputs(
 		req: express.Request,
 		res: express.Response,
-		next: express.NextFunction
+		next: express.NextFunction,
 	) {
 		try {
 			const inputs = req.body;
@@ -154,7 +154,7 @@ export class LocalServer {
 	private async telemetry(
 		req: express.Request,
 		res: express.Response,
-		next: express.NextFunction
+		next: express.NextFunction,
 	) {
 		try {
 			const data = req.body;
@@ -162,7 +162,7 @@ export class LocalServer {
 			this._simulator.telemetry(
 				Constants.SimulatorSendEvent,
 				result,
-				data
+				data,
 			);
 			res.sendStatus(200);
 		} catch (err) {
@@ -173,7 +173,7 @@ export class LocalServer {
 	private async getPersistedInputs(
 		req: express.Request,
 		res: express.Response,
-		next: express.NextFunction
+		next: express.NextFunction,
 	) {
 		try {
 			const result = this._simulator.getPersistedInputs();
@@ -186,7 +186,7 @@ export class LocalServer {
 	private async polling(
 		req: express.Request,
 		res: express.Response,
-		next: express.NextFunction
+		next: express.NextFunction,
 	) {
 		try {
 			const status: SendStatus = this._simulator.getStatus();
@@ -208,7 +208,7 @@ export class LocalServer {
 	private async getInputDeviceList(
 		req: express.Request,
 		res: express.Response,
-		next: express.NextFunction
+		next: express.NextFunction,
 	) {
 		try {
 			const list = await this._simulator.getInputDeviceList();
@@ -221,7 +221,7 @@ export class LocalServer {
 	private async send(
 		req: express.Request,
 		res: express.Response,
-		next: express.NextFunction
+		next: express.NextFunction,
 	) {
 		try {
 			// Since we do not support C2D yet, here is just one call on sendD2C()
@@ -236,7 +236,7 @@ export class LocalServer {
 	private async sendD2C(
 		req: express.Request,
 		res: express.Response,
-		next: express.NextFunction
+		next: express.NextFunction,
 	) {
 		try {
 			const data = req.body;
@@ -259,7 +259,7 @@ export class LocalServer {
 								template,
 								true,
 								numbers,
-								interval
+								interval,
 							);
 							break;
 						case "Plain Text":
@@ -268,7 +268,7 @@ export class LocalServer {
 								template,
 								false,
 								numbers,
-								interval
+								interval,
 							);
 						default:
 							break;
@@ -285,7 +285,7 @@ export class LocalServer {
 	private async generateRandomJson(
 		req: express.Request,
 		res: express.Response,
-		next: express.NextFunction
+		next: express.NextFunction,
 	) {
 		const data = req.body;
 		const template = data.template;

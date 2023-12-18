@@ -1,15 +1,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
 import { Message } from "azure-iot-common";
 import { Client, ConnectionString } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import { Client as ServiceClient } from "azure-iothub";
 import * as vscode from "vscode";
+import { DeviceItem } from "./Model/DeviceItem";
 import { Constants } from "./constants";
 import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
-import { DeviceItem } from "./Model/DeviceItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -20,14 +19,14 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 		super(
 			outputChannel,
 			"$(primitive-square) Stop Receiving C2D Message",
-			"azure-iot-toolkit.stopMonitorC2DMessage"
+			"azure-iot-toolkit.stopMonitorC2DMessage",
 		);
 	}
 
 	public async sendC2DMessage(deviceItem?: DeviceItem) {
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle
+			Constants.IotHubConnectionStringTitle,
 		);
 		if (!iotHubConnectionString) {
 			return;
@@ -35,7 +34,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 
 		deviceItem = await Utility.getInputDevice(
 			deviceItem,
-			Constants.IoTHubAIC2DMessageStartEvent
+			Constants.IoTHubAIC2DMessageStartEvent,
 		);
 
 		if (deviceItem && deviceItem.label) {
@@ -48,14 +47,14 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 			this._outputChannel.show();
 			this.outputLine(
 				Constants.IoTHubC2DMessageMonitorLabel,
-				"There is a running job to receive C2D message. Please stop it first."
+				"There is a running job to receive C2D message. Please stop it first.",
 			);
 			return;
 		}
 
 		deviceItem = await Utility.getInputDevice(
 			deviceItem,
-			Constants.IoTHubAIStartMonitorC2DEvent
+			Constants.IoTHubAIStartMonitorC2DEvent,
 		);
 		if (!deviceItem || !deviceItem.connectionString) {
 			return;
@@ -73,7 +72,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 		if (this._isMonitoring) {
 			this.outputLine(
 				Constants.IoTHubC2DMessageMonitorLabel,
-				"C2D receiving stopped."
+				"C2D receiving stopped.",
 			);
 			this._monitorStatusBarItem.hide();
 			this._deviceClient.close(() => {
@@ -82,28 +81,28 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 		} else {
 			this.outputLine(
 				Constants.IoTHubC2DMessageMonitorLabel,
-				"No C2D monitor job running."
+				"No C2D monitor job running.",
 			);
 		}
 	}
 
 	private sendC2DMessageById(
 		iotHubConnectionString: string,
-		deviceId: string
+		deviceId: string,
 	): void {
 		vscode.window
 			.showInputBox({ prompt: `Enter message to send to device` })
 			.then((messageBody) => {
 				if (messageBody !== undefined) {
 					const serviceClient = ServiceClient.fromConnectionString(
-						iotHubConnectionString
+						iotHubConnectionString,
 					);
 					this._outputChannel.show();
 					serviceClient.open((err) => {
 						if (err) {
 							this.outputLine(
 								Constants.IoTHubC2DMessageLabel,
-								err.message
+								err.message,
 							);
 						} else {
 							const message = new Message(messageBody);
@@ -114,8 +113,8 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 									serviceClient,
 									Constants.IoTHubC2DMessageLabel,
 									deviceId,
-									Constants.IoTHubAIC2DMessageDoneEvent
-								)
+									Constants.IoTHubAIC2DMessageDoneEvent,
+								),
 							);
 						}
 					});
@@ -132,24 +131,24 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 					{
 						Result: "Exception",
 						[Constants.errorProperties.Message]: err,
-					}
+					},
 				);
 			} else {
 				this.updateMonitorStatus(true);
 				const deviceId = ConnectionString.parse(
-					deviceConnectionString
+					deviceConnectionString,
 				).DeviceId;
 				this.outputLine(
 					Constants.IoTHubC2DMessageMonitorLabel,
-					`Start receiving C2D message for [${deviceId}]...`
+					`Start receiving C2D message for [${deviceId}]...`,
 				);
 				TelemetryClient.sendEvent(
-					Constants.IoTHubAIStartMonitorC2DEvent
+					Constants.IoTHubAIStartMonitorC2DEvent,
 				);
 				this._deviceClient.on("message", (msg) => {
 					this.outputLine(
 						Constants.IoTHubC2DMessageMonitorLabel,
-						"Message Received: " + msg.getData()
+						"Message Received: " + msg.getData(),
 					);
 					if (
 						msg.properties &&
@@ -158,7 +157,11 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 					) {
 						this._outputChannel.appendLine("Properties:");
 						this._outputChannel.appendLine(
-							JSON.stringify(msg.properties.propertyList, null, 2)
+							JSON.stringify(
+								msg.properties.propertyList,
+								null,
+								2,
+							),
 						);
 					}
 					this._deviceClient.complete(msg, this.printResult);
@@ -171,13 +174,13 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 		if (err) {
 			this.outputLine(
 				Constants.IoTHubC2DMessageMonitorLabel,
-				"Error: " + err.toString()
+				"Error: " + err.toString(),
 			);
 		}
 		if (res) {
 			this.outputLine(
 				Constants.IoTHubC2DMessageMonitorLabel,
-				"Status: " + res.constructor.name
+				"Status: " + res.constructor.name,
 			);
 		}
 	};

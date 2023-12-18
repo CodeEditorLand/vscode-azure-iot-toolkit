@@ -11,12 +11,12 @@ import { TreeUtils } from "../../Utility/treeUtils";
 
 // Represents an IoT Hub resource
 export class IoTHubResourceTreeItem extends AzureTreeItem {
-	private static contextValue: string = "IotHub";
+	private static contextValue = "IotHub";
 	public readonly contextValue: string = IoTHubResourceTreeItem.contextValue;
 	public readonly iotHub: IotHubModels.IotHubDescription;
 	constructor(
 		parent: AzureParentTreeItem,
-		iotHub: IotHubModels.IotHubDescription
+		iotHub: IotHubModels.IotHubDescription,
 	) {
 		super(parent);
 		this.iotHub = iotHub;

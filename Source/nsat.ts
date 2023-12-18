@@ -1,16 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
-
-import {
-	commands,
-	env,
-	ExtensionContext,
-	extensions,
-	Uri,
-	window,
-} from "vscode";
+import { ExtensionContext, Uri, commands, extensions, window } from "vscode";
 import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 
@@ -34,7 +25,7 @@ export class NSAT {
 		const date = new Date().toDateString();
 		const lastSessionDate = globalState.get(
 			LAST_SESSION_DATE_KEY,
-			new Date(0).toDateString()
+			new Date(0).toDateString(),
 		);
 
 		if (date === lastSessionDate) {
@@ -71,9 +62,9 @@ export class NSAT {
 					"vscode.open",
 					Uri.parse(
 						`${NSAT_SURVEY_URL}?o=${encodeURIComponent(
-							process.platform
-						)}&v=${encodeURIComponent(extensionVersion)}`
-					)
+							process.platform,
+						)}&v=${encodeURIComponent(extensionVersion)}`,
+					),
 				);
 				await globalState.update(IS_CANDIDATE_KEY, false);
 				await globalState.update(SKIP_VERSION_KEY, extensionVersion);
@@ -101,7 +92,7 @@ export class NSAT {
 			"Do you mind taking a quick feedback survey about the Azure IoT Hub Extension for VS Code?",
 			take,
 			remind,
-			never
+			never,
 		);
 		await (button || remind).run();
 	}

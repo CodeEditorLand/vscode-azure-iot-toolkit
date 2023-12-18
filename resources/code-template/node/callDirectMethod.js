@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-"use strict";
-
 // Connection string for the IoT Hub service
 //
 // NOTE:
@@ -31,17 +29,21 @@ var methodParams = {
 };
 
 // Call the direct method on your device using the defined parameters.
-client.invokeDeviceMethod(deviceId, methodParams, function (err, result) {
+client.invokeDeviceMethod(deviceId, methodParams, (err, result) => {
 	if (err) {
 		console.error(
 			"Failed to invoke method '" +
 				methodParams.methodName +
 				"': " +
-				err.message
+				err.message,
 		);
 	} else {
 		console.log(
-			"Response from " + methodParams.methodName + " on " + deviceId + ":"
+			"Response from " +
+				methodParams.methodName +
+				" on " +
+				deviceId +
+				":",
 		);
 		console.log(JSON.stringify(result, null, 2));
 	}

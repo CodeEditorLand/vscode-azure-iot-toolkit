@@ -4,11 +4,11 @@
 import * as iothub from "azure-iothub";
 import * as uuid from "uuid";
 import * as vscode from "vscode";
-import { BaseExplorer } from "./baseExplorer";
-import { Constants, DistributedSettingUpdateType } from "./constants";
 import { SamplingModeItem } from "./Model/SamplingModeItem";
 import { DistributedTracingLabelNode } from "./Nodes/DistributedTracingLabelNode";
 import { DistributedTracingSettingNode } from "./Nodes/DistributedTracingSettingNode";
+import { BaseExplorer } from "./baseExplorer";
+import { Constants, DistributedSettingUpdateType } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -19,18 +19,18 @@ export class DistributedTracingManager extends BaseExplorer {
 
 	public async updateDistributedTracingSetting(
 		node,
-		updateType: DistributedSettingUpdateType
+		updateType: DistributedSettingUpdateType,
 	) {
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle
+			Constants.IotHubConnectionStringTitle,
 		);
 		if (!iotHubConnectionString) {
 			return;
 		}
 
 		TelemetryClient.sendEvent(
-			Constants.IoTHubAIUpdateDistributedSettingStartEvent
+			Constants.IoTHubAIUpdateDistributedSettingStartEvent,
 		);
 
 		let deviceIds: string[] = [];
@@ -42,7 +42,7 @@ export class DistributedTracingManager extends BaseExplorer {
 						placeHolder: "Select devices...",
 						ignoreFocusOut: true,
 						canPickMany: true,
-					}
+					},
 				);
 
 			if (
@@ -63,7 +63,7 @@ export class DistributedTracingManager extends BaseExplorer {
 			deviceIds,
 			iotHubConnectionString,
 			updateType,
-			node
+			node,
 		);
 	}
 
@@ -71,10 +71,10 @@ export class DistributedTracingManager extends BaseExplorer {
 		deviceIds: string[],
 		iotHubConnectionString: string,
 		updateType: DistributedSettingUpdateType,
-		node
+		node,
 	) {
 		const registry = iothub.Registry.fromConnectionString(
-			iotHubConnectionString
+			iotHubConnectionString,
 		);
 
 		let mode: boolean;
@@ -107,7 +107,7 @@ export class DistributedTracingManager extends BaseExplorer {
 					if (updateType === DistributedSettingUpdateType.OnlyMode) {
 						samplingRate = undefined;
 					}
-				}
+				},
 			);
 		}
 
@@ -119,7 +119,7 @@ export class DistributedTracingManager extends BaseExplorer {
 						placeHolder:
 							"Select whether to enable/disable the distributed tracing...",
 						ignoreFocusOut: true,
-					}
+					},
 				);
 			if (!selectedItem) {
 				return;
@@ -131,7 +131,7 @@ export class DistributedTracingManager extends BaseExplorer {
 			if (mode !== false) {
 				samplingRate = await this.promptForSamplingRate(
 					`Enter sampling rate, integer within [0, 100]`,
-					samplingRate
+					samplingRate,
 				);
 
 				if (samplingRate === undefined) {
@@ -151,7 +151,7 @@ export class DistributedTracingManager extends BaseExplorer {
 						mode,
 						samplingRate,
 						iotHubConnectionString,
-						deviceIds
+						deviceIds,
 					);
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAIUpdateDistributedSettingDoneEvent,
@@ -164,7 +164,7 @@ export class DistributedTracingManager extends BaseExplorer {
 								: "",
 							SamplingMode: mode ? mode.toString() : "",
 						},
-						iotHubConnectionString
+						iotHubConnectionString,
 					);
 
 					let resultTip = "";
@@ -177,27 +177,27 @@ export class DistributedTracingManager extends BaseExplorer {
 					this.outputLine(
 						Constants.IoTHubDistributedTracingSettingLabel,
 						`Update distributed tracing setting for device [${deviceIds.join(
-							","
+							",",
 						)}] complete!` +
 							(mode === true
 								? " (Distributed Tracing is in public preview stage and is available only in some regions, please check detail https://aka.ms/iottracing)"
 								: "") +
-							resultTip
+							resultTip,
 					);
 
 					if (node instanceof DistributedTracingLabelNode) {
 						vscode.commands.executeCommand(
 							"azure-iot-toolkit.refresh",
-							node
+							node,
 						);
 					} else if (node instanceof DistributedTracingSettingNode) {
 						vscode.commands.executeCommand(
 							"azure-iot-toolkit.refresh",
-							node.parent
+							node.parent,
 						);
 					} else {
 						vscode.commands.executeCommand(
-							"azure-iot-toolkit.refresh"
+							"azure-iot-toolkit.refresh",
 						);
 					}
 				} catch (err) {
@@ -212,15 +212,15 @@ export class DistributedTracingManager extends BaseExplorer {
 								: samplingRate.toString(),
 							SamplingMode: mode ? "" : mode.toString(),
 						},
-						iotHubConnectionString
+						iotHubConnectionString,
 					);
 					this._outputChannel.show();
 					this.outputLine(
 						Constants.IoTHubDistributedTracingSettingLabel,
-						`Failed to get or update distributed setting: ${err.message}`
+						`Failed to get or update distributed setting: ${err.message}`,
 					);
 				}
-			}
+			},
 		);
 	}
 
@@ -228,7 +228,7 @@ export class DistributedTracingManager extends BaseExplorer {
 		enable: boolean,
 		samplingRate: number,
 		iotHubConnectionString: string,
-		deviceIds: string[]
+		deviceIds: string[],
 	): Promise<any> {
 		const twinPatch = {
 			etag: "*",
@@ -259,12 +259,12 @@ export class DistributedTracingManager extends BaseExplorer {
 
 		if (deviceIds.length === 1) {
 			const registry = iothub.Registry.fromConnectionString(
-				iotHubConnectionString
+				iotHubConnectionString,
 			);
 			await registry.updateTwin(
 				deviceIds[0],
 				JSON.stringify(twinPatch),
-				twinPatch.etag
+				twinPatch.etag,
 			);
 			return;
 		}
@@ -272,18 +272,18 @@ export class DistributedTracingManager extends BaseExplorer {
 		return this.scheduleTwinUpdate(
 			twinPatch,
 			iotHubConnectionString,
-			deviceIds
+			deviceIds,
 		);
 	}
 
 	private async scheduleTwinUpdate(
 		twinPatch,
 		iotHubConnectionString: string,
-		deviceIds: string[]
+		deviceIds: string[],
 	): Promise<any> {
 		const twinJobId = uuid.v4();
 		const jobClient = iothub.JobClient.fromConnectionString(
-			iotHubConnectionString
+			iotHubConnectionString,
 		);
 
 		const queryCondition = this.generateQureyCondition(deviceIds);
@@ -295,7 +295,7 @@ export class DistributedTracingManager extends BaseExplorer {
 			queryCondition,
 			twinPatch,
 			startTime,
-			maxExecutionTimeInSeconds
+			maxExecutionTimeInSeconds,
 		);
 		return this.monitorJob(twinJobId, jobClient);
 	}
@@ -327,13 +327,13 @@ export class DistributedTracingManager extends BaseExplorer {
 
 	private getSamplingModePickupItems(): SamplingModeItem[] {
 		return [true, false].map(
-			(samplingMode) => new SamplingModeItem(samplingMode)
+			(samplingMode) => new SamplingModeItem(samplingMode),
 		);
 	}
 
 	private async promptForSamplingRate(
 		prompt: string,
-		defaultValue: number
+		defaultValue: number,
 	): Promise<number> {
 		if (
 			defaultValue === undefined ||

@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-"use strict";
-
 // Connection string for the IoT Hub service
 //
 // NOTE:
@@ -20,7 +18,7 @@ var connectionString = "{{iotHubConnectionString}}";
 // to read messages sent from a device.
 var { EventHubClient, EventPosition } = require("azure-event-hubs");
 
-var printError = function (err) {
+var printError = (err) => {
 	console.log(err.message);
 };
 
@@ -28,7 +26,7 @@ var printError = function (err) {
 // - Telemetry is sent in the message body
 // - The device can add arbitrary application properties to the message
 // - IoT Hub adds system properties, such as Device Id, to the message.
-var printMessage = function (message) {
+var printMessage = (message) => {
 	if (
 		"{{deviceId}}" ===
 		message.systemProperties["iothub-connection-device-id"]
@@ -47,19 +45,19 @@ var printMessage = function (message) {
 // This example only reads messages sent after this application started.
 var ehClient;
 EventHubClient.createFromIotHubConnectionString(connectionString)
-	.then(function (client) {
+	.then((client) => {
 		console.log(
-			"Successully created the EventHub Client from iothub connection string."
+			"Successully created the EventHub Client from iothub connection string.",
 		);
 		ehClient = client;
 		return ehClient.getPartitionIds();
 	})
-	.then(function (ids) {
+	.then((ids) => {
 		console.log("The partition ids are: ", ids);
-		return ids.map(function (id) {
-			return ehClient.receive(id, printMessage, printError, {
+		return ids.map((id) =>
+			ehClient.receive(id, printMessage, printError, {
 				eventPosition: EventPosition.fromEnqueuedTime(Date.now()),
-			});
-		});
+			}),
+		);
 	})
 	.catch(printError);

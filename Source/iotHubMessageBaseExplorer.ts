@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
 import { EventHubConsumerClient } from "@azure/event-hubs";
 import * as vscode from "vscode";
 import { BaseExplorer } from "./baseExplorer";
@@ -14,13 +13,13 @@ export class IoTHubMessageBaseExplorer extends BaseExplorer {
 	constructor(
 		outputChannel: vscode.OutputChannel,
 		statusBarText: string,
-		statusBarCommand: string
+		statusBarCommand: string,
 	) {
 		super(outputChannel);
 		this._isMonitoring = false;
 		this._monitorStatusBarItem = vscode.window.createStatusBarItem(
 			vscode.StatusBarAlignment.Left,
-			-1
+			-1,
 		);
 		this._monitorStatusBarItem.text = statusBarText;
 		this._monitorStatusBarItem.command = statusBarCommand;
@@ -40,7 +39,7 @@ export class IoTHubMessageBaseExplorer extends BaseExplorer {
 		label: string,
 		aiEvent: string,
 		eventHubClient: EventHubConsumerClient,
-		endpointType: string
+		endpointType: string,
 	) {
 		TelemetryClient.sendEvent(aiEvent);
 		this._outputChannel.show();
@@ -53,7 +52,7 @@ export class IoTHubMessageBaseExplorer extends BaseExplorer {
 				`${
 					endpointType.charAt(0).toUpperCase() +
 					endpointType.substr(1)
-				} monitoring stopped.`
+				} monitoring stopped.`,
 			);
 			this.updateMonitorStatus(false);
 		} else {

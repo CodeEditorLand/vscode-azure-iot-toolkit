@@ -8,20 +8,20 @@ import * as vscode from "vscode";
 import {
 	AzExtTreeDataProvider,
 	AzureTreeItem,
-	createAzureClient,
 	IActionContext,
+	createAzureClient,
 	openReadOnlyJson,
 } from "vscode-azureextensionui";
+import { DpsResourceTreeItem } from "./Nodes/DPS/DpsResourceTreeItem";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
-import { DpsResourceTreeItem } from "./Nodes/DPS/DpsResourceTreeItem";
 
 export class DpsResourceExplorer extends BaseExplorer {
 	private _dpsTreeDataProvider: AzExtTreeDataProvider;
 
 	constructor(
 		outputChannel: vscode.OutputChannel,
-		dpsTreeDataProvider: AzExtTreeDataProvider
+		dpsTreeDataProvider: AzExtTreeDataProvider,
 	) {
 		super(outputChannel);
 		this._dpsTreeDataProvider = dpsTreeDataProvider;
@@ -29,26 +29,26 @@ export class DpsResourceExplorer extends BaseExplorer {
 
 	public async viewProperties(
 		context: IActionContext,
-		node?: DpsResourceTreeItem
+		node?: DpsResourceTreeItem,
 	): Promise<void> {
 		if (!node) {
 			node =
 				await this._dpsTreeDataProvider.showTreeItemPicker<DpsResourceTreeItem>(
 					"IotDps",
-					context
+					context,
 				);
 		}
 
 		const client: IotDpsClient = createAzureClient(node.root, IotDpsClient);
 		const matchResult = Constants.DpsResourceGroupNameRegex.exec(
-			node.fullId
+			node.fullId,
 		);
 		let dpsInfo: IotDpsModels.ProvisioningServiceDescription = null;
 		if (matchResult != null) {
 			const resourecGroupName = matchResult[1];
 			dpsInfo = await client.iotDpsResource.get(
 				node.dps.name,
-				resourecGroupName
+				resourecGroupName,
 			);
 		} else {
 			dpsInfo = node.dps; // Fallback to use cached properties if regex match fails
@@ -63,14 +63,14 @@ export class DpsResourceExplorer extends BaseExplorer {
 
 	public async loadMore(
 		actionContext: IActionContext,
-		node: AzureTreeItem
+		node: AzureTreeItem,
 	): Promise<void> {
 		await this._dpsTreeDataProvider.loadMore(node, actionContext);
 	}
 
 	public async refresh(
 		actionContext: IActionContext,
-		node?: AzureTreeItem
+		node?: AzureTreeItem,
 	): Promise<void> {
 		await this._dpsTreeDataProvider.refresh(node);
 	}

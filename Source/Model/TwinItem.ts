@@ -7,7 +7,7 @@ import { DeviceTwinPropertyType } from "../constants";
 export class TwinItem extends TreeItem {
 	constructor(
 		public readonly propertyLabel: string,
-		public readonly type: DeviceTwinPropertyType
+		public readonly type: DeviceTwinPropertyType,
 	) {
 		super(propertyLabel);
 		this.type = type;

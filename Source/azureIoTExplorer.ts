@@ -1,13 +1,18 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
 import * as vscode from "vscode";
 import {
 	AzExtTreeDataProvider,
 	AzureTreeItem,
 	IActionContext,
 } from "vscode-azureextensionui";
+import { DeviceItem } from "./Model/DeviceItem";
+import { EventHubItem } from "./Model/EventHubItem";
+import { ModuleItem } from "./Model/ModuleItem";
+import { DeviceNode } from "./Nodes/DeviceNode";
+import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
+import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { CodeManager } from "./codeManager";
 import { Constants, DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";
@@ -20,12 +25,6 @@ import { IotHubDirectMethodExplorer } from "./iotHubDirectMethodExplorer";
 import { IoTHubMessageExplorer } from "./iotHubMessageExplorer";
 import { IotHubModuleExplorer } from "./iotHubModuleExplorer";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
-import { DeviceItem } from "./Model/DeviceItem";
-import { EventHubItem } from "./Model/EventHubItem";
-import { ModuleItem } from "./Model/ModuleItem";
-import { DeviceNode } from "./Nodes/DeviceNode";
-import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
-import { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { Simulator } from "./simulator";
 import { SnippetManager } from "./snippetManager";
 import { Utility } from "./utility";
@@ -50,26 +49,26 @@ export class AzureIoTExplorer {
 	constructor(
 		outputChannel: vscode.OutputChannel,
 		private context: vscode.ExtensionContext,
-		iotHubTreeDataProvider: AzExtTreeDataProvider
+		iotHubTreeDataProvider: AzExtTreeDataProvider,
 	) {
 		this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(
-			outputChannel
+			outputChannel,
 		);
 		this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
 		this._deviceExplorer = new DeviceExplorer(outputChannel);
 		this._distributedTracingManager = new DistributedTracingManager(
-			outputChannel
+			outputChannel,
 		);
 		this._snippetManager = new SnippetManager(outputChannel);
 		this._iotHubDirectMethodExplorer = new IotHubDirectMethodExplorer(
-			outputChannel
+			outputChannel,
 		);
 		this._iotHubDeviceTwinExplorer = new IotHubDeviceTwinExplorer(
-			outputChannel
+			outputChannel,
 		);
 		this._iotHubResourceExplorer = new IoTHubResourceExplorer(
 			outputChannel,
-			iotHubTreeDataProvider
+			iotHubTreeDataProvider,
 		);
 		this._iotEdgeExplorer = new IoTEdgeExplorer(outputChannel);
 		this._welcomePage = new WelcomePage(this.context);
@@ -111,24 +110,24 @@ export class AzureIoTExplorer {
 	public async getDevice(
 		deviceItem: DeviceItem,
 		iotHubConnectionString?: string,
-		outputChannel?: vscode.OutputChannel
+		outputChannel?: vscode.OutputChannel,
 	) {
 		return this._deviceExplorer.getDevice(
 			deviceItem,
 			iotHubConnectionString,
-			outputChannel
+			outputChannel,
 		);
 	}
 
 	public async createDevice(
-		edgeDevice: boolean = false,
+		edgeDevice = false,
 		iotHubConnectionString?: string,
-		outputChannel?: vscode.OutputChannel
+		outputChannel?: vscode.OutputChannel,
 	) {
 		return this._deviceExplorer.createDevice(
 			edgeDevice,
 			iotHubConnectionString,
-			outputChannel
+			outputChannel,
 		);
 	}
 
@@ -138,11 +137,11 @@ export class AzureIoTExplorer {
 
 	public updateDistributedTracingSetting(
 		node,
-		updateType: DistributedSettingUpdateType = DistributedSettingUpdateType.All
+		updateType: DistributedSettingUpdateType = DistributedSettingUpdateType.All,
 	): void {
 		this._distributedTracingManager.updateDistributedTracingSetting(
 			node,
-			updateType
+			updateType,
 		);
 	}
 
@@ -165,35 +164,35 @@ export class AzureIoTExplorer {
 	public async createIoTHub(
 		outputChannel?: vscode.OutputChannel,
 		subscriptionId?: string,
-		resourceGroupName?: string
+		resourceGroupName?: string,
 	) {
 		return this._iotHubResourceExplorer.createIoTHub(
 			outputChannel,
 			subscriptionId,
-			resourceGroupName
+			resourceGroupName,
 		);
 	}
 
 	public selectIoTHub(
 		outputChannel?: vscode.OutputChannel,
-		subscriptionId?: string
+		subscriptionId?: string,
 	) {
 		return this._iotHubResourceExplorer.selectIoTHub(
 			outputChannel,
-			subscriptionId
+			subscriptionId,
 		);
 	}
 
 	public async setIoTHub(
 		context: IActionContext,
-		node?: IoTHubResourceTreeItem
+		node?: IoTHubResourceTreeItem,
 	) {
 		await this._iotHubResourceExplorer.setIoTHub(context, node);
 	}
 
 	public async loadMore(
 		actionContext: IActionContext,
-		node: AzureTreeItem
+		node: AzureTreeItem,
 	): Promise<void> {
 		await this._iotHubResourceExplorer.loadMore(actionContext, node);
 	}
@@ -208,12 +207,12 @@ export class AzureIoTExplorer {
 
 	public async copyDeviceConnectionString(deviceItem: DeviceItem) {
 		await this._iotHubResourceExplorer.copyDeviceConnectionString(
-			deviceItem
+			deviceItem,
 		);
 	}
 
 	public replaceConnectionString(
-		event: vscode.TextDocumentChangeEvent
+		event: vscode.TextDocumentChangeEvent,
 	): void {
 		this._snippetManager.replaceConnectionString(event);
 	}
@@ -271,7 +270,7 @@ export class AzureIoTExplorer {
 	}
 
 	public async startMonitorCustomEventHubEndpoint(
-		eventHubItem: EventHubItem
+		eventHubItem: EventHubItem,
 	) {
 		this._eventHubManager.startMonitorCustomEventHubEndpoint(eventHubItem);
 	}
@@ -282,7 +281,7 @@ export class AzureIoTExplorer {
 
 	public async getIotHubConnectionString(): Promise<string> {
 		return Utility.getConnectionStringWithId(
-			Constants.IotHubConnectionStringKey
+			Constants.IotHubConnectionStringKey,
 		);
 	}
 

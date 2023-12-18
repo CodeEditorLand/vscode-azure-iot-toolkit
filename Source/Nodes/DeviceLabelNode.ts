@@ -2,13 +2,13 @@
 // Licensed under the MIT license.
 
 import * as vscode from "vscode";
-import { Constants } from "../constants";
 import { DeviceItem } from "../Model/DeviceItem";
+import { Constants } from "../constants";
 import { TelemetryClient } from "../telemetryClient";
 import { Utility } from "../utility";
 import { DeviceNode } from "./DeviceNode";
-import { InfoNode } from "./InfoNode";
 import { INode } from "./INode";
+import { InfoNode } from "./InfoNode";
 
 export class DeviceLabelNode implements INode {
 	constructor(private iotHubConnectionString: string) {}
@@ -27,20 +27,20 @@ export class DeviceLabelNode implements INode {
 		try {
 			const deviceList: vscode.TreeItem[] = await Utility.getDeviceList(
 				this.iotHubConnectionString,
-				Constants.ExtensionContext
+				Constants.ExtensionContext,
 			);
 
 			const deviceNode: INode[] = deviceList.map(
-				(item) => new DeviceNode(item as DeviceItem)
+				(item) => new DeviceNode(item as DeviceItem),
 			);
 
 			if (deviceNode.length === 0) {
 				deviceNode.push(
 					new InfoNode(
 						`No devices in ${Utility.getHostName(
-							this.iotHubConnectionString
-						)}`
-					)
+							this.iotHubConnectionString,
+						)}`,
+					),
 				);
 			}
 
@@ -57,7 +57,7 @@ export class DeviceLabelNode implements INode {
 			});
 			return Utility.getErrorMessageTreeItems(
 				"IoT Hub devices",
-				err.message
+				err.message,
 			);
 		}
 	}

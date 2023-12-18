@@ -3,9 +3,9 @@
 
 import { IotHubClient, IotHubModels } from "@azure/arm-iothub";
 import {
-	createAzureClient,
 	IActionContext,
 	SubscriptionTreeItemBase,
+	createAzureClient,
 } from "vscode-azureextensionui";
 import { IoTHubResourceTreeItem } from "./IoTHubResourceTreeItem";
 
@@ -20,7 +20,7 @@ export class IoTHubSubscriptionTreeItem extends SubscriptionTreeItemBase {
 
 	public async loadMoreChildrenImpl(
 		clearCache: boolean,
-		_context: IActionContext
+		_context: IActionContext,
 	): Promise<IoTHubResourceTreeItem[]> {
 		_context.telemetry.properties.nodeType = "IotHub";
 
@@ -33,12 +33,12 @@ export class IoTHubSubscriptionTreeItem extends SubscriptionTreeItemBase {
 			this._nextLink === undefined
 				? await client.iotHubResource.listBySubscription()
 				: await client.iotHubResource.listBySubscriptionNext(
-						this._nextLink
-					);
+						this._nextLink,
+				  );
 		this._nextLink = iotHubCollection.nextLink;
 		return iotHubCollection.map(
 			(iotHub: IotHubModels.IotHubDescription) =>
-				new IoTHubResourceTreeItem(this, iotHub)
+				new IoTHubResourceTreeItem(this, iotHub),
 		);
 	}
 }

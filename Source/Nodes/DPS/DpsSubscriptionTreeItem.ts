@@ -6,9 +6,9 @@ import {
 	IotDpsModels,
 } from "@azure/arm-deviceprovisioningservices";
 import {
-	createAzureClient,
 	IActionContext,
 	SubscriptionTreeItemBase,
+	createAzureClient,
 } from "vscode-azureextensionui";
 import { DpsResourceTreeItem } from "./DpsResourceTreeItem";
 
@@ -23,7 +23,7 @@ export class DpsSubscriptionTreeItem extends SubscriptionTreeItemBase {
 
 	public async loadMoreChildrenImpl(
 		clearCache: boolean,
-		_context: IActionContext
+		_context: IActionContext,
 	): Promise<DpsResourceTreeItem[]> {
 		_context.telemetry.properties.nodeType = "IotDps";
 
@@ -36,12 +36,12 @@ export class DpsSubscriptionTreeItem extends SubscriptionTreeItemBase {
 			this._nextLink === undefined
 				? await client.iotDpsResource.listBySubscription()
 				: await client.iotDpsResource.listBySubscriptionNext(
-						this._nextLink
-					);
+						this._nextLink,
+				  );
 		this._nextLink = dpsCollection.nextLink;
 		return dpsCollection.map(
 			(dps: IotDpsModels.ProvisioningServiceDescription) =>
-				new DpsResourceTreeItem(this, dps)
+				new DpsResourceTreeItem(this, dps),
 		);
 	}
 }

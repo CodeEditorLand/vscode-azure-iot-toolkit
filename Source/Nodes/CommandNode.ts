@@ -8,7 +8,7 @@ export class CommandNode implements INode {
 	constructor(
 		private readonly label: string,
 		private readonly command: string,
-		private args?: any[]
+		private args?: any[],
 	) {}
 
 	public getTreeItem(): vscode.TreeItem {
@@ -22,7 +22,7 @@ export class CommandNode implements INode {
 	private createCommandItem(
 		label: string,
 		command: string,
-		args: any[]
+		args: any[],
 	): vscode.TreeItem {
 		const commandItem = new vscode.TreeItem(label);
 		commandItem.command = {

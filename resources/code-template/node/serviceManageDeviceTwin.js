@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-"use strict";
-
 // Run 'npm install azure-iothub' to install the required libraries for this application
 var Registry = require("azure-iothub").Registry;
 
@@ -10,7 +8,7 @@ var connectionString = "{{iotHubConnectionString}}";
 var deviceId = "{{deviceId}}";
 
 var registry = Registry.fromConnectionString(connectionString);
-registry.getTwin(deviceId, function (err, twin) {
+registry.getTwin(deviceId, (err, twin) => {
 	if (err) {
 		console.error(err.message);
 	} else {
@@ -27,7 +25,7 @@ registry.getTwin(deviceId, function (err, twin) {
 		};
 
 		// method 1: using the update method directly on the twin
-		twin.update(twinPatch, function (err, twin) {
+		twin.update(twinPatch, (err, twin) => {
 			if (err) {
 				console.error(err.message);
 				process.exit(-1);
@@ -38,7 +36,7 @@ registry.getTwin(deviceId, function (err, twin) {
 					twin.deviceId,
 					{ properties: { desired: { telemetryInterval: 2000 } } },
 					twin.etag,
-					function (err, twin) {
+					(err, twin) => {
 						if (err) {
 							console.error(err.message);
 							process.exit(-1);
@@ -46,7 +44,7 @@ registry.getTwin(deviceId, function (err, twin) {
 							console.log(JSON.stringify(twin, null, 2));
 							process.exit(0);
 						}
-					}
+					},
 				);
 			}
 		});

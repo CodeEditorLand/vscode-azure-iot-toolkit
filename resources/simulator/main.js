@@ -1,6 +1,6 @@
+import axios from "axios";
 import iView from "iview";
 import Vue from "vue";
-import axios from "axios";
 
 let vscode;
 try {
@@ -73,8 +73,8 @@ const app = new Vue({
 					if (s.charAt(i) < "0" || s.charAt(i) > "9") {
 						callback(
 							new Error(
-								"You cannot enter any character other than 0-9."
-							)
+								"You cannot enter any character other than 0-9.",
+							),
 						);
 					}
 				}
@@ -84,8 +84,8 @@ const app = new Vue({
 				} else {
 					callback(
 						new Error(
-							"Don't you think this should be a positive integer?"
-						)
+							"Don't you think this should be a positive integer?",
+						),
 					);
 				}
 			}
@@ -93,16 +93,14 @@ const app = new Vue({
 		const messageParseValidator = async (rule, value, callback) => {
 			if (value === "") {
 				callback(new Error("Required"));
-			} else {
-				if (this.messageBodyType === "Plain Text") {
+			} else if (this.messageBodyType === "Plain Text") {
+				callback();
+			} else if (this.messageBodyType === "Dummy Json") {
+				const validated = await this.generateDummyJson();
+				if (validated) {
 					callback();
-				} else if (this.messageBodyType === "Dummy Json") {
-					const validated = await this.generateDummyJson();
-					if (validated) {
-						callback();
-					} else {
-						callback(new Error("Malformed dummy json syntax."));
-					}
+				} else {
+					callback(new Error("Malformed dummy json syntax."));
 				}
 			}
 		};
@@ -169,10 +167,10 @@ const app = new Vue({
 			this.$Spin.show();
 			await this.polling();
 			await this.getPersistedInputs();
-			if (!this.status.isProcessing) {
-				await this.getInputDeviceList(); // Load current device list
-			} else {
+			if (this.status.isProcessing) {
 				this.resetFilter(true); // Load the persisted device list
+			} else {
+				await this.getInputDeviceList(); // Load current device list
 			}
 			this.$Spin.hide();
 		} catch (error) {
@@ -349,7 +347,7 @@ const app = new Vue({
 							.includes(query)
 					) {
 						this.filteredInputDeviceList.push(
-							this.inputDeviceList[i]
+							this.inputDeviceList[i],
 						);
 					}
 				}

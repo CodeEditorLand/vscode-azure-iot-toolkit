@@ -1,19 +1,19 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+import { EventHubManagementClient } from "@azure/arm-eventhub";
 import {
-	ReceivedEventData,
 	EventHubConsumerClient,
 	MessagingError,
+	ReceivedEventData,
 } from "@azure/event-hubs";
-import { EventHubManagementClient } from "@azure/arm-eventhub";
 import * as vscode from "vscode";
+import { createAzureClient } from "vscode-azureextensionui";
+import { EventHubItem } from "./Model/EventHubItem";
 import { Constants } from "./constants";
 import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
-import { EventHubItem } from "./Model/EventHubItem";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
-import { createAzureClient } from "vscode-azureextensionui";
 
 export class EventHubManager extends IoTHubMessageBaseExplorer {
 	private _eventHubClient: EventHubConsumerClient;
@@ -22,18 +22,18 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 		super(
 			outputChannel,
 			"$(primitive-square) Stop Monitoring Custom Event Hub Endpoint",
-			"azure-iot-toolkit.stopMonitorCustomEventHubEndpoint"
+			"azure-iot-toolkit.stopMonitorCustomEventHubEndpoint",
 		);
 	}
 
 	public async startMonitorCustomEventHubEndpoint(
-		eventHubItem: EventHubItem
+		eventHubItem: EventHubItem,
 	) {
 		if (this._isMonitoring) {
 			this._outputChannel.show();
 			this.outputLine(
 				Constants.IoTHubMonitorLabel,
-				"There is a running job to monitor custom Event Hub endpoint. Please stop it first."
+				"There is a running job to monitor custom Event Hub endpoint. Please stop it first.",
 			);
 			return;
 		}
@@ -43,7 +43,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 			this._outputChannel.show();
 			this.outputLine(
 				Constants.EventHubMonitorLabel,
-				`Start monitoring message arrived in custom Event Hub endpoint [${eventHubItem.eventHubProperty.name}] ...`
+				`Start monitoring message arrived in custom Event Hub endpoint [${eventHubItem.eventHubProperty.name}] ...`,
 			);
 
 			const eventHubClient = createAzureClient(
@@ -56,31 +56,31 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 						eventHubItem.azureSubscription.subscription
 							.subscriptionId,
 				},
-				EventHubManagementClient
+				EventHubManagementClient,
 			);
 
 			const connectionString = (
 				await eventHubClient.namespaces.listKeys(
 					eventHubItem.eventHubProperty.resourceGroup,
 					this.getNamespacefromConnectionString(
-						eventHubItem.eventHubProperty.connectionString
+						eventHubItem.eventHubProperty.connectionString,
 					),
-					"RootManageSharedAccessKey"
+					"RootManageSharedAccessKey",
 				)
 			).primaryConnectionString;
 			this._eventHubClient = new EventHubConsumerClient(
 				"$Default",
 				connectionString,
 				this.getEntityPathfromConnectionString(
-					eventHubItem.eventHubProperty.connectionString
-				)
+					eventHubItem.eventHubProperty.connectionString,
+				),
 			);
 			const partitionIds = await this._eventHubClient.getPartitionIds();
 			this.updateMonitorStatus(true);
 			partitionIds.forEach((partitionId) => {
 				this.outputLine(
 					Constants.EventHubMonitorLabel,
-					`Created partition receiver [${partitionId}]`
+					`Created partition receiver [${partitionId}]`,
 				);
 				this._eventHubClient.subscribe(
 					partitionId,
@@ -90,7 +90,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 					},
 					{
 						startPosition: { enqueuedOn: Date.now() },
-					}
+					},
 				);
 			});
 		} catch (error) {
@@ -108,7 +108,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 			Constants.EventHubMonitorLabel,
 			Constants.IoTHubAIEHStopMonitorEvent,
 			this._eventHubClient,
-			"custom Event Hub endpoint"
+			"custom Event Hub endpoint",
 		);
 	}
 
@@ -118,7 +118,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 			const timeMessage = Utility.getTimeMessageFromEventData(message);
 			this.outputLine(
 				Constants.EventHubMonitorLabel,
-				`${timeMessage}Message received:`
+				`${timeMessage}Message received:`,
 			);
 			this._outputChannel.appendLine(JSON.stringify(result, null, 2));
 		});
@@ -134,7 +134,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 	}
 
 	private getEntityPathfromConnectionString(
-		connectionString: string
+		connectionString: string,
 	): string {
 		const result = /EntityPath=(.+)$/.exec(connectionString);
 		return result ? result[1] : "";

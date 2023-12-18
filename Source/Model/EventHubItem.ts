@@ -8,7 +8,7 @@ import { AzureSubscription } from "../azure-account.api";
 export class EventHubItem extends TreeItem {
 	constructor(
 		public readonly azureSubscription: AzureSubscription,
-		public readonly eventHubProperty: IotHubModels.RoutingEventHubProperties
+		public readonly eventHubProperty: IotHubModels.RoutingEventHubProperties,
 	) {
 		super(eventHubProperty.name);
 		this.contextValue = "event-hub";

@@ -1,7 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
+import * as crypto from "crypto";
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
+import { IotHubModels } from "@azure/arm-iothub";
+import { ReceivedEventData } from "@azure/event-hubs";
+import { AxiosRequestConfig, Method } from "axios";
 import { ResultWithHttpResponse } from "azure-iot-common";
 import {
 	ConnectionString as DeviceConnectionString,
@@ -13,24 +19,17 @@ import {
 	SharedAccessSignature,
 	Twin,
 } from "azure-iothub";
-import { IotHubModels } from "@azure/arm-iothub";
-import * as crypto from "crypto";
-import * as fs from "fs";
-import * as os from "os";
-import * as path from "path";
+import { ResultWithIncomingMessage } from "azure-iothub/dist/interfaces";
 import * as vscode from "vscode";
-import { Constants } from "./constants";
 import { DeviceItem } from "./Model/DeviceItem";
 import { ModuleItem } from "./Model/ModuleItem";
 import { CommandNode } from "./Nodes/CommandNode";
-import { InfoNode } from "./Nodes/InfoNode";
 import { INode } from "./Nodes/INode";
-import { TelemetryClient } from "./telemetryClient";
-import { ReceivedEventData, EventData } from "@azure/event-hubs";
-import { AxiosRequestConfig, Method } from "axios";
+import { InfoNode } from "./Nodes/InfoNode";
 import { AzureAccount } from "./azure-account.api";
+import { Constants } from "./constants";
 import { CredentialStore } from "./credentialStore";
-import { ResultWithIncomingMessage } from "azure-iothub/dist/interfaces";
+import { TelemetryClient } from "./telemetryClient";
 
 export class Utility {
 	public static getConfiguration(): vscode.WorkspaceConfiguration {
@@ -40,8 +39,8 @@ export class Utility {
 	public static async getConnectionString(
 		id: string,
 		name: string,
-		askForConnectionString: boolean = true,
-		helpfile: string = "iot-hub-connection-string.md"
+		askForConnectionString = true,
+		helpfile = "iot-hub-connection-string.md",
 	) {
 		const connectionString = await this.getConnectionStringWithId(id);
 		if (!connectionString && askForConnectionString) {
@@ -53,7 +52,7 @@ export class Utility {
 	public static async setConnectionString(
 		id: string,
 		name: string,
-		helpfile: string = "iot-hub-connection-string.md"
+		helpfile = "iot-hub-connection-string.md",
 	) {
 		TelemetryClient.sendEvent("General.SetConfig.Popup");
 		return new Promise<string>((resolve) => {
@@ -72,7 +71,7 @@ export class Utility {
 					if (id === Constants.IotHubConnectionStringKey) {
 						await CredentialStore.setPassword(
 							Constants.IotHubEventHubConnectionStringKey,
-							undefined
+							undefined,
 						);
 						await Utility.deleteIoTHubInfo();
 					}
@@ -86,9 +85,9 @@ export class Utility {
 						"markdown.showPreview",
 						vscode.Uri.file(
 							Constants.ExtensionContext.asAbsolutePath(
-								path.join("resources", helpfile)
-							)
-						)
+								path.join("resources", helpfile),
+							),
+						),
 					);
 					input.validationMessage = `The format should be "${Constants.ConnectionStringFormat[id]}"`;
 				}
@@ -141,7 +140,7 @@ export class Utility {
 
 	public static generateSasTokenForService(
 		iotHubConnectionString: string,
-		expiryInHours = 1
+		expiryInHours = 1,
 	): string {
 		const connectionString = ConnectionString.parse(iotHubConnectionString);
 		const expiry = Math.floor(Date.now() / 1000) + expiryInHours * 60 * 60;
@@ -149,23 +148,23 @@ export class Utility {
 			connectionString.HostName,
 			connectionString.SharedAccessKeyName,
 			connectionString.SharedAccessKey,
-			expiry
+			expiry,
 		).toString();
 	}
 
 	public static generateSasTokenForDevice(
 		deviceConnectionString: string,
-		expiryInHours = 1
+		expiryInHours = 1,
 	): string {
 		const connectionString = DeviceConnectionString.parse(
-			deviceConnectionString
+			deviceConnectionString,
 		);
 		const expiry = Math.floor(Date.now() / 1000) + expiryInHours * 60 * 60;
 		return DeviceSharedAccessSignature.create(
 			connectionString.HostName,
 			connectionString.DeviceId,
 			connectionString.SharedAccessKey,
-			expiry
+			expiry,
 		).toString();
 	}
 
@@ -191,7 +190,7 @@ export class Utility {
 			return filePath
 				.replace(
 					/^([A-Za-z]):/,
-					(match, p1) => `${terminalRoot}${p1.toLowerCase()}`
+					(match, p1) => `${terminalRoot}${p1.toLowerCase()}`,
 				)
 				.replace(/\\/g, "/");
 		}
@@ -213,7 +212,7 @@ export class Utility {
 			return filePath
 				.replace(
 					/^([A-Za-z]):/,
-					(match, p1) => `/mnt/${p1.toLowerCase()}`
+					(match, p1) => `/mnt/${p1.toLowerCase()}`,
 				)
 				.replace(/\\/g, "/");
 		}
@@ -225,8 +224,8 @@ export class Utility {
 			const defaultPath: string = vscode.workspace.workspaceFolders
 				? path.join(
 						vscode.workspace.workspaceFolders[0].uri.fsPath,
-						filename
-					)
+						filename,
+				  )
 				: `*/${filename}`;
 			return vscode.Uri.file(defaultPath);
 		} else {
@@ -249,17 +248,17 @@ export class Utility {
 	public static async getModuleItems(
 		iotHubConnectionString: string,
 		deviceItem: DeviceItem,
-		context: vscode.ExtensionContext
+		context: vscode.ExtensionContext,
 	) {
 		const modules = await Utility.getModules(
 			iotHubConnectionString,
-			deviceItem.deviceId
+			deviceItem.deviceId,
 		);
 		return modules.map((module) => {
 			const isConnected = module.connectionState === "Connected";
 			const state = isConnected ? "on" : "off";
 			const iconPath = context.asAbsolutePath(
-				path.join("resources", `module-${state}.svg`)
+				path.join("resources", `module-${state}.svg`),
 			);
 			return new ModuleItem(
 				deviceItem,
@@ -268,7 +267,7 @@ export class Utility {
 				module.connectionState,
 				null,
 				iconPath,
-				"module"
+				"module",
 			);
 		});
 	}
@@ -276,7 +275,7 @@ export class Utility {
 	public static async getModuleItemsForEdge(
 		iotHubConnectionString: string,
 		deviceItem: DeviceItem,
-		context: vscode.ExtensionContext
+		context: vscode.ExtensionContext,
 	) {
 		/**
 		 * modules: contains connection state of each module
@@ -287,7 +286,7 @@ export class Utility {
 			Utility.getModuleTwin(
 				iotHubConnectionString,
 				deviceItem.deviceId,
-				"$edgeAgent"
+				"$edgeAgent",
 			),
 		]);
 		const desiredTwin = (edgeAgent as any).properties.desired;
@@ -307,7 +306,7 @@ export class Utility {
 				}
 				const state = isConnected ? "on" : "off";
 				const iconPath = context.asAbsolutePath(
-					path.join("resources", `module-${state}.svg`)
+					path.join("resources", `module-${state}.svg`),
 				);
 				if (module.moduleId.startsWith("$")) {
 					const moduleId = module.moduleId.substring(1);
@@ -323,33 +322,31 @@ export class Utility {
 							reportedTwin
 								? this.getModuleRuntimeStatus(
 										moduleId,
-										reportedTwin.systemModules
-									)
+										reportedTwin.systemModules,
+								  )
 								: undefined,
 							iconPath,
-							"edge-module"
+							"edge-module",
 						);
 					}
-				} else {
-					if (
-						desiredTwin.modules &&
-						desiredTwin.modules[module.moduleId]
-					) {
-						return new ModuleItem(
-							deviceItem,
-							module.moduleId,
-							module.connectionString,
-							module.connectionState,
-							reportedTwin
-								? this.getModuleRuntimeStatus(
-										module.moduleId,
-										reportedTwin.modules
-									)
-								: undefined,
-							iconPath,
-							"edge-module"
-						);
-					}
+				} else if (
+					desiredTwin.modules &&
+					desiredTwin.modules[module.moduleId]
+				) {
+					return new ModuleItem(
+						deviceItem,
+						module.moduleId,
+						module.connectionString,
+						module.connectionState,
+						reportedTwin
+							? this.getModuleRuntimeStatus(
+									module.moduleId,
+									reportedTwin.modules,
+							  )
+							: undefined,
+						iconPath,
+						"edge-module",
+					);
 				}
 				const moduleType = module.moduleId.startsWith("$")
 					? "edge-module"
@@ -363,7 +360,7 @@ export class Utility {
 					module.connectionState,
 					null,
 					iconPath,
-					moduleType
+					moduleType,
 				);
 			})
 			.filter((module) => module);
@@ -371,10 +368,10 @@ export class Utility {
 
 	public static async getModules(
 		iotHubConnectionString: string,
-		deviceId: string
+		deviceId: string,
 	): Promise<any[]> {
 		const registry: Registry = Registry.fromConnectionString(
-			iotHubConnectionString
+			iotHubConnectionString,
 		);
 		const hostName: string = Utility.getHostName(iotHubConnectionString);
 
@@ -392,11 +389,11 @@ export class Utility {
 										deviceId,
 										module.moduleId,
 										module.authentication.symmetricKey
-											.primaryKey
+											.primaryKey,
 									);
 							}
 							return module;
-						})
+						}),
 					);
 				}
 			});
@@ -406,15 +403,15 @@ export class Utility {
 	public static async getModuleTwin(
 		iotHubConnectionString: string,
 		deviceId: string,
-		moduleId: string
+		moduleId: string,
 	): Promise<Twin> {
 		const registry: Registry = Registry.fromConnectionString(
-			iotHubConnectionString
+			iotHubConnectionString,
 		);
 		return (
 			(await registry.getModuleTwin(
 				deviceId,
-				moduleId
+				moduleId,
 			)) as ResultWithHttpResponse<Twin>
 		).responseBody;
 	}
@@ -423,10 +420,10 @@ export class Utility {
 		iotHubConnectionString: string,
 		deviceId: string,
 		moduleId: string,
-		twin: any
+		twin: any,
 	): Promise<void> {
 		const registry: Registry = Registry.fromConnectionString(
-			iotHubConnectionString
+			iotHubConnectionString,
 		);
 		await registry.updateModuleTwin(deviceId, moduleId, twin, "*");
 	}
@@ -439,7 +436,7 @@ export class Utility {
 			path.basename(activeTextEditor.document.fileName) !== fileName
 		) {
 			vscode.window.showWarningMessage(
-				`Please open ${fileName} and try again.`
+				`Please open ${fileName} and try again.`,
 			);
 			return "";
 		}
@@ -459,10 +456,18 @@ export class Utility {
 	public static async getInputDevice(
 		deviceItem: DeviceItem,
 		eventName: string,
-		onlyEdgeDevice: boolean = false,
-		iotHubConnectionString?: string
+		onlyEdgeDevice = false,
+		iotHubConnectionString?: string,
 	): Promise<DeviceItem> {
-		if (!deviceItem) {
+		if (deviceItem) {
+			if (eventName) {
+				TelemetryClient.sendEvent(eventName, {
+					entry: "contextMenu",
+					deviceType: deviceItem.contextValue,
+				});
+			}
+			return deviceItem;
+		} else {
 			if (eventName) {
 				TelemetryClient.sendEvent(eventName, {
 					entry: "commandPalette",
@@ -471,7 +476,7 @@ export class Utility {
 			if (!iotHubConnectionString) {
 				iotHubConnectionString = await Utility.getConnectionString(
 					Constants.IotHubConnectionStringKey,
-					Constants.IotHubConnectionStringTitle
+					Constants.IotHubConnectionStringTitle,
 				);
 				if (!iotHubConnectionString) {
 					return null;
@@ -481,26 +486,18 @@ export class Utility {
 			const deviceList: Promise<DeviceItem[]> =
 				Utility.getFilteredDeviceList(
 					iotHubConnectionString,
-					onlyEdgeDevice
+					onlyEdgeDevice,
 				);
 			deviceItem = await vscode.window.showQuickPick(deviceList, {
 				placeHolder: "Select an IoT Hub device",
 			});
-			return deviceItem;
-		} else {
-			if (eventName) {
-				TelemetryClient.sendEvent(eventName, {
-					entry: "contextMenu",
-					deviceType: deviceItem.contextValue,
-				});
-			}
 			return deviceItem;
 		}
 	}
 
 	public static async getDeviceList(
 		iotHubConnectionString: string,
-		context?: vscode.ExtensionContext
+		context?: vscode.ExtensionContext,
 	): Promise<DeviceItem[]> {
 		const [deviceList, edgeDeviceIdSet] = await Promise.all([
 			Utility.getIoTDeviceList(iotHubConnectionString),
@@ -520,7 +517,7 @@ export class Utility {
 			}
 			if (context) {
 				device.iconPath = context.asAbsolutePath(
-					path.join("resources", `${deviceType}-${state}.svg`)
+					path.join("resources", `${deviceType}-${state}.svg`),
 				);
 			}
 			return device;
@@ -528,11 +525,11 @@ export class Utility {
 	}
 
 	public static async getNoneEdgeDeviceIdList(
-		iotHubConnectionString: string
+		iotHubConnectionString: string,
 	): Promise<string[]> {
 		const noneEdgeDevices = await this.queryDeviceTwins(
 			iotHubConnectionString,
-			false
+			false,
 		);
 		const deviceIdList = [];
 		for (const noneEdgeDevice of noneEdgeDevices) {
@@ -544,7 +541,7 @@ export class Utility {
 
 	public static isValidTargetCondition(value: string): boolean {
 		return /^(\*|((deviceId|tags\..+|properties\.reported\..+).*=.+))$/.test(
-			value
+			value,
 		);
 	}
 
@@ -557,7 +554,7 @@ export class Utility {
 		hostName: string,
 		deviceId: string,
 		moduleId: string,
-		sharedAccessKey: string
+		sharedAccessKey: string,
 	): string {
 		return `HostName=${hostName};DeviceId=${deviceId};ModuleId=${moduleId};SharedAccessKey=${sharedAccessKey}`;
 	}
@@ -568,27 +565,27 @@ export class Utility {
 		items.push(
 			new CommandNode(
 				"-> Set IoT Hub Connection String",
-				"azure-iot-toolkit.setIoTHubConnectionString"
-			)
+				"azure-iot-toolkit.setIoTHubConnectionString",
+			),
 		);
 		items.push(
 			new CommandNode(
 				"-> Select IoT Hub",
-				"azure-iot-toolkit.selectIoTHub"
-			)
+				"azure-iot-toolkit.selectIoTHub",
+			),
 		);
 		items.push(
 			new CommandNode(
 				"-> Create IoT Hub",
-				"azure-iot-toolkit.createIoTHub"
-			)
+				"azure-iot-toolkit.createIoTHub",
+			),
 		);
 		return items;
 	}
 
 	public static getErrorMessageTreeItems(
 		item: string,
-		error: string
+		error: string,
 	): INode[] {
 		const items = [];
 		items.push(new InfoNode(`Failed to list ${item}`));
@@ -644,7 +641,7 @@ export class Utility {
 
 	public static async getTwin(
 		registry: Registry,
-		deviceId: string
+		deviceId: string,
 	): Promise<any> {
 		const result = await registry.getTwin(deviceId);
 		return result.responseBody;
@@ -652,7 +649,7 @@ export class Utility {
 
 	public static getAzureAccountApi(): AzureAccount {
 		return vscode.extensions.getExtension<AzureAccount>(
-			"ms-vscode.azure-account"
+			"ms-vscode.azure-account",
 		)!.exports;
 	}
 
@@ -684,7 +681,7 @@ export class Utility {
 	}
 
 	public static getTimeMessageFromEventData(
-		message: ReceivedEventData
+		message: ReceivedEventData,
 	): string {
 		return message.enqueuedTimeUtc
 			? `[${message.enqueuedTimeUtc.toLocaleTimeString("en-US")}] `
@@ -693,32 +690,32 @@ export class Utility {
 
 	public static async storeIoTHubInfo(
 		subscriptionId: string,
-		iotHubDescription: IotHubModels.IotHubDescription
+		iotHubDescription: IotHubModels.IotHubDescription,
 	) {
 		await Constants.ExtensionContext.globalState.update(
 			Constants.StateKeySubsID,
-			subscriptionId
+			subscriptionId,
 		);
 		await Constants.ExtensionContext.globalState.update(
 			Constants.StateKeyIoTHubID,
-			iotHubDescription.id
+			iotHubDescription.id,
 		);
 	}
 
 	public static async deleteIoTHubInfo() {
 		await Constants.ExtensionContext.globalState.update(
 			Constants.StateKeySubsID,
-			""
+			"",
 		);
 		await Constants.ExtensionContext.globalState.update(
 			Constants.StateKeyIoTHubID,
-			""
+			"",
 		);
 	}
 
 	public static async getFilteredDeviceList(
 		iotHubConnectionString: string,
-		onlyEdgeDevice: boolean
+		onlyEdgeDevice: boolean,
 	): Promise<DeviceItem[]> {
 		if (onlyEdgeDevice) {
 			const [deviceList, edgeDeviceIdSet] = await Promise.all([
@@ -726,7 +723,7 @@ export class Utility {
 				Utility.getEdgeDeviceIdSet(iotHubConnectionString),
 			]);
 			return deviceList.filter((device) =>
-				edgeDeviceIdSet.has(device.deviceId)
+				edgeDeviceIdSet.has(device.deviceId),
 			);
 		} else {
 			return Utility.getIoTDeviceList(iotHubConnectionString);
@@ -737,7 +734,7 @@ export class Utility {
 		iotHubConnectionString: string,
 		url: string,
 		method: Method,
-		data?: any
+		data?: any,
 	): AxiosRequestConfig {
 		return {
 			url,
@@ -745,7 +742,7 @@ export class Utility {
 			baseURL: `https://${Utility.getHostName(iotHubConnectionString)}`,
 			headers: {
 				Authorization: Utility.generateSasTokenForService(
-					iotHubConnectionString
+					iotHubConnectionString,
 				),
 			},
 			data,
@@ -780,14 +777,14 @@ export class Utility {
 	}
 
 	private static async getIoTDeviceList(
-		iotHubConnectionString: string
+		iotHubConnectionString: string,
 	): Promise<DeviceItem[]> {
 		if (!iotHubConnectionString) {
 			return null;
 		}
 
 		const registry: Registry = Registry.fromConnectionString(
-			iotHubConnectionString
+			iotHubConnectionString,
 		);
 		const devices: DeviceItem[] = [];
 		const hostName: string = Utility.getHostName(iotHubConnectionString);
@@ -798,7 +795,7 @@ export class Utility {
 					reject(err);
 				} else {
 					deviceList.forEach((device, index) => {
-						let deviceConnectionString: string = "";
+						let deviceConnectionString = "";
 						if (
 							device.authentication.SymmetricKey.primaryKey !=
 							null
@@ -808,7 +805,7 @@ export class Utility {
 									hostName,
 									device.deviceId,
 									device.authentication.SymmetricKey
-										.primaryKey
+										.primaryKey,
 								);
 						} else if (
 							device.authentication.x509Thumbprint
@@ -817,7 +814,7 @@ export class Utility {
 							deviceConnectionString =
 								DeviceConnectionString.createWithX509Certificate(
 									hostName,
-									device.deviceId
+									device.deviceId,
 								);
 						}
 						devices.push(
@@ -826,14 +823,14 @@ export class Utility {
 								deviceConnectionString,
 								null,
 								device.connectionState.toString(),
-								null
-							)
+								null,
+							),
 						);
 					});
 					resolve(
 						devices.sort((a: DeviceItem, b: DeviceItem) => {
 							return a.deviceId.localeCompare(b.deviceId);
-						})
+						}),
 					);
 				}
 			});
@@ -841,11 +838,11 @@ export class Utility {
 	}
 
 	private static async getEdgeDeviceIdSet(
-		iotHubConnectionString: string
+		iotHubConnectionString: string,
 	): Promise<Set<string>> {
 		const edgeDevices = await Utility.queryDeviceTwins(
 			iotHubConnectionString,
-			true
+			true,
 		);
 		const set = new Set<string>();
 		for (const edgeDevice of edgeDevices) {
@@ -856,13 +853,13 @@ export class Utility {
 
 	private static async queryDeviceTwins(
 		iotHubConnectionString: string,
-		isEdge: boolean
+		isEdge: boolean,
 	): Promise<Twin[]> {
 		const registry: Registry = Registry.fromConnectionString(
-			iotHubConnectionString
+			iotHubConnectionString,
 		);
 		const query = registry.createQuery(
-			"SELECT * FROM DEVICES where capabilities.iotEdge=" + isEdge
+			"SELECT * FROM DEVICES where capabilities.iotEdge=" + isEdge,
 		);
 		return ((await query.nextAsTwin()) as ResultWithIncomingMessage<Twin[]>)
 			.result;
@@ -880,7 +877,7 @@ export class Utility {
 					"Don't have Azure IoT Hub? Register a free Azure account to get a free one.",
 					GoToAzureRegistrationPage,
 					GoToAzureIoTHubPage,
-					DoNotShowAgain
+					DoNotShowAgain,
 				)
 				.then((selection) => {
 					switch (selection) {
@@ -888,32 +885,32 @@ export class Utility {
 							vscode.commands.executeCommand(
 								"vscode.open",
 								vscode.Uri.parse(
-									`https://azure.microsoft.com/en-us/free/?WT.mc_id=${Constants.CampaignID}`
-								)
+									`https://azure.microsoft.com/en-us/free/?WT.mc_id=${Constants.CampaignID}`,
+								),
 							);
 							TelemetryClient.sendEvent(
-								"General.Open.AzureRegistrationPage"
+								"General.Open.AzureRegistrationPage",
 							);
 							break;
 						case GoToAzureIoTHubPage:
 							vscode.commands.executeCommand(
 								"vscode.open",
 								vscode.Uri.parse(
-									`https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-get-started?WT.mc_id=${Constants.CampaignID}`
-								)
+									`https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-get-started?WT.mc_id=${Constants.CampaignID}`,
+								),
 							);
 							TelemetryClient.sendEvent(
-								"General.Open.AzureIoTHubPage"
+								"General.Open.AzureIoTHubPage",
 							);
 							break;
 						case DoNotShowAgain:
 							config.update(
 								Constants.ShowIoTHubInfoKey,
 								false,
-								true
+								true,
 							);
 							TelemetryClient.sendEvent(
-								"General.IoTHubInfo.DoNotShowAgain"
+								"General.IoTHubInfo.DoNotShowAgain",
 							);
 							break;
 						default:

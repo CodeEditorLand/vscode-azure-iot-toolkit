@@ -1,6 +1,6 @@
 import $ from "jquery";
 
-$(function () {
+$(() => {
 	main();
 });
 
@@ -27,8 +27,8 @@ function main() {
 	});
 
 	$(window).scroll(() => {
-		let offset = 250;
-		let duration = 600;
+		const offset = 250;
+		const duration = 600;
 		if ($(this).scrollTop() >= offset) {
 			$("#back-to-top").fadeIn(duration);
 		} else {

@@ -5,8 +5,6 @@
 
 //@ts-check
 
-"use strict";
-
 const copyPlugin = require("copy-webpack-plugin");
 const failOnErrorsPlugin = require("fail-on-errors-webpack-plugin");
 const terserWebpackPlugin = require("terser-webpack-plugin");
@@ -89,13 +87,13 @@ const extensionConfig = {
 		new webpack.ContextReplacementPlugin(
 			/applicationinsights[\/\\]out[\/\\]AutoCollection/,
 			false,
-			/$^/
+			/$^/,
 		),
 		new webpack.ContextReplacementPlugin(/ms-rest[\/\\]lib/, false, /$^/),
 		new webpack.ContextReplacementPlugin(
 			/applicationinsights[\/\\]out[\/\\]Library/,
 			false,
-			/$^/
+			/$^/,
 		),
 		// Pack node_modules/getos/logic/*.js
 		new webpack.ContextReplacementPlugin(/getos/, /logic[\/\\].*\.js/),

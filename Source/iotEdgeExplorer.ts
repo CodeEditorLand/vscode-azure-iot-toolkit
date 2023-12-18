@@ -1,18 +1,17 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-"use strict";
+import * as fs from "fs";
+import * as path from "path";
 import Ajv from "ajv";
 import axios from "axios";
 import * as iothub from "azure-iothub";
-import * as fs from "fs";
-import * as path from "path";
 import stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
-import { BaseExplorer } from "./baseExplorer";
-import { Constants } from "./constants";
 import { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
+import { BaseExplorer } from "./baseExplorer";
+import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
@@ -26,7 +25,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle
+			Constants.IotHubConnectionStringTitle,
 		);
 		if (!iotHubConnectionString) {
 			return;
@@ -57,18 +56,18 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			iotHubConnectionString,
 			deviceItem.deviceId,
 			deploymentJson,
-			from
+			from,
 		);
 	}
 
 	public async createDeploymentAtScale(fileUri?: vscode.Uri) {
 		TelemetryClient.sendEvent(
-			Constants.IoTHubAIEdgeDeployAtScaleStartEvent
+			Constants.IoTHubAIEdgeDeployAtScaleStartEvent,
 		);
 
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle
+			Constants.IotHubConnectionStringTitle,
 		);
 		if (!iotHubConnectionString) {
 			return;
@@ -88,7 +87,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			await this.getModuleTwinById(
 				moduleItem.deviceId,
 				moduleItem.moduleId,
-				moduleItem.contextValue
+				moduleItem.contextValue,
 			);
 		}
 	}
@@ -97,7 +96,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		TelemetryClient.sendEvent(Constants.IoTHubAIUpdateModuleTwinStartEvent);
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle
+			Constants.IotHubConnectionStringTitle,
 		);
 		if (!iotHubConnectionString) {
 			return;
@@ -106,7 +105,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		try {
 			this._outputChannel.show();
 			const moduleTwinContent = await Utility.readFromActiveFile(
-				Constants.ModuleTwinJosnFileName
+				Constants.ModuleTwinJosnFileName,
 			);
 			if (!moduleTwinContent) {
 				return;
@@ -114,39 +113,39 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			const moduleTwinJson = JSON.parse(moduleTwinContent);
 			if (moduleTwinJson.moduleId.startsWith("$")) {
 				throw new Error(
-					"Azure IoT Edge system modules are readonly and cannot be modified. Changes can be submitted via deploying a configuration."
+					"Azure IoT Edge system modules are readonly and cannot be modified. Changes can be submitted via deploying a configuration.",
 				);
 			}
 			this.outputLine(
 				Constants.IoTHubModuleTwinLabel,
-				`Update Module Twin for [${moduleTwinJson.deviceId}][${moduleTwinJson.moduleId}]...`
+				`Update Module Twin for [${moduleTwinJson.deviceId}][${moduleTwinJson.moduleId}]...`,
 			);
 			await Utility.updateModuleTwin(
 				iotHubConnectionString,
 				moduleTwinJson.deviceId,
 				moduleTwinJson.moduleId,
-				moduleTwinContent
+				moduleTwinContent,
 			);
 			this.outputLine(
 				Constants.IoTHubModuleTwinLabel,
-				`Module Twin updated successfully`
+				`Module Twin updated successfully`,
 			);
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAIUpdateModuleTwinDoneEvent,
-				{ Result: "Success" }
+				{ Result: "Success" },
 			);
 			await this.getModuleTwinById(
 				moduleTwinJson.deviceId,
-				moduleTwinJson.moduleId
+				moduleTwinJson.moduleId,
 			);
 		} catch (error) {
 			this.outputLine(
 				Constants.IoTHubModuleTwinLabel,
-				`Failed to update Module Twin: ${error}`
+				`Failed to update Module Twin: ${error}`,
 			);
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAIUpdateModuleTwinDoneEvent,
-				{ Result: "Fail", [Constants.errorProperties.Message]: error }
+				{ Result: "Fail", [Constants.errorProperties.Message]: error },
 			);
 		}
 	}
@@ -161,8 +160,8 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			vscode.window.showErrorMessage(
 				`There are errors in deployment json file: ${ajv.errorsText(
 					null,
-					{ separator: ", " }
-				)}`
+					{ separator: ", " },
+				)}`,
 			);
 			return false;
 		}
@@ -202,7 +201,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 					}
 				} catch (error) {
 					vscode.window.showErrorMessage(
-						`CreateOptions of "${moduleName}" is not a valid JSON string: ${error.message}`
+						`CreateOptions of "${moduleName}" is not a valid JSON string: ${error.message}`,
 					);
 					return false;
 				}
@@ -223,14 +222,14 @@ export class IoTEdgeExplorer extends BaseExplorer {
 	private async getModuleTwinById(
 		deviceId: string,
 		moduleId: string,
-		moduleType: string = "unknown"
+		moduleType = "unknown",
 	) {
 		TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent, {
 			moduleType,
 		});
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
-			Constants.IotHubConnectionStringTitle
+			Constants.IotHubConnectionStringTitle,
 		);
 		if (!iotHubConnectionString) {
 			return;
@@ -240,31 +239,31 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			const twin = await Utility.getModuleTwin(
 				iotHubConnectionString,
 				deviceId,
-				moduleId
+				moduleId,
 			);
 			Utility.writeJson(Constants.ModuleTwinJosnFilePath, twin);
 			const document = await vscode.workspace.openTextDocument(
-				Constants.ModuleTwinJosnFilePath
+				Constants.ModuleTwinJosnFilePath,
 			);
 			if (document.isDirty) {
 				throw new Error(
-					`Your ${Constants.ModuleTwinJosnFileName} has unsaved changes. Please close or save the file. Then try again.`
+					`Your ${Constants.ModuleTwinJosnFileName} has unsaved changes. Please close or save the file. Then try again.`,
 				);
 			}
 			vscode.window.showTextDocument(document);
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAIGetModuleTwinDoneEvent,
-				{ Result: "Success" }
+				{ Result: "Success" },
 			);
 		} catch (error) {
 			this._outputChannel.show();
 			this.outputLine(
 				Constants.IoTHubModuleTwinLabel,
-				`Failed to get Module Twin: ${error}`
+				`Failed to get Module Twin: ${error}`,
 			);
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAIGetModuleTwinDoneEvent,
-				{ Result: "Fail", [Constants.errorProperties.Message]: error }
+				{ Result: "Fail", [Constants.errorProperties.Message]: error },
 			);
 		}
 	}
@@ -287,7 +286,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 		if (path.basename(filePath).endsWith(".template.json")) {
 			vscode.window.showWarningMessage(
-				"Please select deployment manifest file under 'config' folder for deployment."
+				"Please select deployment manifest file under 'config' folder for deployment.",
 			);
 			return "";
 		}
@@ -307,7 +306,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 					this.isValidCreateOptions(
 						contentJson.modulesContent.$edgeAgent[
 							"properties.desired"
-						]
+						],
 					);
 
 				if (!isValid) {
@@ -316,14 +315,14 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			} catch (error) {
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAIValidateJsonSchemaEvent,
-					{ [Constants.errorProperties.Message]: error.message }
+					{ [Constants.errorProperties.Message]: error.message },
 				);
 			}
 
 			content = JSON.stringify(contentJson, null, 2);
 		} catch (error) {
 			vscode.window.showErrorMessage(
-				"Failed to parse deployment manifest: " + error.toString()
+				"Failed to parse deployment manifest: " + error.toString(),
 			);
 			return "";
 		}
@@ -335,7 +334,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		iotHubConnectionString: string,
 		deviceId: string,
 		deploymentJson: string,
-		from: string
+		from: string,
 	) {
 		const label = Constants.IoTHubEdgeLabel;
 		this._outputChannel.show();
@@ -344,12 +343,12 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 		try {
 			const registry = iothub.Registry.fromConnectionString(
-				iotHubConnectionString
+				iotHubConnectionString,
 			);
 			const deploymentJsonObject = JSON.parse(deploymentJson);
 			await registry.applyConfigurationContentOnDevice(
 				deviceId,
-				deploymentJsonObject
+				deploymentJsonObject,
 			);
 			this.outputLine(label, "Deployment succeeded.");
 			TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, {
@@ -376,7 +375,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 	private async deployAtScale(
 		iotHubConnectionString: string,
-		deploymentJson: string
+		deploymentJson: string,
 	) {
 		const deploymentJsonObject = JSON.parse(deploymentJson);
 		let modulesContent;
@@ -468,33 +467,33 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		this._outputChannel.show();
 		this.outputLine(
 			label,
-			`Start deployment with deployment id [${deploymentId}] and target condition [${targetCondition}]`
+			`Start deployment with deployment id [${deploymentId}] and target condition [${targetCondition}]`,
 		);
 
 		const registry = iothub.Registry.fromConnectionString(
-			iotHubConnectionString
+			iotHubConnectionString,
 		);
 		registry.addConfiguration(deploymentConfiguration, (err) => {
 			if (err) {
 				this.outputLine(
 					label,
-					`Deployment with deployment id [${deploymentId}] failed. ${err}`
+					`Deployment with deployment id [${deploymentId}] failed. ${err}`,
 				);
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAIEdgeDeployAtScaleDoneEvent,
 					{
 						Result: "Fail",
 						[Constants.errorProperties.Message]: err.message,
-					}
+					},
 				);
 			} else {
 				this.outputLine(
 					label,
-					`Deployment with deployment id [${deploymentId}] succeeded.`
+					`Deployment with deployment id [${deploymentId}] succeeded.`,
 				);
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAIEdgeDeployAtScaleDoneEvent,
-					{ Result: "Success" }
+					{ Result: "Success" },
 				);
 			}
 		});
