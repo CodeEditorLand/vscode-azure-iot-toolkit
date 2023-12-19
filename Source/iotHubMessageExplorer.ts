@@ -27,7 +27,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			deviceItem,
 			Constants.IoTHubAIMessageStartEvent,
 		);
-		if (!deviceItem || !deviceItem.connectionString) {
+		if (!deviceItem?.connectionString) {
 			return;
 		}
 		const deviceConnectionString: string = deviceItem.connectionString;

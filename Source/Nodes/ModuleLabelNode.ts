@@ -78,7 +78,7 @@ export class ModuleLabelNode implements INode {
 					{ Result: "Success" },
 				);
 				if (moduleList.length === 0) {
-					moduleList.push(new vscode.TreeItem(`No Modules`));
+					moduleList.push(new vscode.TreeItem("No Modules"));
 				}
 
 				const moduleNodeList: INode[] = [];

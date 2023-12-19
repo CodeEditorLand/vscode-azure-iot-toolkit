@@ -31,7 +31,7 @@ export class LocalServer {
 		const { port } = this.server.listen(0).address() as AddressInfo;
 		this.serverPort = port;
 		// tslint:disable-next-line:no-console
-		console.log("serverPort:" + this.serverPort);
+		console.log(`serverPort:${this.serverPort}`);
 	}
 
 	public stopServer(): void {
@@ -251,9 +251,9 @@ export class LocalServer {
 				case "File Upload":
 					// TODO: File Upload
 					break;
-				case "Text Content":
+				case "Text Content": {
 					switch (messageBodyType) {
-						case "Dummy Json":
+						case "Dummy Json": {
 							await this._simulator.sendD2CMessage(
 								deviceConnectionStrings,
 								template,
@@ -262,6 +262,7 @@ export class LocalServer {
 								interval,
 							);
 							break;
+						}
 						case "Plain Text":
 							await this._simulator.sendD2CMessage(
 								deviceConnectionStrings,
@@ -274,6 +275,7 @@ export class LocalServer {
 							break;
 					}
 					break;
+				}
 				default:
 					break;
 			}

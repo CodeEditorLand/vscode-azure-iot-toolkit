@@ -15,7 +15,7 @@ const aiKey: string = packageJSON.aiKey;
 
 export class TelemetryClient {
 	public static initialize(context: vscode.ExtensionContext) {
-		this._extensionContext = context;
+		TelemetryClient._extensionContext = context;
 	}
 
 	public static async sendEvent(
@@ -24,20 +24,20 @@ export class TelemetryClient {
 		iotHubConnectionString?: string,
 		measurements?: { [key: string]: number },
 	) {
-		properties = await this.addCommonProperties(
+		properties = await TelemetryClient.addCommonProperties(
 			properties,
 			iotHubConnectionString,
 		);
 		const errorProperties = Object.values(Constants.errorProperties);
-		if (this.hasErrorProperties(properties, errorProperties)) {
-			this._client.sendTelemetryErrorEvent(
+		if (TelemetryClient.hasErrorProperties(properties, errorProperties)) {
+			TelemetryClient._client.sendTelemetryErrorEvent(
 				eventName,
 				properties,
 				measurements,
 				errorProperties,
 			);
 		} else {
-			this._client.sendTelemetryEvent(
+			TelemetryClient._client.sendTelemetryEvent(
 				eventName,
 				properties,
 				measurements,
@@ -48,8 +48,8 @@ export class TelemetryClient {
 			eventName.startsWith("AZ.") &&
 			eventName !== Constants.IoTHubAILoadDeviceTreeEvent
 		) {
-			if (this._extensionContext) {
-				NSAT.takeSurvey(this._extensionContext);
+			if (TelemetryClient._extensionContext) {
+				NSAT.takeSurvey(TelemetryClient._extensionContext);
 			}
 		}
 	}
@@ -89,7 +89,8 @@ export class TelemetryClient {
 			}
 		}
 
-		newProperties.IsInternal = this._isInternal === true ? "true" : "false";
+		newProperties.IsInternal =
+			TelemetryClient._isInternal === true ? "true" : "false";
 
 		return newProperties;
 	}

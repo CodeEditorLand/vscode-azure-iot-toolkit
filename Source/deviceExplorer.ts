@@ -11,10 +11,6 @@ import { Utility } from "./utility";
 import iothub = require("azure-iothub");
 
 export class DeviceExplorer extends BaseExplorer {
-	constructor(outputChannel: vscode.OutputChannel) {
-		super(outputChannel);
-	}
-
 	public async listDevice() {
 		const label = "Device";
 		const iotHubConnectionString = await Utility.getConnectionString(
@@ -170,7 +166,7 @@ export class DeviceExplorer extends BaseExplorer {
 			deviceItem,
 			"AZ.Device.Delete.Start",
 		);
-		if (deviceItem && deviceItem.label) {
+		if (deviceItem?.label) {
 			const result = await vscode.window.showWarningMessage(
 				`${Constants.DeleteMessage} "${deviceItem.label}"?`,
 				{ modal: true },

@@ -11,7 +11,7 @@ export class TwinItem extends TreeItem {
 	) {
 		super(propertyLabel);
 		this.type = type;
-		this.contextValue = type + "-distributed-twin-properies";
+		this.contextValue = `${type}-distributed-twin-properies`;
 		this.collapsibleState = TreeItemCollapsibleState.Expanded;
 	}
 }

@@ -6,8 +6,6 @@ import { INode } from "../INode";
 import { BuiltInEndpointItemNode } from "./BuiltInEndpointItemNode";
 
 export class BuiltInEndpointLabelNode implements INode {
-	constructor() {}
-
 	public getTreeItem(): vscode.TreeItem {
 		return {
 			label: "Built-in endpoints",

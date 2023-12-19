@@ -2,13 +2,13 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // Run 'npm install azure-iot-device-mqtt' to install the required libraries for this application
-var Client = require("azure-iot-device").Client;
-var Protocol = require("azure-iot-device-mqtt").Mqtt;
+const Client = require("azure-iot-device").Client;
+const Protocol = require("azure-iot-device-mqtt").Mqtt;
 
-var connectionString = "{{deviceConnectionString}}";
+const connectionString = "{{deviceConnectionString}}";
 
 // create the IoTHub client
-var client = Client.fromConnectionString(connectionString, Protocol);
+const client = Client.fromConnectionString(connectionString, Protocol);
 console.log("got client");
 
 // connect to the hub
@@ -34,7 +34,7 @@ client.open((err) => {
 				});
 
 				// create a patch to send to the hub
-				var patch = {
+				const patch = {
 					firmwareVersion: "1.2.2",
 					weather: {
 						temperature: 72,
@@ -46,7 +46,7 @@ client.open((err) => {
 				twin.properties.reported.update(patch, (err) => {
 					if (err) {
 						console.error(
-							"unable to update twin: " + err.toString(),
+							`unable to update twin: ${err.toString()}`,
 						);
 						process.exit(-1);
 					} else {

@@ -9,11 +9,12 @@ export class Executor {
 		command: string,
 		terminal = "Azure IoT Hub",
 	): void {
-		if (this.terminals[terminal] === undefined) {
-			this.terminals[terminal] = vscode.window.createTerminal(terminal);
+		if (Executor.terminals[terminal] === undefined) {
+			Executor.terminals[terminal] =
+				vscode.window.createTerminal(terminal);
 		}
-		this.terminals[terminal].show();
-		this.terminals[terminal].sendText(command);
+		Executor.terminals[terminal].show();
+		Executor.terminals[terminal].sendText(command);
 	}
 
 	public static exec(command: string) {
@@ -25,7 +26,7 @@ export class Executor {
 	}
 
 	public static onDidCloseTerminal(closedTerminal: vscode.Terminal): void {
-		delete this.terminals[closedTerminal.name];
+		delete Executor.terminals[closedTerminal.name];
 	}
 
 	private static terminals: { [id: string]: vscode.Terminal } = {};

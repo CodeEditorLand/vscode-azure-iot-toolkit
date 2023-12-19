@@ -13,10 +13,6 @@ export class SnippetManager extends BaseExplorer {
 		Constants.IotHubConnectionStringKey,
 	];
 
-	constructor(outputChannel: vscode.OutputChannel) {
-		super(outputChannel);
-	}
-
 	public replaceConnectionString(
 		event: vscode.TextDocumentChangeEvent,
 	): void {
@@ -63,7 +59,7 @@ export class SnippetManager extends BaseExplorer {
 								connectionStringValue,
 							);
 							TelemetryClient.sendEvent(
-								`Snippet.ReplaceConnectionString`,
+								"Snippet.ReplaceConnectionString",
 								{ Type: connectionStringKey },
 							);
 						});
@@ -78,6 +74,6 @@ export class SnippetManager extends BaseExplorer {
 	}
 
 	private getTextWithAngleBracket(text: string): string {
-		return "<" + text + ">";
+		return `<${text}>`;
 	}
 }

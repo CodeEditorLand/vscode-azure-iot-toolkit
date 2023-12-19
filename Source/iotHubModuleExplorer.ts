@@ -12,10 +12,6 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IotHubModuleExplorer extends BaseExplorer {
-	constructor(outputChannel: vscode.OutputChannel) {
-		super(outputChannel);
-	}
-
 	public async getModule(moduleItem: ModuleItem) {
 		TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleStartEvent);
 		const label = "Module";

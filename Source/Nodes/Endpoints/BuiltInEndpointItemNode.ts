@@ -5,8 +5,6 @@ import * as vscode from "vscode";
 import { INode } from "../INode";
 
 export class BuiltInEndpointItemNode implements INode {
-	constructor() {}
-
 	public getTreeItem(): vscode.TreeItem {
 		return {
 			label: "events",

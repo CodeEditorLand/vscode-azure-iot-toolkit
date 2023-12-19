@@ -2,18 +2,18 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // Run 'npm install azure-iothub' to install the required libraries for this application
-var Registry = require("azure-iothub").Registry;
+const Registry = require("azure-iothub").Registry;
 
-var connectionString = "{{iotHubConnectionString}}";
-var deviceId = "{{deviceId}}";
+const connectionString = "{{iotHubConnectionString}}";
+const deviceId = "{{deviceId}}";
 
-var registry = Registry.fromConnectionString(connectionString);
+const registry = Registry.fromConnectionString(connectionString);
 registry.getTwin(deviceId, (err, twin) => {
 	if (err) {
 		console.error(err.message);
 	} else {
 		console.log(JSON.stringify(twin, null, 2));
-		var twinPatch = {
+		const twinPatch = {
 			tags: {
 				city: "Redmond",
 			},

@@ -8,7 +8,10 @@ import { Constants } from "./constants";
 export class CredentialStore {
 	public static getPassword(account: string): Promise<string> {
 		try {
-			return this.keytar.getPassword(Constants.ExtensionId, account);
+			return CredentialStore.keytar.getPassword(
+				Constants.ExtensionId,
+				account,
+			);
 		} catch (error) {
 			return Constants.ExtensionContext.globalState.get(account);
 		}
@@ -16,7 +19,7 @@ export class CredentialStore {
 
 	public static async setPassword(account: string, password: string) {
 		try {
-			await this.keytar.setPassword(
+			await CredentialStore.keytar.setPassword(
 				Constants.ExtensionId,
 				account,
 				password,

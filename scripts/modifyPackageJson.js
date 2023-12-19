@@ -20,4 +20,4 @@ for (let i = 3; i < cnt; i += 2) {
 	packageJson[process.argv[i - 1]] = process.argv[i];
 }
 
-fs.writeFileSync("package.json", JSON.stringify(packageJson, null, 2) + "\n");
+fs.writeFileSync("package.json", `${JSON.stringify(packageJson, null, 2)}\n`);

@@ -42,9 +42,9 @@ export class Utility {
 		askForConnectionString = true,
 		helpfile = "iot-hub-connection-string.md",
 	) {
-		const connectionString = await this.getConnectionStringWithId(id);
+		const connectionString = await Utility.getConnectionStringWithId(id);
 		if (!connectionString && askForConnectionString) {
-			return this.setConnectionString(id, name, helpfile);
+			return Utility.setConnectionString(id, name, helpfile);
 		}
 		return connectionString;
 	}
@@ -63,7 +63,7 @@ export class Utility {
 			input.ignoreFocusOut = true;
 			input.onDidAccept(async () => {
 				value = input.value;
-				if (this.isValidConnectionString(id, value)) {
+				if (Utility.isValidConnectionString(id, value)) {
 					TelemetryClient.sendEvent("General.SetConfig.Done", {
 						Result: "Success",
 					});
@@ -96,7 +96,7 @@ export class Utility {
 				resolve();
 				input.dispose();
 				if (!value) {
-					this.showIoTHubInformationMessage();
+					Utility.showIoTHubInformationMessage();
 				}
 			});
 			input.show();
@@ -108,7 +108,7 @@ export class Utility {
 		if (!configValue) {
 			configValue = Utility.getConfiguration().get<string>(id);
 		}
-		if (!this.isValidConnectionString(id, configValue)) {
+		if (!Utility.isValidConnectionString(id, configValue)) {
 			return null;
 		}
 		return configValue;
@@ -310,17 +310,14 @@ export class Utility {
 				);
 				if (module.moduleId.startsWith("$")) {
 					const moduleId = module.moduleId.substring(1);
-					if (
-						desiredTwin.systemModules &&
-						desiredTwin.systemModules[moduleId]
-					) {
+					if (desiredTwin.systemModules?.[moduleId]) {
 						return new ModuleItem(
 							deviceItem,
 							module.moduleId,
 							module.connectionString,
 							module.connectionState,
 							reportedTwin
-								? this.getModuleRuntimeStatus(
+								? Utility.getModuleRuntimeStatus(
 										moduleId,
 										reportedTwin.systemModules,
 								  )
@@ -329,17 +326,14 @@ export class Utility {
 							"edge-module",
 						);
 					}
-				} else if (
-					desiredTwin.modules &&
-					desiredTwin.modules[module.moduleId]
-				) {
+				} else if (desiredTwin.modules?.[module.moduleId]) {
 					return new ModuleItem(
 						deviceItem,
 						module.moduleId,
 						module.connectionString,
 						module.connectionState,
 						reportedTwin
-							? this.getModuleRuntimeStatus(
+							? Utility.getModuleRuntimeStatus(
 									module.moduleId,
 									reportedTwin.modules,
 							  )
@@ -431,8 +425,7 @@ export class Utility {
 	public static async readFromActiveFile(fileName: string): Promise<string> {
 		const activeTextEditor = vscode.window.activeTextEditor;
 		if (
-			!activeTextEditor ||
-			!activeTextEditor.document ||
+			!activeTextEditor?.document ||
 			path.basename(activeTextEditor.document.fileName) !== fileName
 		) {
 			vscode.window.showWarningMessage(
@@ -527,7 +520,7 @@ export class Utility {
 	public static async getNoneEdgeDeviceIdList(
 		iotHubConnectionString: string,
 	): Promise<string[]> {
-		const noneEdgeDevices = await this.queryDeviceTwins(
+		const noneEdgeDevices = await Utility.queryDeviceTwins(
 			iotHubConnectionString,
 			false,
 		);
@@ -590,8 +583,8 @@ export class Utility {
 		const items = [];
 		items.push(new InfoNode(`Failed to list ${item}`));
 		items.push(new InfoNode(`Error: ${error}`));
-		items.push(new InfoNode(`Try another IoT Hub?`));
-		items.push(...this.getDefaultTreeItems());
+		items.push(new InfoNode("Try another IoT Hub?"));
+		items.push(...Utility.getDefaultTreeItems());
 		return items;
 	}
 
@@ -650,7 +643,7 @@ export class Utility {
 	public static getAzureAccountApi(): AzureAccount {
 		return vscode.extensions.getExtension<AzureAccount>(
 			"ms-vscode.azure-account",
-		)!.exports;
+		)?.exports;
 	}
 
 	public static getMessageFromEventData(message: any): any {
@@ -751,9 +744,7 @@ export class Utility {
 
 	public static getReportedInterfacesFromDigitalTwin(interfaces) {
 		return (
-			interfaces &&
-			interfaces.interfaces &&
-			interfaces.interfaces[Constants.modelDiscoveryInterfaceName] &&
+			interfaces?.interfaces?.[Constants.modelDiscoveryInterfaceName] &&
 			interfaces.interfaces[Constants.modelDiscoveryInterfaceName]
 				.properties &&
 			interfaces.interfaces[Constants.modelDiscoveryInterfaceName]
@@ -859,7 +850,7 @@ export class Utility {
 			iotHubConnectionString,
 		);
 		const query = registry.createQuery(
-			"SELECT * FROM DEVICES where capabilities.iotEdge=" + isEdge,
+			`SELECT * FROM DEVICES where capabilities.iotEdge=${isEdge}`,
 		);
 		return ((await query.nextAsTwin()) as ResultWithIncomingMessage<Twin[]>)
 			.result;
@@ -881,7 +872,7 @@ export class Utility {
 				)
 				.then((selection) => {
 					switch (selection) {
-						case GoToAzureRegistrationPage:
+						case GoToAzureRegistrationPage: {
 							vscode.commands.executeCommand(
 								"vscode.open",
 								vscode.Uri.parse(
@@ -892,7 +883,8 @@ export class Utility {
 								"General.Open.AzureRegistrationPage",
 							);
 							break;
-						case GoToAzureIoTHubPage:
+						}
+						case GoToAzureIoTHubPage: {
 							vscode.commands.executeCommand(
 								"vscode.open",
 								vscode.Uri.parse(
@@ -903,7 +895,8 @@ export class Utility {
 								"General.Open.AzureIoTHubPage",
 							);
 							break;
-						case DoNotShowAgain:
+						}
+						case DoNotShowAgain: {
 							config.update(
 								Constants.ShowIoTHubInfoKey,
 								false,
@@ -913,6 +906,7 @@ export class Utility {
 								"General.IoTHubInfo.DoNotShowAgain",
 							);
 							break;
+						}
 						default:
 					}
 				});
@@ -927,7 +921,7 @@ export class Utility {
 	}
 
 	private static getModuleRuntimeStatus(moduleId: string, modules): string {
-		if (modules && modules[moduleId]) {
+		if (modules?.[moduleId]) {
 			return modules[moduleId].runtimeStatus;
 		} else {
 			return undefined;

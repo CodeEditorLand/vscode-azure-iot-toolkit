@@ -9,16 +9,16 @@
 // an environment variable to make it available to your application
 // or use an x509 certificate.
 // https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-security
-var connectionString = "{{iotHubConnectionString}}";
+const connectionString = "{{iotHubConnectionString}}";
 
 // Using the Node.js SDK for Azure Event hubs:
 //   https://github.com/Azure/azure-event-hubs-node
 //   Run 'npm install azure-event-hubs' to install the required libraries for this application
 // The sample connects to an IoT hub's Event Hubs-compatible endpoint
 // to read messages sent from a device.
-var { EventHubClient, EventPosition } = require("azure-event-hubs");
+const { EventHubClient, EventPosition } = require("azure-event-hubs");
 
-var printError = (err) => {
+const printError = (err) => {
 	console.log(err.message);
 };
 
@@ -26,7 +26,7 @@ var printError = (err) => {
 // - Telemetry is sent in the message body
 // - The device can add arbitrary application properties to the message
 // - IoT Hub adds system properties, such as Device Id, to the message.
-var printMessage = (message) => {
+const printMessage = (message) => {
 	if (
 		"{{deviceId}}" ===
 		message.systemProperties["iothub-connection-device-id"]
@@ -43,7 +43,7 @@ var printMessage = (message) => {
 
 // Connect to the partitions on the IoT Hub's Event Hubs-compatible endpoint.
 // This example only reads messages sent after this application started.
-var ehClient;
+let ehClient;
 EventHubClient.createFromIotHubConnectionString(connectionString)
 	.then((client) => {
 		console.log(

@@ -14,8 +14,6 @@ import { CustomEndpointLabelNode } from "./CustomEndpointLabelNode";
 import { EventHubLabelNode } from "./EventHubLabelNode";
 
 export class EndpointsLabelNode implements INode {
-	constructor() {}
-
 	public getTreeItem(): vscode.TreeItem {
 		return {
 			label: "Endpoints",
@@ -34,7 +32,7 @@ export class EndpointsLabelNode implements INode {
 			const subscriptionId = Constants.ExtensionContext.globalState.get(
 				Constants.StateKeySubsID,
 			);
-			if (!subscriptionId || !(await accountApi.waitForLogin())) {
+			if (!(subscriptionId && (await accountApi.waitForLogin()))) {
 				return [this.getSelectIoTHubCommandNode()];
 			}
 

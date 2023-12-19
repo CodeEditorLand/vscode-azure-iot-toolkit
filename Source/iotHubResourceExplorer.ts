@@ -166,7 +166,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 						let errorMessage: string;
 						if (err.message) {
 							errorMessage = err.message;
-						} else if (err.body && err.body.message) {
+						} else if (err.body?.message) {
 							errorMessage = err.body.message;
 						} else {
 							errorMessage =
@@ -276,7 +276,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 			deviceItem,
 			"AZ.Copy.DeviceConnectionString",
 		);
-		if (deviceItem && deviceItem.connectionString) {
+		if (deviceItem?.connectionString) {
 			await vscode.env.clipboard.writeText(deviceItem.connectionString);
 		}
 	}
@@ -301,7 +301,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 			deviceItem,
 			"AZ.Generate.SasToken.Device",
 		);
-		if (deviceItem && deviceItem.connectionString) {
+		if (deviceItem?.connectionString) {
 			this.generateSasToken(
 				Utility.generateSasTokenForDevice,
 				deviceItem.connectionString,
@@ -319,10 +319,10 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		target: string,
 	) {
 		const expiryInHours = await vscode.window.showInputBox({
-			prompt: `Enter expiration time (hours)`,
+			prompt: "Enter expiration time (hours)",
 			ignoreFocusOut: true,
 			validateInput: (value: string) => {
-				if (!value || isNaN(parseFloat(value))) {
+				if (!value || Number.isNaN(parseFloat(value))) {
 					return "Provided expiration time is not a number, enter correct expiration time (hours).";
 				}
 			},

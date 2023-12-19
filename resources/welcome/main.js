@@ -14,8 +14,7 @@ function main() {
 
 	$(".interactive").click((event) => {
 		if (
-			!$(event.target).is("a") &&
-			!$(event.target).is(".detail") &&
+			!($(event.target).is("a") || $(event.target).is(".detail")) &&
 			$(event.target).parents(".detail").length === 0
 		) {
 			$(event.currentTarget).find(".detail").toggle(1000);

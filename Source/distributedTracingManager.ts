@@ -13,10 +13,6 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class DistributedTracingManager extends BaseExplorer {
-	constructor(outputChannel: vscode.OutputChannel) {
-		super(outputChannel);
-	}
-
 	public async updateDistributedTracingSetting(
 		node,
 		updateType: DistributedSettingUpdateType,
@@ -34,7 +30,9 @@ export class DistributedTracingManager extends BaseExplorer {
 		);
 
 		let deviceIds: string[] = [];
-		if (!node || !node.deviceNode) {
+		if (node?.deviceNode) {
+			deviceIds = [node.deviceNode.deviceId];
+		} else {
 			const selectedDeviceIds: string[] =
 				await vscode.window.showQuickPick(
 					Utility.getNoneEdgeDeviceIdList(iotHubConnectionString),
@@ -51,8 +49,6 @@ export class DistributedTracingManager extends BaseExplorer {
 			) {
 				deviceIds = selectedDeviceIds;
 			}
-		} else {
-			deviceIds = [node.deviceNode.deviceId];
 		}
 
 		if (deviceIds.length === 0) {
@@ -84,7 +80,7 @@ export class DistributedTracingManager extends BaseExplorer {
 		if (deviceIds.length === 1) {
 			await vscode.window.withProgress(
 				{
-					title: `Get Current Distributed Tracing Setting`,
+					title: "Get Current Distributed Tracing Setting",
 					location: vscode.ProgressLocation.Notification,
 				},
 				async () => {
@@ -130,7 +126,7 @@ export class DistributedTracingManager extends BaseExplorer {
 		if (updateType !== DistributedSettingUpdateType.OnlyMode) {
 			if (mode !== false) {
 				samplingRate = await this.promptForSamplingRate(
-					`Enter sampling rate, integer within [0, 100]`,
+					"Enter sampling rate, integer within [0, 100]",
 					samplingRate,
 				);
 
@@ -142,7 +138,7 @@ export class DistributedTracingManager extends BaseExplorer {
 
 		await vscode.window.withProgress(
 			{
-				title: `Update Distributed Tracing Setting`,
+				title: "Update Distributed Tracing Setting",
 				location: vscode.ProgressLocation.Notification,
 			},
 			async () => {
@@ -169,9 +165,11 @@ export class DistributedTracingManager extends BaseExplorer {
 
 					let resultTip = "";
 					if (result) {
-						resultTip =
-							"\nDetailed information are shown as below:\n" +
-							JSON.stringify(result, null, 2);
+						resultTip = `\nDetailed information are shown as below:\n${JSON.stringify(
+							result,
+							null,
+							2,
+						)}`;
 					}
 					this._outputChannel.show();
 					this.outputLine(
@@ -301,7 +299,7 @@ export class DistributedTracingManager extends BaseExplorer {
 	}
 
 	private generateQureyCondition(deviceids: string[]): string {
-		const deviceIdsWithQuotes = deviceids.map((id) => "'" + id + "'");
+		const deviceIdsWithQuotes = deviceids.map((id) => `'${id}'`);
 		return `deviceId IN [${deviceIdsWithQuotes.join(",")}]`;
 	}
 
@@ -356,8 +354,7 @@ export class DistributedTracingManager extends BaseExplorer {
 					const containsOnlyNumber = /^\d+$/.test(value);
 					const floatValue: number = parseFloat(value);
 					if (
-						!containsOnlyNumber ||
-						!Number.isInteger(floatValue) ||
+						!(containsOnlyNumber && Number.isInteger(floatValue)) ||
 						floatValue < 0 ||
 						floatValue > 100
 					) {

@@ -16,10 +16,6 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IoTEdgeExplorer extends BaseExplorer {
-	constructor(outputChannel: vscode.OutputChannel) {
-		super(outputChannel);
-	}
-
 	public async createDeployment(input?: DeviceNode | vscode.Uri) {
 		TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployStartEvent);
 
@@ -128,7 +124,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			);
 			this.outputLine(
 				Constants.IoTHubModuleTwinLabel,
-				`Module Twin updated successfully`,
+				"Module Twin updated successfully",
 			);
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAIUpdateModuleTwinDoneEvent,
@@ -297,7 +293,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			// Backward compatibility for old schema using 'moduleContent'
 			if (!contentJson.modulesContent && contentJson.moduleContent) {
 				contentJson.modulesContent = contentJson.moduleContent;
-				delete contentJson.moduleContent;
+				contentJson.moduleContent = undefined;
 			}
 
 			try {
@@ -322,7 +318,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			content = JSON.stringify(contentJson, null, 2);
 		} catch (error) {
 			vscode.window.showErrorMessage(
-				"Failed to parse deployment manifest: " + error.toString(),
+				`Failed to parse deployment manifest: ${error.toString()}`,
 			);
 			return "";
 		}
@@ -359,7 +355,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		} catch (err) {
 			this.outputLine(label, `Deployment failed. ${err}`);
 			let detailedMessage = "";
-			if (err && err.responseBody) {
+			if (err?.responseBody) {
 				detailedMessage = err.responseBody;
 				this.outputLine(label, err.responseBody);
 			}
@@ -381,10 +377,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		let modulesContent;
 		if (deploymentJsonObject.modulesContent) {
 			modulesContent = deploymentJsonObject.modulesContent;
-		} else if (
-			deploymentJsonObject.content &&
-			deploymentJsonObject.content.modulesContent
-		) {
+		} else if (deploymentJsonObject.content?.modulesContent) {
 			modulesContent = deploymentJsonObject.content.modulesContent;
 		}
 		if (!modulesContent) {

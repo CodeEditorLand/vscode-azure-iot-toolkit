@@ -12,10 +12,6 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IotHubDirectMethodExplorer extends BaseExplorer {
-	constructor(outputChannel: vscode.OutputChannel) {
-		super(outputChannel);
-	}
-
 	public async invokeDeviceDirectMethod(deviceItem: DeviceItem) {
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,

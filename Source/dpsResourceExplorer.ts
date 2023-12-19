@@ -54,7 +54,7 @@ export class DpsResourceExplorer extends BaseExplorer {
 			dpsInfo = node.dps; // Fallback to use cached properties if regex match fails
 		}
 		const propertyInfo = {
-			label: dpsInfo.name + "-properties",
+			label: `${dpsInfo.name}-properties`,
 			fullId: dpsInfo.id,
 		};
 

@@ -37,7 +37,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 			Constants.IoTHubAIC2DMessageStartEvent,
 		);
 
-		if (deviceItem && deviceItem.label) {
+		if (deviceItem?.label) {
 			this.sendC2DMessageById(iotHubConnectionString, deviceItem.label);
 		}
 	}
@@ -56,7 +56,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 			deviceItem,
 			Constants.IoTHubAIStartMonitorC2DEvent,
 		);
-		if (!deviceItem || !deviceItem.connectionString) {
+		if (!deviceItem?.connectionString) {
 			return;
 		}
 
@@ -91,7 +91,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 		deviceId: string,
 	): void {
 		vscode.window
-			.showInputBox({ prompt: `Enter message to send to device` })
+			.showInputBox({ prompt: "Enter message to send to device" })
 			.then((messageBody) => {
 				if (messageBody !== undefined) {
 					const serviceClient = ServiceClient.fromConnectionString(
@@ -148,11 +148,10 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 				this._deviceClient.on("message", (msg) => {
 					this.outputLine(
 						Constants.IoTHubC2DMessageMonitorLabel,
-						"Message Received: " + msg.getData(),
+						`Message Received: ${msg.getData()}`,
 					);
 					if (
-						msg.properties &&
-						msg.properties.propertyList &&
+						msg.properties?.propertyList &&
 						msg.properties.propertyList.length > 0
 					) {
 						this._outputChannel.appendLine("Properties:");
@@ -174,13 +173,13 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 		if (err) {
 			this.outputLine(
 				Constants.IoTHubC2DMessageMonitorLabel,
-				"Error: " + err.toString(),
+				`Error: ${err.toString()}`,
 			);
 		}
 		if (res) {
 			this.outputLine(
 				Constants.IoTHubC2DMessageMonitorLabel,
-				"Status: " + res.constructor.name,
+				`Status: ${res.constructor.name}`,
 			);
 		}
 	};

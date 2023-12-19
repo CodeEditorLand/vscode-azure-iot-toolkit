@@ -10,10 +10,6 @@ import { TelemetryClient } from "./telemetryClient";
 import { Utility } from "./utility";
 
 export class IotHubDeviceTwinExplorer extends BaseExplorer {
-	constructor(outputChannel: vscode.OutputChannel) {
-		super(outputChannel);
-	}
-
 	public async getDeviceTwin(deviceItem: DeviceItem) {
 		deviceItem = await Utility.getInputDevice(
 			deviceItem,
@@ -52,7 +48,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 			} else {
 				this.outputLine(
 					Constants.IoTHubDeviceTwinLabel,
-					`Device Twin retrieved successfully`,
+					"Device Twin retrieved successfully",
 				);
 				Utility.writeJson(Constants.DeviceTwinJosnFilePath, twin);
 				vscode.workspace
@@ -107,7 +103,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 					} else {
 						this.outputLine(
 							Constants.IoTHubDeviceTwinLabel,
-							`Device Twin updated successfully`,
+							"Device Twin updated successfully",
 						);
 						this.getDeviceTwinById(deviceTwinJson.deviceId);
 					}

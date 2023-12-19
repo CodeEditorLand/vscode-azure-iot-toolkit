@@ -122,11 +122,10 @@ export class Simulator {
 					eventName,
 					{
 						Result: "Success",
-						DeviceNumber:
-							"" + properties.deviceConnectionStrings.length,
-						IterationsPerDevice: "" + properties.numbers,
-						Interval: "" + properties.interval,
-						MessageBodyType: "" + properties.messageBodyType,
+						DeviceNumber: `${properties.deviceConnectionStrings.length}`,
+						IterationsPerDevice: `${properties.numbers}`,
+						Interval: `${properties.interval}`,
+						MessageBodyType: `${properties.messageBodyType}`,
 					},
 					this.iotHubConnectionString,
 				);
@@ -135,8 +134,8 @@ export class Simulator {
 					eventName,
 					{
 						Result: "Fail",
-						[Constants.errorProperties.Message]:
-							"" + properties.reason,
+						[Constants.errorProperties
+							.Message]: `${properties.reason}`,
 					},
 					this.iotHubConnectionString,
 				);
@@ -206,13 +205,10 @@ export class Simulator {
 					);
 				} catch (err) {
 					vscode.window.showErrorMessage(
-						"Failed to launch Send D2C Messages webview: " +
-							err.message,
+						`Failed to launch Send D2C Messages webview: ${err.message}`,
 					);
 					this.telemetry(Constants.SimulatorLaunchEvent, false, {
-						error:
-							"Failed to launch Send D2C Messages webview: " +
-							err.message,
+						error: `Failed to launch Send D2C Messages webview: ${err.message}`,
 					});
 					return;
 				}
@@ -385,7 +381,7 @@ export class Simulator {
 		const deviceCount = deviceConnectionStrings.length;
 		const total = deviceCount * numbers;
 		if (total <= 0) {
-			this.output(`Invalid Operation.`);
+			this.output("Invalid Operation.");
 			return;
 		}
 		const startTime = new Date();
@@ -434,7 +430,7 @@ export class Simulator {
 		const endTime = new Date();
 		this.output(
 			this.cancelToken
-				? `User aborted.`
+				? "User aborted."
 				: `All device(s) finished sending in ${
 						(endTime.getTime() - startTime.getTime()) / 1000
 				  } second(s).`,

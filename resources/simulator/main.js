@@ -43,7 +43,7 @@ const dummyJsonTemplate = `{
 }
 `;
 
-const plainTextTemplate = `Hello from Azure IoT!`;
+const plainTextTemplate = "Hello from Azure IoT!";
 
 const introductionTemplate = `This page is intended to help you quickly send D2C messages.
 You only need to specify the device, the number of times, the delivery interval, and the data template.
@@ -236,15 +236,18 @@ const app = new Vue({
 				if (valid) {
 					let intervalInMilliSecond = Number(this.formItem.interval);
 					switch (this.intervalUnit) {
-						case "minute":
+						case "minute": {
 							intervalInMilliSecond *= 60000;
 							break;
-						case "second":
+						}
+						case "second": {
 							intervalInMilliSecond *= 1000;
 							break;
-						case "millisecond":
+						}
+						case "millisecond": {
 							intervalInMilliSecond *= 1;
 							break;
+						}
 					}
 					const data = {
 						deviceConnectionStrings:
@@ -338,7 +341,7 @@ const app = new Vue({
 		},
 		deviceSelectFilter(query) {
 			query = query.toLowerCase();
-			if (query != "") {
+			if (query !== "") {
 				this.filteredInputDeviceList = [];
 				for (let i = 0; i < this.inputDeviceList.length; i++) {
 					if (

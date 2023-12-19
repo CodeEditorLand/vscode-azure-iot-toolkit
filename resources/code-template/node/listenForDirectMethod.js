@@ -9,20 +9,20 @@
 // an environment variable to make it available to your application
 // or use an HSM or an x509 certificate.
 // https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-security
-var connectionString = "{{deviceConnectionString}}";
+const connectionString = "{{deviceConnectionString}}";
 
 // Using the Node.js Device SDK for IoT Hub:
 //   https://github.com/Azure/azure-iot-sdk-node
 //   Run 'npm install azure-iot-device-mqtt' to install the required libraries for this application
 // The sample connects to a device-specific MQTT endpoint on your IoT Hub.
-var Mqtt = require("azure-iot-device-mqtt").Mqtt;
-var DeviceClient = require("azure-iot-device").Client;
-var Message = require("azure-iot-device").Message;
+const Mqtt = require("azure-iot-device-mqtt").Mqtt;
+const DeviceClient = require("azure-iot-device").Client;
+const Message = require("azure-iot-device").Message;
 
-var client = DeviceClient.fromConnectionString(connectionString, Mqtt);
+const client = DeviceClient.fromConnectionString(connectionString, Mqtt);
 
 // Timeout created by setInterval
-var intervalLoop = null;
+let intervalLoop = null;
 
 // Function to handle the SetTelemetryInterval direct method call from IoT hub
 function onSetTelemetryInterval(request, response) {
@@ -30,14 +30,11 @@ function onSetTelemetryInterval(request, response) {
 	function directMethodResponse(err) {
 		if (err) {
 			console.error(
-				"An error ocurred when sending a method response:\n" +
-					err.toString(),
+				`An error ocurred when sending a method response:\n${err.toString()}`,
 			);
 		} else {
 			console.log(
-				"Response to method '" +
-					request.methodName +
-					"' sent successfully.",
+				`Response to method '${request.methodName}' sent successfully.`,
 			);
 		}
 	}
@@ -46,12 +43,12 @@ function onSetTelemetryInterval(request, response) {
 	console.log(request.payload);
 
 	// Check that a numeric value was passed as a parameter
-	if (isNaN(request.payload)) {
+	if (Number.isNaN(request.payload)) {
 		console.log("Invalid interval response received in payload");
 		// Report failure back to your hub.
 		response.send(
 			400,
-			"Invalid direct method parameter: " + request.payload,
+			`Invalid direct method parameter: ${request.payload}`,
 			directMethodResponse,
 		);
 	} else {
@@ -62,7 +59,7 @@ function onSetTelemetryInterval(request, response) {
 		// Report success back to your hub.
 		response.send(
 			200,
-			"Telemetry interval set: " + request.payload,
+			`Telemetry interval set: ${request.payload}`,
 			directMethodResponse,
 		);
 	}
@@ -71,8 +68,8 @@ function onSetTelemetryInterval(request, response) {
 // Send a telemetry message to your hub
 function sendMessage() {
 	// Simulate telemetry.
-	var temperature = 20 + Math.random() * 15;
-	var message = new Message(
+	const temperature = 20 + Math.random() * 15;
+	const message = new Message(
 		JSON.stringify({
 			temperature: temperature,
 			humidity: 60 + Math.random() * 20,
@@ -86,12 +83,12 @@ function sendMessage() {
 		temperature > 30 ? "true" : "false",
 	);
 
-	console.log("Sending message: " + message.getData());
+	console.log(`Sending message: ${message.getData()}`);
 
 	// Send the message.
 	client.sendEvent(message, (err) => {
 		if (err) {
-			console.error("send error: " + err.toString());
+			console.error(`send error: ${err.toString()}`);
 		} else {
 			console.log("message sent");
 		}
