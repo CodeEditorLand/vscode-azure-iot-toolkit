@@ -176,11 +176,11 @@ export class DistributedTracingManager extends BaseExplorer {
 						Constants.IoTHubDistributedTracingSettingLabel,
 						`Update distributed tracing setting for device [${deviceIds.join(
 							",",
-						)}] complete!` +
-							(mode === true
+						)}] complete!${
+							mode === true
 								? " (Distributed Tracing is in public preview stage and is available only in some regions, please check detail https://aka.ms/iottracing)"
-								: "") +
-							resultTip,
+								: ""
+						}${resultTip}`,
 					);
 
 					if (node instanceof DistributedTracingLabelNode) {
@@ -352,7 +352,7 @@ export class DistributedTracingManager extends BaseExplorer {
 						return "Sampling rate cannot be empty";
 					}
 					const containsOnlyNumber = /^\d+$/.test(value);
-					const floatValue: number = parseFloat(value);
+					const floatValue: number = Number.parseFloat(value);
 					if (
 						!(containsOnlyNumber && Number.isInteger(floatValue)) ||
 						floatValue < 0 ||
@@ -369,7 +369,7 @@ export class DistributedTracingManager extends BaseExplorer {
 
 		if (samplingRate !== undefined) {
 			samplingRate = samplingRate.trim();
-			const floatValue: number = parseFloat(samplingRate);
+			const floatValue: number = Number.parseFloat(samplingRate);
 			return floatValue;
 		}
 

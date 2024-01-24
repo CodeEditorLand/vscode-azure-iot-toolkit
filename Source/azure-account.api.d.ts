@@ -3,11 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { ReadStream } from "fs";
-import { SubscriptionModels } from "@azure/arm-subscriptions";
-import { Environment } from "@azure/ms-rest-azure-env";
-import { TokenCredentialsBase } from "@azure/ms-rest-nodeauth";
-import { CancellationToken, Event, Progress, Terminal } from "vscode";
+import type { ReadStream } from "node:fs";
+import type { SubscriptionModels } from "@azure/arm-subscriptions";
+import type { Environment } from "@azure/ms-rest-azure-env";
+import type { TokenCredentialsBase } from "@azure/ms-rest-nodeauth";
+import type { CancellationToken, Event, Progress, Terminal } from "vscode";
 
 export type AzureLoginStatus =
 	| "Initializing"

@@ -4,20 +4,20 @@
 import * as vscode from "vscode";
 import {
 	AzExtTreeDataProvider,
-	AzureTreeItem,
+	type AzureTreeItem,
 	AzureUserInput,
-	IActionContext,
+	type IActionContext,
 	createAzExtOutputChannel,
 	registerCommand,
 	registerUIExtensionVariables,
 } from "vscode-azureextensionui";
 import { DpsAccountTreeItem } from "./Nodes/DPS/DpsAccountTreeItem";
-import { DpsResourceTreeItem } from "./Nodes/DPS/DpsResourceTreeItem";
-import { DeviceNode } from "./Nodes/DeviceNode";
-import { EventHubItemNode } from "./Nodes/Endpoints/EventHubItemNode";
+import type { DpsResourceTreeItem } from "./Nodes/DPS/DpsResourceTreeItem";
+import type { DeviceNode } from "./Nodes/DeviceNode";
+import type { EventHubItemNode } from "./Nodes/Endpoints/EventHubItemNode";
 import { IoTHubAccountTreeItem } from "./Nodes/IoTHub/IoTHubAccountTreeItem";
-import { ModuleItemNode } from "./Nodes/ModuleItemNode";
-import { ModuleLabelNode } from "./Nodes/ModuleLabelNode";
+import type { ModuleItemNode } from "./Nodes/ModuleItemNode";
+import type { ModuleLabelNode } from "./Nodes/ModuleLabelNode";
 import { AzureDpsExplorer } from "./azureDpsExplorer";
 import { AzureIoTExplorer } from "./azureIoTExplorer";
 import { Constants, DistributedSettingUpdateType } from "./constants";

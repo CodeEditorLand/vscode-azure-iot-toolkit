@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { Client as ServiceClient, DeviceMethodParams } from "azure-iothub";
-import { IncomingMessageCallback } from "azure-iothub/dist/interfaces";
+import { Client as ServiceClient, type DeviceMethodParams } from "azure-iothub";
+import type { IncomingMessageCallback } from "azure-iothub/dist/interfaces";
 import * as vscode from "vscode";
-import { DeviceItem } from "./Model/DeviceItem";
-import { ModuleItem } from "./Model/ModuleItem";
+import type { DeviceItem } from "./Model/DeviceItem";
+import type { ModuleItem } from "./Model/ModuleItem";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";

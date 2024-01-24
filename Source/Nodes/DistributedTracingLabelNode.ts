@@ -4,8 +4,8 @@
 import * as vscode from "vscode";
 import { TwinItem } from "../Model/TwinItem";
 import { DeviceTwinPropertyType } from "../constants";
-import { DeviceNode } from "./DeviceNode";
-import { INode } from "./INode";
+import type { DeviceNode } from "./DeviceNode";
+import type { INode } from "./INode";
 import { TwinNode } from "./TwinNode";
 
 export class DistributedTracingLabelNode implements INode {

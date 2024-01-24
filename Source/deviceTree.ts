@@ -4,7 +4,7 @@
 import * as vscode from "vscode";
 import { DeviceLabelNode } from "./Nodes/DeviceLabelNode";
 import { EndpointsLabelNode } from "./Nodes/Endpoints/EndpointsLabelNode";
-import { INode } from "./Nodes/INode";
+import type { INode } from "./Nodes/INode";
 import { IoTHubLabelNode } from "./Nodes/IoTHubLabelNode";
 import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";

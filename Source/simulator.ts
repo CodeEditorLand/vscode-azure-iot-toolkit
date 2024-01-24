@@ -3,11 +3,11 @@
 
 import { ConnectionString } from "azure-iot-common";
 import { Message } from "azure-iot-device";
-import { Client } from "azure-iot-device";
+import type { Client } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import dummyjson from "dummy-json";
 import * as vscode from "vscode";
-import { DeviceItem } from "./Model/DeviceItem";
+import type { DeviceItem } from "./Model/DeviceItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { Constants } from "./constants";
 import { IoTHubResourceExplorer } from "./iotHubResourceExplorer";
@@ -134,8 +134,8 @@ export class Simulator {
 					eventName,
 					{
 						Result: "Fail",
-						[Constants.errorProperties
-							.Message]: `${properties.reason}`,
+						[Constants.errorProperties.Message]:
+							`${properties.reason}`,
 					},
 					this.iotHubConnectionString,
 				);

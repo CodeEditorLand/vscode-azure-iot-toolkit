@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { IotHubModels } from "@azure/arm-iothub";
-import { QuickPickItem } from "vscode";
+import type { IotHubModels } from "@azure/arm-iothub";
+import type { QuickPickItem } from "vscode";
 import { Utility } from "../utility";
 
 export class IotHubItem implements QuickPickItem {

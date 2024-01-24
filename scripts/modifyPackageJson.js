@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("node:fs");
 
 const packageJson = JSON.parse(fs.readFileSync("package.json"));
 const indexOfDash = packageJson.version.indexOf("-");

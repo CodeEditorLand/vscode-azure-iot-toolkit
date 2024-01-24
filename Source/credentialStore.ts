@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as keytarType from "keytar";
+import type * as keytarType from "keytar";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
 

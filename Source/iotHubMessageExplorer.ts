@@ -1,11 +1,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { EventHubConsumerClient, ReceivedEventData } from "@azure/event-hubs";
+import {
+	EventHubConsumerClient,
+	type ReceivedEventData,
+} from "@azure/event-hubs";
 import { Message } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import * as vscode from "vscode";
-import { DeviceItem } from "./Model/DeviceItem";
+import type { DeviceItem } from "./Model/DeviceItem";
 import { Constants } from "./constants";
 import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { TelemetryClient } from "./telemetryClient";

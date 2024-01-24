@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 import { TreeUtils } from "../Utility/treeUtils";
 import { Utility } from "../utility";
-import { INode } from "./INode";
+import type { INode } from "./INode";
 
 export class IoTHubLabelNode implements INode {
 	constructor(private iotHubConnectionString: string) {}

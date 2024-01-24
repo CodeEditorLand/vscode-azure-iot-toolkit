@@ -4,12 +4,12 @@
 import { EventHubManagementClient } from "@azure/arm-eventhub";
 import {
 	EventHubConsumerClient,
-	MessagingError,
-	ReceivedEventData,
+	type MessagingError,
+	type ReceivedEventData,
 } from "@azure/event-hubs";
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 import { createAzureClient } from "vscode-azureextensionui";
-import { EventHubItem } from "./Model/EventHubItem";
+import type { EventHubItem } from "./Model/EventHubItem";
 import { Constants } from "./constants";
 import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { TelemetryClient } from "./telemetryClient";

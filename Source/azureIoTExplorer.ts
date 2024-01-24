@@ -1,18 +1,18 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as vscode from "vscode";
-import {
+import type * as vscode from "vscode";
+import type {
 	AzExtTreeDataProvider,
 	AzureTreeItem,
 	IActionContext,
 } from "vscode-azureextensionui";
-import { DeviceItem } from "./Model/DeviceItem";
-import { EventHubItem } from "./Model/EventHubItem";
-import { ModuleItem } from "./Model/ModuleItem";
-import { DeviceNode } from "./Nodes/DeviceNode";
-import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
-import { ModuleItemNode } from "./Nodes/ModuleItemNode";
+import type { DeviceItem } from "./Model/DeviceItem";
+import type { EventHubItem } from "./Model/EventHubItem";
+import type { ModuleItem } from "./Model/ModuleItem";
+import type { DeviceNode } from "./Nodes/DeviceNode";
+import type { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
+import type { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { CodeManager } from "./codeManager";
 import { Constants, DistributedSettingUpdateType } from "./constants";
 import { DeviceExplorer } from "./deviceExplorer";

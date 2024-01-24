@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { TreeItem, TreeItemCollapsibleState } from "vscode";
-import { DeviceTwinPropertyType } from "../constants";
+import type { DeviceTwinPropertyType } from "../constants";
 
 export class TwinItem extends TreeItem {
 	constructor(

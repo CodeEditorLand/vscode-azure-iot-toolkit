@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as vscode from "vscode";
-import { DeviceItem } from "../Model/DeviceItem";
+import type * as vscode from "vscode";
+import type { DeviceItem } from "../Model/DeviceItem";
 import { Constants } from "../constants";
 import { TelemetryClient } from "../telemetryClient";
 import { DistributedTracingLabelNode } from "./DistributedTracingLabelNode";
-import { INode } from "./INode";
+import type { INode } from "./INode";
 import { ModuleLabelNode } from "./ModuleLabelNode";
 
 export class DeviceNode implements INode {

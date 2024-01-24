@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("node:fs");
 
 if (process.env.TRAVIS_TAG) {
 	const ISPROD = new RegExp(process.env.ISPRODTAG).test(

@@ -2,12 +2,12 @@
 // Licensed under the MIT license.
 
 import * as vscode from "vscode";
-import { DeviceItem } from "../Model/DeviceItem";
+import type { DeviceItem } from "../Model/DeviceItem";
 import { Constants } from "../constants";
 import { TelemetryClient } from "../telemetryClient";
 import { Utility } from "../utility";
 import { DeviceNode } from "./DeviceNode";
-import { INode } from "./INode";
+import type { INode } from "./INode";
 import { InfoNode } from "./InfoNode";
 
 export class DeviceLabelNode implements INode {

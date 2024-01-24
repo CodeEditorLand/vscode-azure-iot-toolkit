@@ -2,17 +2,17 @@
 // Licensed under the MIT license.
 import {
 	IotDpsClient,
-	IotDpsModels,
+	type IotDpsModels,
 } from "@azure/arm-deviceprovisioningservices";
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 import {
-	AzExtTreeDataProvider,
-	AzureTreeItem,
-	IActionContext,
+	type AzExtTreeDataProvider,
+	type AzureTreeItem,
+	type IActionContext,
 	createAzureClient,
 	openReadOnlyJson,
 } from "vscode-azureextensionui";
-import { DpsResourceTreeItem } from "./Nodes/DPS/DpsResourceTreeItem";
+import type { DpsResourceTreeItem } from "./Nodes/DPS/DpsResourceTreeItem";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 

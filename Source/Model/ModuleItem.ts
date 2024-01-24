@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import { TreeItem } from "vscode";
-import { DeviceItem } from "./DeviceItem";
+import type { DeviceItem } from "./DeviceItem";
 
 export class ModuleItem extends TreeItem {
 	public readonly deviceId: string;

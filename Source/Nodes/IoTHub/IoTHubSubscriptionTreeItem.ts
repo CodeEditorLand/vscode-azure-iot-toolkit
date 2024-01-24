@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { IotHubClient, IotHubModels } from "@azure/arm-iothub";
+import { IotHubClient, type IotHubModels } from "@azure/arm-iothub";
 import {
-	IActionContext,
+	type IActionContext,
 	SubscriptionTreeItemBase,
 	createAzureClient,
 } from "vscode-azureextensionui";

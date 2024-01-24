@@ -78,7 +78,7 @@ const app = new Vue({
 						);
 					}
 				}
-				const v = parseFloat(s);
+				const v = Number.parseFloat(s);
 				if (v > 0) {
 					callback();
 				} else {

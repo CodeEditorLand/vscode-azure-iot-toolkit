@@ -8,7 +8,7 @@
 const copyPlugin = require("copy-webpack-plugin");
 const failOnErrorsPlugin = require("fail-on-errors-webpack-plugin");
 const terserWebpackPlugin = require("terser-webpack-plugin");
-const path = require("path");
+const path = require("node:path");
 const webpack = require("webpack");
 
 /**@type {import('webpack').Configuration}*/

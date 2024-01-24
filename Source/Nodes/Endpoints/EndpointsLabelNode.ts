@@ -8,7 +8,7 @@ import { Constants } from "../../constants";
 import { TelemetryClient } from "../../telemetryClient";
 import { Utility } from "../../utility";
 import { CommandNode } from "../CommandNode";
-import { INode } from "../INode";
+import type { INode } from "../INode";
 import { BuiltInEndpointLabelNode } from "./BuiltInEndpointLabelNode";
 import { CustomEndpointLabelNode } from "./CustomEndpointLabelNode";
 import { EventHubLabelNode } from "./EventHubLabelNode";

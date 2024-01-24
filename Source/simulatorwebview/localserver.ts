@@ -1,12 +1,12 @@
-import * as http from "http";
-import { AddressInfo } from "net";
+import * as http from "node:http";
+import type { AddressInfo } from "node:net";
 import * as bodyParser from "body-parser";
 import dummyjson from "dummy-json";
 import express from "express";
-import * as vscode from "vscode";
-import { DeviceItem } from "../Model/DeviceItem";
+import type * as vscode from "vscode";
+import type { DeviceItem } from "../Model/DeviceItem";
 import { Constants } from "../constants";
-import { SendStatus } from "../sendStatus";
+import type { SendStatus } from "../sendStatus";
 import { Simulator } from "../simulator";
 
 export class LocalServer {

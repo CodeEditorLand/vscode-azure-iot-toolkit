@@ -3,7 +3,7 @@
 
 import { ConnectionString } from "azure-iot-device";
 import * as vscode from "vscode";
-import { DeviceItem } from "./Model/DeviceItem";
+import type { DeviceItem } from "./Model/DeviceItem";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";

@@ -3,9 +3,9 @@
 
 import * as iothub from "azure-iothub";
 import * as vscode from "vscode";
-import { ModuleItem } from "./Model/ModuleItem";
-import { DeviceNode } from "./Nodes/DeviceNode";
-import { ModuleItemNode } from "./Nodes/ModuleItemNode";
+import type { ModuleItem } from "./Model/ModuleItem";
+import type { DeviceNode } from "./Nodes/DeviceNode";
+import type { ModuleItemNode } from "./Nodes/ModuleItemNode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";

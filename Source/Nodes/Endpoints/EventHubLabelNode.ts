@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { IotHubModels } from "@azure/arm-iothub";
+import type { IotHubModels } from "@azure/arm-iothub";
 import * as vscode from "vscode";
 import { EventHubItem } from "../../Model/EventHubItem";
-import { AzureSubscription } from "../../azure-account.api";
-import { INode } from "../INode";
+import type { AzureSubscription } from "../../azure-account.api";
+import type { INode } from "../INode";
 import { EventHubItemNode } from "./EventHubItemNode";
 
 export class EventHubLabelNode implements INode {

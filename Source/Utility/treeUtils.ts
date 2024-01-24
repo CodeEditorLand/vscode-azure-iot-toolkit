@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as path from "path";
-import { TreeItemIconPath } from "vscode-azureextensionui";
+import * as path from "node:path";
+import type { TreeItemIconPath } from "vscode-azureextensionui";
 import { Constants } from "../constants";
 
 export class TreeUtils {

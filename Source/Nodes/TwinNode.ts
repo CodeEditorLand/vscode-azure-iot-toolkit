@@ -1,15 +1,15 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as vscode from "vscode";
-import { TwinItem } from "../Model/TwinItem";
+import type * as vscode from "vscode";
+import type { TwinItem } from "../Model/TwinItem";
 import { DistributedTracingSettingNode } from "./DistributedTracingSettingNode";
-import { INode } from "./INode";
+import type { INode } from "./INode";
 import iothub = require("azure-iothub");
 import { Constants, DeviceTwinPropertyType } from "../constants";
 import { TelemetryClient } from "../telemetryClient";
 import { Utility } from "../utility";
-import { DeviceNode } from "./DeviceNode";
+import type { DeviceNode } from "./DeviceNode";
 
 export class TwinNode implements INode {
 	private readonly DISTRIBUTED_TRACING_ENABLED_PROPERTY: string =
@@ -17,7 +17,10 @@ export class TwinNode implements INode {
 	private readonly DISTRIBUTED_TRACING_SAMPLING_RATE: string =
 		"Sampling Rate: ";
 
-	constructor(private twinItem: TwinItem, public deviceNode: DeviceNode) {}
+	constructor(
+		private twinItem: TwinItem,
+		public deviceNode: DeviceNode,
+	) {}
 
 	public getTreeItem(): vscode.TreeItem {
 		return this.twinItem;

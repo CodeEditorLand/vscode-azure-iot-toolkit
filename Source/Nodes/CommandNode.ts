@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 import * as vscode from "vscode";
-import { INode } from "./INode";
+import type { INode } from "./INode";
 
 export class CommandNode implements INode {
 	constructor(

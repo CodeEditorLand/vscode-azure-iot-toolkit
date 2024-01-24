@@ -3,10 +3,10 @@
 
 import {
 	IotDpsClient,
-	IotDpsModels,
+	type IotDpsModels,
 } from "@azure/arm-deviceprovisioningservices";
 import {
-	IActionContext,
+	type IActionContext,
 	SubscriptionTreeItemBase,
 	createAzureClient,
 } from "vscode-azureextensionui";

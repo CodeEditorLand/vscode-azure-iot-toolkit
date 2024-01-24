@@ -2,11 +2,14 @@
 // Licensed under the MIT license.
 
 import * as vscode from "vscode";
-import { INode } from "../INode";
+import type { INode } from "../INode";
 import { CustomEndpointItemNode } from "./CustomEndpointItemNode";
 
 export class CustomEndpointLabelNode implements INode {
-	constructor(private label: string, private properties: any[]) {}
+	constructor(
+		private label: string,
+		private properties: any[],
+	) {}
 
 	public getTreeItem(): vscode.TreeItem {
 		return {

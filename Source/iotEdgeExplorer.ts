@@ -1,14 +1,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import Ajv from "ajv";
 import axios from "axios";
 import * as iothub from "azure-iothub";
 import stripJsonComments from "strip-json-comments";
 import * as vscode from "vscode";
-import { ModuleItem } from "./Model/ModuleItem";
+import type { ModuleItem } from "./Model/ModuleItem";
 import { DeviceNode } from "./Nodes/DeviceNode";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
@@ -435,7 +435,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				if (!value) {
 					return "The value should not be empty.";
 				}
-				const floatValue = parseFloat(value);
+				const floatValue = Number.parseFloat(value);
 				if (!Number.isInteger(floatValue) || floatValue < 0) {
 					return "Deployment priority should be a positive integer";
 				}
@@ -453,7 +453,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			},
 			schemaVersion: "1.0",
 			targetCondition,
-			priority: parseInt(priority, 10),
+			priority: Number.parseInt(priority, 10),
 		};
 
 		const label = Constants.IoTHubEdgeLabel;

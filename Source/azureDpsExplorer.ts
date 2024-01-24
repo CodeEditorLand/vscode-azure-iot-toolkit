@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as vscode from "vscode";
-import {
+import type * as vscode from "vscode";
+import type {
 	AzExtTreeDataProvider,
 	AzureTreeItem,
 	IActionContext,
 } from "vscode-azureextensionui";
-import { DpsResourceTreeItem } from "./Nodes/DPS/DpsResourceTreeItem";
+import type { DpsResourceTreeItem } from "./Nodes/DPS/DpsResourceTreeItem";
 import { DpsResourceExplorer } from "./dpsResourceExplorer";
 
 export class AzureDpsExplorer {

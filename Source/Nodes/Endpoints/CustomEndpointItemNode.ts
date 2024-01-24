@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as vscode from "vscode";
+import type * as vscode from "vscode";
 import { CustomEndpointItem } from "../../Model/CustomEndpointItem";
-import { INode } from "../INode";
+import type { INode } from "../INode";
 
 export class CustomEndpointItemNode implements INode {
 	constructor(private name: string) {}

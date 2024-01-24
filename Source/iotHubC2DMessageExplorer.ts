@@ -2,11 +2,11 @@
 // Licensed under the MIT license.
 
 import { Message } from "azure-iot-common";
-import { Client, ConnectionString } from "azure-iot-device";
+import { type Client, ConnectionString } from "azure-iot-device";
 import { clientFromConnectionString } from "azure-iot-device-mqtt";
 import { Client as ServiceClient } from "azure-iothub";
 import * as vscode from "vscode";
-import { DeviceItem } from "./Model/DeviceItem";
+import type { DeviceItem } from "./Model/DeviceItem";
 import { Constants } from "./constants";
 import { IoTHubMessageBaseExplorer } from "./iotHubMessageBaseExplorer";
 import { TelemetryClient } from "./telemetryClient";

@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as vscode from "vscode";
-import { DeviceNode } from "./DeviceNode";
-import { INode } from "./INode";
+import type * as vscode from "vscode";
+import type { DeviceNode } from "./DeviceNode";
+import type { INode } from "./INode";
 
 export class DistributedTracingSettingNode implements INode {
 	constructor(

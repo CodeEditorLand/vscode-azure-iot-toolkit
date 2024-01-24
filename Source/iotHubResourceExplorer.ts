@@ -1,28 +1,28 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { IotHubClient, IotHubModels } from "@azure/arm-iothub";
+import { IotHubClient, type IotHubModels } from "@azure/arm-iothub";
 import {
 	ResourceManagementClient,
-	ResourceManagementModels,
+	type ResourceManagementModels,
 } from "@azure/arm-resources";
 import { SubscriptionClient } from "@azure/arm-subscriptions";
-import { Environment } from "@azure/ms-rest-azure-env";
+import type { Environment } from "@azure/ms-rest-azure-env";
 import * as vscode from "vscode";
 import {
-	AzExtTreeDataProvider,
-	AzureTreeItem,
-	IActionContext,
+	type AzExtTreeDataProvider,
+	type AzureTreeItem,
+	type IActionContext,
 	createAzureClient,
 	createAzureSubscriptionClient,
 } from "vscode-azureextensionui";
-import { DeviceItem } from "./Model/DeviceItem";
+import type { DeviceItem } from "./Model/DeviceItem";
 import { IotHubItem } from "./Model/IotHubItem";
 import { LocationItem } from "./Model/LocationItem";
 import { ResourceGroupItem } from "./Model/ResourceGroupItem";
 import { SubscriptionItem } from "./Model/SubscriptionItem";
-import { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
-import { AzureAccount } from "./azure-account.api";
+import type { IoTHubResourceTreeItem } from "./Nodes/IoTHub/IoTHubResourceTreeItem";
+import type { AzureAccount } from "./azure-account.api";
 import { BaseExplorer } from "./baseExplorer";
 import { Constants } from "./constants";
 import { CredentialStore } from "./credentialStore";
@@ -322,7 +322,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 			prompt: "Enter expiration time (hours)",
 			ignoreFocusOut: true,
 			validateInput: (value: string) => {
-				if (!value || Number.isNaN(parseFloat(value))) {
+				if (!value || Number.isNaN(Number.parseFloat(value))) {
 					return "Provided expiration time is not a number, enter correct expiration time (hours).";
 				}
 			},
@@ -330,7 +330,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
 		const sasToken = sasTokenFunction(
 			connectionString,
-			parseFloat(expiryInHours),
+			Number.parseFloat(expiryInHours),
 		);
 		await vscode.env.clipboard.writeText(sasToken);
 		this._outputChannel.show();

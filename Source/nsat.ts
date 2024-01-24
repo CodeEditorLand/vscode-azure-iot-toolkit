@@ -1,7 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { ExtensionContext, Uri, commands, extensions, window } from "vscode";
+import {
+	type ExtensionContext,
+	Uri,
+	commands,
+	extensions,
+	window,
+} from "vscode";
 import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 
