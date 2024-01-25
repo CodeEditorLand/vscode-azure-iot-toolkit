@@ -1,5 +1,5 @@
-import * as http from "node:http";
-import type { AddressInfo } from "node:net";
+import * as http from "http";
+import type { AddressInfo } from "net";
 import * as bodyParser from "body-parser";
 import dummyjson from "dummy-json";
 import express from "express";

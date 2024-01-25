@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as path from "node:path";
+import * as path from "path";
 import * as fs from "fs-extra";
 import * as replace from "replace-in-file";
 import * as vscode from "vscode";

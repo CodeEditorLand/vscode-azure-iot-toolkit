@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import * as fs from "node:fs";
-import * as path from "node:path";
+import * as fs from "fs";
+import * as path from "path";
 import * as vscode from "vscode";
 import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";

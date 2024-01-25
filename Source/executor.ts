@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { exec, execSync } from "node:child_process";
+import { exec, execSync } from "child_process";
 import * as vscode from "vscode";
 
 export class Executor {
