@@ -1,5 +1,4 @@
 out
-npm-debug.log
 dist
 .vscode-test
 # output of simulator bundling
