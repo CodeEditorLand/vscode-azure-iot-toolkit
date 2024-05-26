@@ -766,7 +766,7 @@
 		"body-parser": "1.20.2",
 		"dummy-json": "3.0.5",
 		"fs-extra": "11.2.0",
-		"glob": "10.3.16",
+		"glob": "10.4.1",
 		"iview": "3.5.4",
 		"jquery": "3.7.1",
 		"keytar": "7.9.0",
