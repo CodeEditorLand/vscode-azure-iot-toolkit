@@ -770,7 +770,7 @@
 		"iview": "3.5.4",
 		"jquery": "3.7.1",
 		"keytar": "7.9.0",
-		"replace-in-file": "8.0.2",
+		"replace-in-file": "8.1.0",
 		"strip-json-comments": "5.0.1",
 		"uuid": "10.0.0"
 	},
