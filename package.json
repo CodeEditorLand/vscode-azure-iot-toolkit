@@ -749,29 +749,29 @@
 		}
 	},
 	"dependencies": {
-		"ajv": "6.12.4",
-		"axios": "0.21.4",
-		"body-parser": "1.18.2",
-		"dummy-json": "3.0.4",
-		"fs-extra": "9.0.1",
-		"glob": "7.1.6",
-		"iview": "3.5.4",
-		"jquery": "3.3.1",
+		"ajv": "8.17.1",
+		"axios": "1.7.3",
+		"body-parser": "2.0.0-beta.2",
+		"dummy-json": "3.0.5",
+		"fs-extra": "11.2.0",
+		"glob": "11.0.0",
+		"iview": "3.5.5-rc.1",
+		"jquery": "4.0.0-beta.2",
 		"keytar": "7.9.0",
-		"replace-in-file": "6.1.0",
-		"strip-json-comments": "3.1.1",
-		"uuid": "8.3.0"
+		"replace-in-file": "8.1.0",
+		"strip-json-comments": "5.0.1",
+		"uuid": "10.0.0"
 	},
 	"description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service (DPS).",
 	"devDependencies": {
-		"@types/body-parser": "1.19.0",
-		"@types/fs-extra": "9.0.1",
+		"@types/body-parser": "1.19.5",
+		"@types/fs-extra": "11.0.4",
 		"@types/keytar": "4.4.2",
-		"@types/node": "14.6.0",
-		"@types/node-fetch": "2.5.7",
-		"rimraf": "3.0.2",
+		"@types/node": "22.0.2",
+		"@types/node-fetch": "3.0.3",
+		"rimraf": "6.0.1",
 		"shebang-loader": "0.0.1",
-		"ts-loader": "8.0.2"
+		"ts-loader": "9.5.1"
 	},
 	"displayName": "Azure IoT Hub",
 	"extensionDependencies": [
