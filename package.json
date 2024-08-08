@@ -767,7 +767,7 @@
 		"@types/body-parser": "1.19.5",
 		"@types/fs-extra": "11.0.4",
 		"@types/keytar": "4.4.2",
-		"@types/node": "22.0.2",
+		"@types/node": "22.1.0",
 		"@types/node-fetch": "3.0.3",
 		"rimraf": "6.0.1",
 		"shebang-loader": "0.0.1",
