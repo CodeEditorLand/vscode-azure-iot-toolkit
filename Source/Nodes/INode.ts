@@ -4,8 +4,10 @@
 import * as vscode from "vscode";
 
 export interface INode {
+	getTreeItem(): Promise<vscode.TreeItem> | vscode.TreeItem;
 
-    getTreeItem(): Promise<vscode.TreeItem> | vscode.TreeItem;
-
-    getChildren(context?: vscode.ExtensionContext, iotHubConnectionString?: string): Promise<INode[]> | INode[];
+	getChildren(
+		context?: vscode.ExtensionContext,
+		iotHubConnectionString?: string,
+	): Promise<INode[]> | INode[];
 }
