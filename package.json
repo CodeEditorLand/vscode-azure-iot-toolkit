@@ -760,14 +760,14 @@
 		"keytar": "7.9.0",
 		"replace-in-file": "8.2.0",
 		"strip-json-comments": "5.0.1",
-		"uuid": "10.0.0"
+		"uuid": "11.0.1"
 	},
 	"description": "Interact with Azure IoT Hub, IoT Device Management, IoT Edge Management, IoT Hub Device Simulation, IoT Hub Code Generation and IoT Hub Device Provisioning Service (DPS).",
 	"devDependencies": {
 		"@types/body-parser": "1.19.5",
 		"@types/fs-extra": "11.0.4",
 		"@types/keytar": "4.4.2",
-		"@types/node": "22.7.9",
+		"@types/node": "22.8.1",
 		"@types/node-fetch": "2.6.11",
 		"rimraf": "6.0.1",
 		"shebang-loader": "0.0.1",
