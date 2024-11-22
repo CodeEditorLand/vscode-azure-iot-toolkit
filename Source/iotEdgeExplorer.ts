@@ -30,27 +30,33 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
 
 		let from = "none";
+
 		let deviceItem;
+
 		if (input instanceof DeviceNode) {
 			deviceItem = input.deviceItem;
 			from = "device";
 		}
 		deviceItem = await Utility.getInputDevice(deviceItem, null, true);
+
 		if (!deviceItem) {
 			return;
 		}
 
 		let filePath;
+
 		if (input instanceof vscode.Uri) {
 			filePath = input.fsPath;
 			from = "file";
 		}
 		const deploymentJson = await this.getDeploymentJson(filePath);
+
 		if (!deploymentJson) {
 			return;
 		}
@@ -72,12 +78,15 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
 
 		const filePath = fileUri ? fileUri.fsPath : undefined;
+
 		const deploymentJson = await this.getDeploymentJson(filePath);
+
 		if (!deploymentJson) {
 			return;
 		}
@@ -97,23 +106,28 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 	public async updateModuleTwin() {
 		TelemetryClient.sendEvent(Constants.IoTHubAIUpdateModuleTwinStartEvent);
+
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
 
 		try {
 			this._outputChannel.show();
+
 			const moduleTwinContent = await Utility.readFromActiveFile(
 				Constants.ModuleTwinJosnFileName,
 			);
+
 			if (!moduleTwinContent) {
 				return;
 			}
 			const moduleTwinJson = JSON.parse(moduleTwinContent);
+
 			if (moduleTwinJson.moduleId.startsWith("$")) {
 				throw new Error(
 					"Azure IoT Edge system modules are readonly and cannot be modified. Changes can be submitted via deploying a configuration.",
@@ -156,13 +170,17 @@ export class IoTEdgeExplorer extends BaseExplorer {
 	private async isValidDeploymentJsonSchema(json: object): Promise<boolean> {
 		const schema = (await axios.get(Constants.DeploymentJsonSchemaUrl))
 			.data;
+
 		const ajv = new Ajv({ allErrors: true, schemaId: "id" });
 		ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-04.json"));
+
 		const valid = ajv.validate(schema, json);
+
 		if (!valid) {
 			vscode.window.showErrorMessage(
 				`There are errors in deployment json file: ${ajv.errorsText(null, { separator: ", " })}`,
 			);
+
 			return false;
 		}
 
@@ -190,6 +208,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 					) {
 						const extendedCreateOptions =
 							modules[moduleName].settings[`createOptions0${i}`];
+
 						if (!extendedCreateOptions) {
 							break;
 						}
@@ -203,6 +222,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 					vscode.window.showErrorMessage(
 						`CreateOptions of "${moduleName}" is not a valid JSON string: ${error.message}`,
 					);
+
 					return false;
 				}
 			}
@@ -227,10 +247,12 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleTwinStartEvent, {
 			moduleType,
 		});
+
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
@@ -242,9 +264,11 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				moduleId,
 			);
 			Utility.writeJson(Constants.ModuleTwinJosnFilePath, twin);
+
 			const document = await vscode.workspace.openTextDocument(
 				Constants.ModuleTwinJosnFilePath,
 			);
+
 			if (document.isDirty) {
 				throw new Error(
 					`Your ${Constants.ModuleTwinJosnFileName} has unsaved changes. Please close or save the file. Then try again.`,
@@ -278,6 +302,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 					},
 					defaultUri: Utility.getDefaultPath(),
 				});
+
 			if (!filePathUri) {
 				return "";
 			}
@@ -288,10 +313,12 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			vscode.window.showWarningMessage(
 				"Please select deployment manifest file under 'config' folder for deployment.",
 			);
+
 			return "";
 		}
 
 		let content = stripJsonComments(fs.readFileSync(filePath, "utf8"));
+
 		try {
 			const contentJson = JSON.parse(content);
 			// Backward compatibility for old schema using 'moduleContent'
@@ -324,6 +351,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			vscode.window.showErrorMessage(
 				"Failed to parse deployment manifest: " + error.toString(),
 			);
+
 			return "";
 		}
 
@@ -339,12 +367,14 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		const label = Constants.IoTHubEdgeLabel;
 		this._outputChannel.show();
 		this.outputLine(label, `Start deployment to device [${deviceId}]`);
+
 		const entry = from === "none" ? "commandPalette" : "contextMenu";
 
 		try {
 			const registry = iothub.Registry.fromConnectionString(
 				iotHubConnectionString,
 			);
+
 			const deploymentJsonObject = JSON.parse(deploymentJson);
 			await registry.applyConfigurationContentOnDevice(
 				deviceId,
@@ -358,7 +388,9 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			});
 		} catch (err) {
 			this.outputLine(label, `Deployment failed. ${err}`);
+
 			let detailedMessage = "";
+
 			if (err && err.responseBody) {
 				detailedMessage = err.responseBody;
 				this.outputLine(label, err.responseBody);
@@ -378,7 +410,9 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		deploymentJson: string,
 	) {
 		const deploymentJsonObject = JSON.parse(deploymentJson);
+
 		let modulesContent;
+
 		if (deploymentJsonObject.modulesContent) {
 			modulesContent = deploymentJsonObject.modulesContent;
 		} else if (
@@ -389,6 +423,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		}
 		if (!modulesContent) {
 			vscode.window.showWarningMessage("Deployment manifest is invalid.");
+
 			return;
 		}
 
@@ -409,6 +444,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				return undefined;
 			},
 		});
+
 		if (!deploymentId) {
 			return;
 		}
@@ -430,6 +466,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				return undefined;
 			},
 		});
+
 		if (!targetCondition) {
 			return;
 		}
@@ -443,12 +480,14 @@ export class IoTEdgeExplorer extends BaseExplorer {
 					return "The value should not be empty.";
 				}
 				const floatValue = parseFloat(value);
+
 				if (!Number.isInteger(floatValue) || floatValue < 0) {
 					return "Deployment priority should be a positive integer";
 				}
 				return undefined;
 			},
 		});
+
 		if (!priority) {
 			return;
 		}

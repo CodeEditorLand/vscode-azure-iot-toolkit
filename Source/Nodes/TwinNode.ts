@@ -41,6 +41,7 @@ export class TwinNode implements INode {
 			null,
 			iotHubConnectionString,
 		);
+
 		const items: INode[] = [];
 
 		try {
@@ -48,8 +49,11 @@ export class TwinNode implements INode {
 				registry,
 				this.deviceNode.deviceId,
 			);
+
 			let samplingRate = null;
+
 			let enabled = null;
+
 			if (this.twinItem.type === DeviceTwinPropertyType.Desired) {
 				if (twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME]) {
 					samplingRate = Utility.parseDesiredSamplingRate(twin);

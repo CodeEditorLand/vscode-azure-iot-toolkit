@@ -13,7 +13,9 @@ import { Utility } from "./utility";
 const packageJSON = vscode.extensions.getExtension(
 	Constants.ExtensionId,
 ).packageJSON;
+
 const extensionVersion: string = packageJSON.version;
+
 const aiKey: string = packageJSON.aiKey;
 
 export class TelemetryClient {
@@ -31,7 +33,9 @@ export class TelemetryClient {
 			properties,
 			iotHubConnectionString,
 		);
+
 		const errorProperties = Object.values(Constants.errorProperties);
+
 		if (this.hasErrorProperties(properties, errorProperties)) {
 			this._client.sendTelemetryErrorEvent(
 				eventName,
@@ -71,10 +75,12 @@ export class TelemetryClient {
 		iotHubConnectionString?: string,
 	) {
 		const newProperties = properties ? properties : {};
+
 		if (!iotHubConnectionString) {
 			iotHubConnectionString = await Utility.getConnectionStringWithId(
 				Constants.IotHubConnectionStringKey,
 			);
+
 			if (!iotHubConnectionString) {
 				iotHubConnectionString =
 					await Utility.getConnectionStringWithId(
@@ -85,6 +91,7 @@ export class TelemetryClient {
 
 		if (iotHubConnectionString) {
 			const iotHubHostName = Utility.getHostName(iotHubConnectionString);
+
 			if (iotHubHostName) {
 				newProperties.IoTHubHostName = Utility.hash(iotHubHostName);
 				newProperties.IoTHubHostNamePostfix =
@@ -101,6 +108,7 @@ export class TelemetryClient {
 		const userDomain = process.env.USERDNSDOMAIN
 			? process.env.USERDNSDOMAIN.toLowerCase()
 			: "";
+
 		return userDomain.endsWith("microsoft.com");
 	}
 
@@ -109,6 +117,7 @@ export class TelemetryClient {
 		errorProperties: string[],
 	): boolean {
 		const propertyKeys = Object.keys(properties);
+
 		return errorProperties.some((value) => propertyKeys.includes(value));
 	}
 }

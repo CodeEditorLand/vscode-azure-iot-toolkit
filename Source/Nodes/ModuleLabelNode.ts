@@ -34,6 +34,7 @@ export class ModuleLabelNode implements INode {
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAILoadEdgeModuleTreeStartEvent,
 			);
+
 			try {
 				const moduleList: vscode.TreeItem[] =
 					await Utility.getModuleItemsForEdge(
@@ -52,6 +53,7 @@ export class ModuleLabelNode implements INode {
 						new ModuleItemNode(item as ModuleItem, this),
 					);
 				});
+
 				return moduleNodeList;
 			} catch (err) {
 				TelemetryClient.sendEvent(
@@ -61,12 +63,14 @@ export class ModuleLabelNode implements INode {
 						[Constants.errorProperties.Message]: err.message,
 					},
 				);
+
 				return Utility.getErrorMessageTreeItems("modules", err.message);
 			}
 		} else if (this.deviceNode.deviceItem.contextValue === "device") {
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAILoadModuleTreeStartEvent,
 			);
+
 			try {
 				const moduleList: vscode.TreeItem[] =
 					await Utility.getModuleItems(
@@ -78,6 +82,7 @@ export class ModuleLabelNode implements INode {
 					Constants.IoTHubAILoadModuleTreeDoneEvent,
 					{ Result: "Success" },
 				);
+
 				if (moduleList.length === 0) {
 					moduleList.push(new vscode.TreeItem(`No Modules`));
 				}
@@ -88,6 +93,7 @@ export class ModuleLabelNode implements INode {
 						new ModuleItemNode(item as ModuleItem, this),
 					);
 				});
+
 				return moduleNodeList;
 			} catch (err) {
 				TelemetryClient.sendEvent(
@@ -97,6 +103,7 @@ export class ModuleLabelNode implements INode {
 						[Constants.errorProperties.Message]: err.message,
 					},
 				);
+
 				return Utility.getErrorMessageTreeItems("modules", err.message);
 			}
 		}

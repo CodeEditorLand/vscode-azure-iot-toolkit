@@ -26,6 +26,7 @@ export class DistributedTracingManager extends BaseExplorer {
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
@@ -35,6 +36,7 @@ export class DistributedTracingManager extends BaseExplorer {
 		);
 
 		let deviceIds: string[] = [];
+
 		if (!node || !node.deviceNode) {
 			const selectedDeviceIds: string[] =
 				await vscode.window.showQuickPick(
@@ -79,7 +81,9 @@ export class DistributedTracingManager extends BaseExplorer {
 		);
 
 		let mode: boolean;
+
 		let samplingRate: number;
+
 		let twin;
 
 		if (deviceIds.length === 1) {
@@ -122,6 +126,7 @@ export class DistributedTracingManager extends BaseExplorer {
 						ignoreFocusOut: true,
 					},
 				);
+
 			if (!selectedItem) {
 				return;
 			}
@@ -169,6 +174,7 @@ export class DistributedTracingManager extends BaseExplorer {
 					);
 
 					let resultTip = "";
+
 					if (result) {
 						resultTip =
 							"\nDetailed information are shown as below:\n" +
@@ -265,6 +271,7 @@ export class DistributedTracingManager extends BaseExplorer {
 				JSON.stringify(twinPatch),
 				twinPatch.etag,
 			);
+
 			return;
 		}
 
@@ -281,12 +288,15 @@ export class DistributedTracingManager extends BaseExplorer {
 		deviceIds: string[],
 	): Promise<any> {
 		const twinJobId = uuid.v4();
+
 		const jobClient = iothub.JobClient.fromConnectionString(
 			iotHubConnectionString,
 		);
 
 		const queryCondition = this.generateQureyCondition(deviceIds);
+
 		const startTime = new Date();
+
 		const maxExecutionTimeInSeconds = 300;
 
 		await jobClient.scheduleTwinUpdate(
@@ -296,11 +306,13 @@ export class DistributedTracingManager extends BaseExplorer {
 			startTime,
 			maxExecutionTimeInSeconds,
 		);
+
 		return this.monitorJob(twinJobId, jobClient);
 	}
 
 	private generateQureyCondition(deviceids: string[]): string {
 		const deviceIdsWithQuotes = deviceids.map((id) => "'" + id + "'");
+
 		return `deviceId IN [${deviceIdsWithQuotes.join(",")}]`;
 	}
 
@@ -309,6 +321,7 @@ export class DistributedTracingManager extends BaseExplorer {
 			const jobMonitorInterval = setInterval(async () => {
 				try {
 					const result = await jobClient.getJob(jobId);
+
 					if (
 						result.jobStatus.status === "completed" ||
 						result.jobStatus.status === "failed" ||
@@ -349,11 +362,14 @@ export class DistributedTracingManager extends BaseExplorer {
 			validateInput: (value): string => {
 				if (value !== undefined) {
 					value = value.trim();
+
 					if (!value) {
 						return "Sampling rate cannot be empty";
 					}
 					const containsOnlyNumber = /^\d+$/.test(value);
+
 					const floatValue: number = parseFloat(value);
+
 					if (
 						!containsOnlyNumber ||
 						!Number.isInteger(floatValue) ||
@@ -371,7 +387,9 @@ export class DistributedTracingManager extends BaseExplorer {
 
 		if (samplingRate !== undefined) {
 			samplingRate = samplingRate.trim();
+
 			const floatValue: number = parseFloat(samplingRate);
+
 			return floatValue;
 		}
 

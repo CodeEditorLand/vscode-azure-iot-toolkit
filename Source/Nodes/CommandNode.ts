@@ -31,6 +31,7 @@ export class CommandNode implements INode {
 			title: "",
 			arguments: args,
 		};
+
 		return commandItem;
 	}
 }

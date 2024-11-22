@@ -46,6 +46,7 @@ export class Utility {
 		helpfile: string = "iot-hub-connection-string.md",
 	) {
 		const connectionString = await this.getConnectionStringWithId(id);
+
 		if (!connectionString && askForConnectionString) {
 			return this.setConnectionString(id, name, helpfile);
 		}
@@ -58,19 +59,23 @@ export class Utility {
 		helpfile: string = "iot-hub-connection-string.md",
 	) {
 		TelemetryClient.sendEvent("General.SetConfig.Popup");
+
 		return new Promise<string>((resolve) => {
 			let value: string | PromiseLike<string>;
+
 			const input = vscode.window.createInputBox();
 			input.prompt = name;
 			input.placeholder = Constants.ConnectionStringFormat[id];
 			input.ignoreFocusOut = true;
 			input.onDidAccept(async () => {
 				value = input.value;
+
 				if (this.isValidConnectionString(id, value)) {
 					TelemetryClient.sendEvent("General.SetConfig.Done", {
 						Result: "Success",
 					});
 					await CredentialStore.setPassword(id, value);
+
 					if (id === Constants.IotHubConnectionStringKey) {
 						await CredentialStore.setPassword(
 							Constants.IotHubEventHubConnectionStringKey,
@@ -98,6 +103,7 @@ export class Utility {
 			input.onDidHide(() => {
 				resolve();
 				input.dispose();
+
 				if (!value) {
 					this.showIoTHubInformationMessage();
 				}
@@ -108,6 +114,7 @@ export class Utility {
 
 	public static async getConnectionStringWithId(id: string) {
 		let configValue = await CredentialStore.getPassword(id);
+
 		if (!configValue) {
 			configValue = Utility.getConfiguration().get<string>(id);
 		}
@@ -119,21 +126,25 @@ export class Utility {
 
 	public static getConfig<T>(id: string): T {
 		const config = Utility.getConfiguration();
+
 		return config.get<T>(id);
 	}
 
 	public static getHostName(iotHubConnectionString: string): string {
 		const result = /^HostName=([^=]+);/.exec(iotHubConnectionString);
+
 		return result ? result[1] : "";
 	}
 
 	public static getIoTHubName(iotHubConnectionString: string): string {
 		const result = /^HostName=([^.]+)./.exec(iotHubConnectionString);
+
 		return result ? result[1] : "";
 	}
 
 	public static getPostfixFromHostName(hostName: string): string {
 		const result = /^[^.]+\.(.+)$/.exec(hostName);
+
 		return result ? result[1] : "";
 	}
 
@@ -146,7 +157,9 @@ export class Utility {
 		expiryInHours = 1,
 	): string {
 		const connectionString = ConnectionString.parse(iotHubConnectionString);
+
 		const expiry = Math.floor(Date.now() / 1000) + expiryInHours * 60 * 60;
+
 		return SharedAccessSignature.create(
 			connectionString.HostName,
 			connectionString.SharedAccessKeyName,
@@ -162,7 +175,9 @@ export class Utility {
 		const connectionString = DeviceConnectionString.parse(
 			deviceConnectionString,
 		);
+
 		const expiry = Math.floor(Date.now() / 1000) + expiryInHours * 60 * 60;
+
 		return DeviceSharedAccessSignature.create(
 			connectionString.HostName,
 			connectionString.DeviceId,
@@ -184,11 +199,13 @@ export class Utility {
 		const windowsShell = vscode.workspace
 			.getConfiguration("terminal")
 			.get<string>("integrated.shell.windows");
+
 		if (!windowsShell) {
 			return filePath;
 		}
 		const terminalRoot =
 			Utility.getConfiguration().get<string>("terminalRoot");
+
 		if (terminalRoot) {
 			return filePath
 				.replace(
@@ -198,6 +215,7 @@ export class Utility {
 				.replace(/\\/g, "/");
 		}
 		const winshellLowercase = windowsShell.toLowerCase();
+
 		if (
 			winshellLowercase.indexOf("bash") > -1 &&
 			winshellLowercase.indexOf("git") > -1
@@ -230,6 +248,7 @@ export class Utility {
 						filename,
 					)
 				: `*/${filename}`;
+
 			return vscode.Uri.file(defaultPath);
 		} else {
 			return vscode.workspace.workspaceFolders
@@ -242,6 +261,7 @@ export class Utility {
 		fs.writeFile(filePath.fsPath, content, (err) => {
 			if (err) {
 				vscode.window.showErrorMessage(err.message);
+
 				return;
 			}
 			vscode.window.showTextDocument(filePath);
@@ -257,12 +277,16 @@ export class Utility {
 			iotHubConnectionString,
 			deviceItem.deviceId,
 		);
+
 		return modules.map((module) => {
 			const isConnected = module.connectionState === "Connected";
+
 			const state = isConnected ? "on" : "off";
+
 			const iconPath = context.asAbsolutePath(
 				path.join("resources", `module-${state}.svg`),
 			);
+
 			return new ModuleItem(
 				deviceItem,
 				module.moduleId,
@@ -292,7 +316,9 @@ export class Utility {
 				"$edgeAgent",
 			),
 		]);
+
 		const desiredTwin = (edgeAgent as any).properties.desired;
+
 		const reportedTwin = (edgeAgent as any).properties.reported;
 
 		return modules
@@ -303,16 +329,20 @@ export class Utility {
 					isConnected =
 						isConnected ||
 						(edgeAgent as any).connectionState === "Connected";
+
 					if (isConnected) {
 						module.connectionState = "Connected";
 					}
 				}
 				const state = isConnected ? "on" : "off";
+
 				const iconPath = context.asAbsolutePath(
 					path.join("resources", `module-${state}.svg`),
 				);
+
 				if (module.moduleId.startsWith("$")) {
 					const moduleId = module.moduleId.substring(1);
+
 					if (
 						desiredTwin.systemModules &&
 						desiredTwin.systemModules[moduleId]
@@ -378,6 +408,7 @@ export class Utility {
 		const registry: Registry = Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
+
 		const hostName: string = Utility.getHostName(iotHubConnectionString);
 
 		return new Promise<any[]>((resolve, reject) => {
@@ -413,6 +444,7 @@ export class Utility {
 		const registry: Registry = Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
+
 		return (
 			(await registry.getModuleTwin(
 				deviceId,
@@ -435,6 +467,7 @@ export class Utility {
 
 	public static async readFromActiveFile(fileName: string): Promise<string> {
 		const activeTextEditor = vscode.window.activeTextEditor;
+
 		if (
 			!activeTextEditor ||
 			!activeTextEditor.document ||
@@ -443,15 +476,18 @@ export class Utility {
 			vscode.window.showWarningMessage(
 				`Please open ${fileName} and try again.`,
 			);
+
 			return "";
 		}
 		const document = activeTextEditor.document;
 		await document.save();
+
 		return document.getText();
 	}
 
 	public static writeJson(filePath: string, data) {
 		const directory = path.dirname(filePath);
+
 		if (!fs.existsSync(directory)) {
 			fs.mkdirSync(directory);
 		}
@@ -475,6 +511,7 @@ export class Utility {
 					Constants.IotHubConnectionStringKey,
 					Constants.IotHubConnectionStringTitle,
 				);
+
 				if (!iotHubConnectionString) {
 					return null;
 				}
@@ -488,6 +525,7 @@ export class Utility {
 			deviceItem = await vscode.window.showQuickPick(deviceList, {
 				placeHolder: "Select an IoT Hub device",
 			});
+
 			return deviceItem;
 		} else {
 			if (eventName) {
@@ -508,11 +546,15 @@ export class Utility {
 			Utility.getIoTDeviceList(iotHubConnectionString),
 			Utility.getEdgeDeviceIdSet(iotHubConnectionString),
 		]);
+
 		return deviceList.map((device) => {
 			const isConnected =
 				device.connectionState.toString() === "Connected";
+
 			const state: string = isConnected ? "on" : "off";
+
 			let deviceType: string;
+
 			if (edgeDeviceIdSet.has(device.deviceId)) {
 				deviceType = "edge";
 				device.contextValue = "edge";
@@ -536,7 +578,9 @@ export class Utility {
 			iotHubConnectionString,
 			false,
 		);
+
 		const deviceIdList = [];
+
 		for (const noneEdgeDevice of noneEdgeDevices) {
 			deviceIdList.push(noneEdgeDevice.deviceId);
 		}
@@ -552,6 +596,7 @@ export class Utility {
 
 	public static getResourceGroupNameFromId(resourceId: string): string {
 		const result = /resourceGroups\/([^/]+)\//.exec(resourceId);
+
 		return result[1];
 	}
 
@@ -566,6 +611,7 @@ export class Utility {
 
 	public static getDefaultTreeItems(): INode[] {
 		TelemetryClient.sendEvent("General.Load.DefaultTreeItems");
+
 		const items = [];
 		items.push(
 			new CommandNode(
@@ -585,6 +631,7 @@ export class Utility {
 				"azure-iot-toolkit.createIoTHub",
 			),
 		);
+
 		return items;
 	}
 
@@ -597,12 +644,14 @@ export class Utility {
 		items.push(new InfoNode(`Error: ${error}`));
 		items.push(new InfoNode(`Try another IoT Hub?`));
 		items.push(...this.getDefaultTreeItems());
+
 		return items;
 	}
 
 	public static parseReportedSamplingMode(twin: any): boolean {
 		const reportedDistributedTwinObject =
 			twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME];
+
 		if (
 			reportedDistributedTwinObject.sampling_mode === undefined ||
 			reportedDistributedTwinObject.sampling_mode.value === undefined
@@ -618,6 +667,7 @@ export class Utility {
 	public static parseReportedSamplingRate(twin: any): number {
 		const reportedDistributedTwinObject =
 			twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME];
+
 		if (reportedDistributedTwinObject.sampling_rate === undefined) {
 			return undefined;
 		}
@@ -649,6 +699,7 @@ export class Utility {
 		deviceId: string,
 	): Promise<any> {
 		const result = await registry.getTwin(deviceId);
+
 		return result.responseBody;
 	}
 
@@ -660,9 +711,13 @@ export class Utility {
 
 	public static getMessageFromEventData(message: any): any {
 		const config = Utility.getConfiguration();
+
 		const showVerboseMessage = config.get<boolean>("showVerboseMessage");
+
 		let result;
+
 		const body = Utility.tryGetStringFromCharCode(message.body);
+
 		if (showVerboseMessage) {
 			result = {
 				body,
@@ -727,6 +782,7 @@ export class Utility {
 				Utility.getIoTDeviceList(iotHubConnectionString),
 				Utility.getEdgeDeviceIdSet(iotHubConnectionString),
 			]);
+
 			return deviceList.filter((device) =>
 				edgeDeviceIdSet.has(device.deviceId),
 			);
@@ -791,7 +847,9 @@ export class Utility {
 		const registry: Registry = Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
+
 		const devices: DeviceItem[] = [];
+
 		const hostName: string = Utility.getHostName(iotHubConnectionString);
 
 		return new Promise<DeviceItem[]>((resolve, reject) => {
@@ -801,6 +859,7 @@ export class Utility {
 				} else {
 					deviceList.forEach((device, index) => {
 						let deviceConnectionString: string = "";
+
 						if (
 							device.authentication.SymmetricKey.primaryKey !=
 							null
@@ -849,7 +908,9 @@ export class Utility {
 			iotHubConnectionString,
 			true,
 		);
+
 		const set = new Set<string>();
+
 		for (const edgeDevice of edgeDevices) {
 			set.add(edgeDevice.deviceId);
 		}
@@ -863,19 +924,25 @@ export class Utility {
 		const registry: Registry = Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
+
 		const query = registry.createQuery(
 			"SELECT * FROM DEVICES where capabilities.iotEdge=" + isEdge,
 		);
+
 		return ((await query.nextAsTwin()) as ResultWithIncomingMessage<Twin[]>)
 			.result;
 	}
 
 	private static showIoTHubInformationMessage(): void {
 		const config = Utility.getConfiguration();
+
 		const showIoTHubInfo = config.get<boolean>(Constants.ShowIoTHubInfoKey);
+
 		if (showIoTHubInfo) {
 			const GoToAzureRegistrationPage = "Go to Azure registration page";
+
 			const GoToAzureIoTHubPage = "Go to Azure IoT Hub page";
+
 			const DoNotShowAgain = "Don't show again";
 			vscode.window
 				.showInformationMessage(
@@ -896,7 +963,9 @@ export class Utility {
 							TelemetryClient.sendEvent(
 								"General.Open.AzureRegistrationPage",
 							);
+
 							break;
+
 						case GoToAzureIoTHubPage:
 							vscode.commands.executeCommand(
 								"vscode.open",
@@ -907,7 +976,9 @@ export class Utility {
 							TelemetryClient.sendEvent(
 								"General.Open.AzureIoTHubPage",
 							);
+
 							break;
+
 						case DoNotShowAgain:
 							config.update(
 								Constants.ShowIoTHubInfoKey,
@@ -917,7 +988,9 @@ export class Utility {
 							TelemetryClient.sendEvent(
 								"General.IoTHubInfo.DoNotShowAgain",
 							);
+
 							break;
+
 						default:
 					}
 				});

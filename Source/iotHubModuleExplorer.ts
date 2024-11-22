@@ -21,11 +21,14 @@ export class IotHubModuleExplorer extends BaseExplorer {
 
 	public async getModule(moduleItem: ModuleItem) {
 		TelemetryClient.sendEvent(Constants.IoTHubAIGetModuleStartEvent);
+
 		const label = "Module";
+
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
@@ -70,10 +73,12 @@ export class IotHubModuleExplorer extends BaseExplorer {
 
 	public async createModule(deviceNode?: DeviceNode) {
 		const label = "Module";
+
 		const deviceItem = await Utility.getInputDevice(
 			deviceNode ? deviceNode.deviceItem : undefined,
 			Constants.IoTHubAICreateModuleStartEvent,
 		);
+
 		if (!deviceItem) {
 			return;
 		}
@@ -82,6 +87,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
@@ -94,6 +100,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 			prompt: "Enter Module ID to create",
 			ignoreFocusOut: true,
 		});
+
 		if (!moduleId) {
 			return;
 		}
@@ -133,6 +140,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 
 	public async copyModuleConnectionString(moduleItem: ModuleItem) {
 		TelemetryClient.sendEvent("AZ.Copy.ModuleConnectionString");
+
 		if (moduleItem.connectionString) {
 			await vscode.env.clipboard.writeText(moduleItem.connectionString);
 		}
@@ -140,11 +148,14 @@ export class IotHubModuleExplorer extends BaseExplorer {
 
 	public async deleteModule(moduleItemNode: ModuleItemNode) {
 		TelemetryClient.sendEvent(Constants.IoTHubAIDeleteModuleStartEvent);
+
 		const label = "Module";
+
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
@@ -154,6 +165,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 			{ modal: true },
 			Constants.DeleteLabel,
 		);
+
 		if (result !== Constants.DeleteLabel) {
 			return;
 		}

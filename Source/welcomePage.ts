@@ -41,6 +41,7 @@ export class WelcomePage {
 					retainContextWhenHidden: true,
 				},
 			);
+
 			let html = fs.readFileSync(
 				this.context.asAbsolutePath(
 					path.join("resources", "welcome", "index.html"),
@@ -58,6 +59,7 @@ export class WelcomePage {
 			this.panel.webview.html = html;
 			this.panel.onDidDispose(() => {
 				this.panel = undefined;
+
 				const duration =
 					(new Date().getTime() - startTime.getTime()) / 1000;
 				TelemetryClient.sendEvent("General.WelcomePage.Close", {

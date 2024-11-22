@@ -7,6 +7,7 @@ import { DeviceItem } from "./DeviceItem";
 
 export class ModuleItem extends TreeItem {
 	public readonly deviceId: string;
+
 	constructor(
 		public readonly deviceItem: DeviceItem,
 		public readonly moduleId: string,
@@ -24,6 +25,7 @@ export class ModuleItem extends TreeItem {
 			title: "",
 			arguments: [this],
 		};
+
 		if (runtimeStatus) {
 			this.description = runtimeStatus;
 		}

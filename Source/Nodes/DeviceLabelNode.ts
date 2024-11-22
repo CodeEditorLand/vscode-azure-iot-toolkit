@@ -54,6 +54,7 @@ export class DeviceLabelNode implements INode {
 				Result: "Fail",
 				[Constants.errorProperties.Message]: err.message,
 			});
+
 			return Utility.getErrorMessageTreeItems(
 				"IoT Hub devices",
 				err.message,

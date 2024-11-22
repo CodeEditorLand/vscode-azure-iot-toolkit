@@ -33,11 +33,13 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
 
 		TelemetryClient.sendEvent(Constants.IoTHubAIGetDeviceTwinDoneEvent);
+
 		const registry = iothub.Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
@@ -74,19 +76,23 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 
 	public async updateDeviceTwin() {
 		TelemetryClient.sendEvent(Constants.IoTHubAIUpdateDeviceTwinEvent);
+
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
 
 		try {
 			this._outputChannel.show();
+
 			const deviceTwinContent = await Utility.readFromActiveFile(
 				Constants.DeviceTwinJosnFileName,
 			);
+
 			if (!deviceTwinContent) {
 				return;
 			}
@@ -95,6 +101,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 				Constants.IoTHubDeviceTwinLabel,
 				`Update Device Twin for [${deviceTwinJson.deviceId}]...`,
 			);
+
 			const registry = iothub.Registry.fromConnectionString(
 				iotHubConnectionString,
 			);
@@ -122,6 +129,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 				Constants.IoTHubDeviceTwinLabel,
 				`Failed to update Device Twin: ${e}`,
 			);
+
 			return;
 		}
 	}

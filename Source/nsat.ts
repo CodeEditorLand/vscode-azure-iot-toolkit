@@ -16,23 +16,33 @@ import { Constants } from "./constants";
 import { TelemetryClient } from "./telemetryClient";
 
 const NSAT_SURVEY_URL = "https://www.surveymonkey.com/r/C9Y5M25";
+
 const PROBABILITY = 1;
+
 const SESSION_COUNT_THRESHOLD = 2;
+
 const SESSION_COUNT_KEY = "nsat/sessionCount";
+
 const LAST_SESSION_DATE_KEY = "nsat/lastSessionDate";
+
 const TAKE_SURVEY_DATE_KEY = "nsat/takeSurveyDate";
+
 const DONT_SHOW_DATE_KEY = "nsat/dontShowDate";
+
 const SKIP_VERSION_KEY = "nsat/skipVersion";
+
 const IS_CANDIDATE_KEY = "nsat/isCandidate";
 
 export class NSAT {
 	public static async takeSurvey({ globalState }: ExtensionContext) {
 		const skipVersion = globalState.get(SKIP_VERSION_KEY, "");
+
 		if (skipVersion) {
 			return;
 		}
 
 		const date = new Date().toDateString();
+
 		const lastSessionDate = globalState.get(
 			LAST_SESSION_DATE_KEY,
 			new Date(0).toDateString(),
@@ -59,8 +69,10 @@ export class NSAT {
 		const extensionVersion =
 			extensions.getExtension(Constants.ExtensionId).packageJSON
 				.version || "unknown";
+
 		if (!isCandidate) {
 			await globalState.update(SKIP_VERSION_KEY, extensionVersion);
+
 			return;
 		}
 
@@ -79,6 +91,7 @@ export class NSAT {
 				await globalState.update(TAKE_SURVEY_DATE_KEY, date);
 			},
 		};
+
 		const remind = {
 			title: "Remind Me Later",
 			run: async () => {
@@ -86,6 +99,7 @@ export class NSAT {
 				await globalState.update(SESSION_COUNT_KEY, 0);
 			},
 		};
+
 		const never = {
 			title: "Don't Show Again",
 			run: async () => {
@@ -96,6 +110,7 @@ export class NSAT {
 			},
 		};
 		TelemetryClient.sendEvent("nsat.survey/userAsked");
+
 		const button = await window.showInformationMessage(
 			"Do you mind taking a quick feedback survey about the Azure IoT Hub Extension for VS Code?",
 			take,

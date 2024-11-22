@@ -87,6 +87,7 @@ export class Simulator {
 			Constants.IotHubConnectionStringTitle,
 			false,
 		);
+
 		return await Utility.getFilteredDeviceList(
 			this.iotHubConnectionString,
 			false,
@@ -158,6 +159,7 @@ export class Simulator {
 
 	public async launch(deviceItem: DeviceItem): Promise<void> {
 		const deviceConnectionStrings = [];
+
 		if (this.isProcessing()) {
 			this.closeDuration = 3500;
 			await this.showWebview(false);
@@ -170,12 +172,15 @@ export class Simulator {
 				Constants.IotHubConnectionStringTitle,
 				true,
 			);
+
 			if (deviceItem) {
 				const hostName = ConnectionString.parse(
 					this.iotHubConnectionString,
 				).HostName;
+
 				const hostNamePersisted = this.persistedInputs.hostName;
 				deviceConnectionStrings.push(deviceItem.connectionString);
+
 				const deviceConnectionStringsPersisted =
 					this.persistedInputs.deviceConnectionStrings;
 				await this.showWebview(
@@ -195,6 +200,7 @@ export class Simulator {
 					this.telemetry(Constants.SimulatorLaunchEvent, false, {
 						error: errorMessage,
 					});
+
 					return;
 				}
 				try {
@@ -216,12 +222,15 @@ export class Simulator {
 							"Failed to launch Send D2C Messages webview: " +
 							err.message,
 					});
+
 					return;
 				}
 				const hostName = ConnectionString.parse(
 					this.iotHubConnectionString,
 				).HostName;
+
 				const hostNamePersisted = this.persistedInputs.hostName;
+
 				const deviceConnectionStringsPersisted =
 					this.persistedInputs.deviceConnectionStrings;
 				await this.showWebview(
@@ -290,6 +299,7 @@ export class Simulator {
 		deviceConnectionStrings?: string[],
 	): Promise<void> {
 		const simulatorwebview = SimulatorWebview.getInstance(this.context);
+
 		if (hostName) {
 			await this.setPreSelectedHostName(hostName);
 		}
@@ -299,6 +309,7 @@ export class Simulator {
 			);
 		}
 		await simulatorwebview.showWebview(forceReload);
+
 		return;
 	}
 
@@ -316,6 +327,7 @@ export class Simulator {
 	) {
 		return async (err, result) => {
 			const total = await status.getTotal();
+
 			if (err) {
 				await status.addFailed();
 				await totalStatus.addFailed();
@@ -325,6 +337,7 @@ export class Simulator {
 				await totalStatus.addSucceed();
 			}
 			const sum = await status.sum();
+
 			if (sum === total) {
 				client.close(() => {
 					return;
@@ -342,6 +355,7 @@ export class Simulator {
 		const stringify = Utility.getConfig<boolean>(
 			Constants.IoTHubD2CMessageStringifyKey,
 		);
+
 		const msg = new Message(stringify ? JSON.stringify(message) : message);
 		// default to utf-8 encoding
 		msg.contentEncoding = "utf-8";
@@ -366,6 +380,7 @@ export class Simulator {
 	private async cancellableDelay(milliSecond: number) {
 		while (milliSecond > 1000) {
 			await this.delay(1000);
+
 			if (this.cancelToken) {
 				return;
 			} else {
@@ -385,19 +400,26 @@ export class Simulator {
 		interval: number,
 	) {
 		const deviceCount = deviceConnectionStrings.length;
+
 		const total = deviceCount * numbers;
+
 		if (total <= 0) {
 			this.output(`Invalid Operation.`);
+
 			return;
 		}
 		const startTime = new Date();
 		this.output(
 			`Start sending messages from ${deviceCount} device(s) to IoT Hub.`,
 		);
+
 		const clients = [];
+
 		const statuses = [];
+
 		const ids = [];
 		this.totalStatus = new SendStatus("Total", total);
+
 		for (let i = 0; i < deviceCount; i++) {
 			clients.push(
 				await clientFromConnectionString(deviceConnectionStrings[i]),
@@ -425,6 +447,7 @@ export class Simulator {
 				);
 			});
 			this.totalStatus.addSent(deviceCount);
+
 			if (this.cancelToken) {
 				break;
 			}
@@ -441,6 +464,7 @@ export class Simulator {
 						(endTime.getTime() - startTime.getTime()) / 1000
 					} second(s).`,
 		);
+
 		while (
 			!this.cancelToken &&
 			(await this.totalStatus.sum()) !==

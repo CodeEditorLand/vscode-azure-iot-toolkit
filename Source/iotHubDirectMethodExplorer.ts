@@ -24,6 +24,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
@@ -32,6 +33,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 			deviceItem,
 			Constants.IoTHubAIInvokeDeviceMethodEvent,
 		);
+
 		if (!deviceItem) {
 			return;
 		}
@@ -44,6 +46,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
@@ -90,6 +93,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 							responseTimeoutInSeconds: 10,
 							connectTimeoutInSeconds: 10,
 						};
+
 						const serviceClient =
 							ServiceClient.fromConnectionString(
 								iotHubConnectionString,

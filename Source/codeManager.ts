@@ -21,6 +21,7 @@ export class CodeManager {
 			deviceItem,
 			"AZ.Generate.Code.Start",
 		);
+
 		if (!deviceItem) {
 			return;
 		}
@@ -29,6 +30,7 @@ export class CodeManager {
 			Object.keys(Constants.CodeTemplates),
 			{ placeHolder: "Select language", ignoreFocusOut: true },
 		);
+
 		if (!language) {
 			return;
 		}
@@ -37,6 +39,7 @@ export class CodeManager {
 			Object.keys(Constants.CodeTemplates[language]),
 			{ placeHolder: "Select code type", ignoreFocusOut: true },
 		);
+
 		if (!type) {
 			return;
 		}
@@ -44,6 +47,7 @@ export class CodeManager {
 		const iotHubConnectionString = await Utility.getConnectionStringWithId(
 			Constants.IotHubConnectionStringKey,
 		);
+
 		const template = this.context.asAbsolutePath(
 			path.join(
 				"resources",
@@ -51,6 +55,7 @@ export class CodeManager {
 				Constants.CodeTemplates[language][type],
 			),
 		);
+
 		const replacements = new Map([
 			[/{{deviceConnectionString}}/g, deviceItem.connectionString],
 			[/{{iotHubConnectionString}}/g, iotHubConnectionString],
@@ -64,8 +69,10 @@ export class CodeManager {
 				Utility.generateSasTokenForDevice(deviceItem.connectionString),
 			],
 		]);
+
 		if ((await fs.stat(template)).isFile()) {
 			let content = await fs.readFile(template, "utf8");
+
 			for (const [key, value] of replacements) {
 				content = content.replace(key, value);
 			}
@@ -79,6 +86,7 @@ export class CodeManager {
 				canSelectFiles: false,
 				canSelectFolders: true,
 			});
+
 			if (!folderUri) {
 				return;
 			}

@@ -12,6 +12,7 @@ import { Simulator } from "../simulator";
 import { LocalServer } from "./localserver";
 
 const simulatorWebviewPanelViewType = "Send D2C Messages";
+
 const simulatorWebviewPanelViewTitle = "Send D2C Messages";
 
 export class SimulatorWebview {
@@ -59,6 +60,7 @@ export class SimulatorWebview {
 					retainContextWhenHidden: true,
 				},
 			);
+
 			let html = fs.readFileSync(
 				this.context.asAbsolutePath(
 					path.join("resources", "simulator", "index.html"),

@@ -457,6 +457,7 @@ export function deactivate() {}
 
 function initializeTreeView(context: vscode.ExtensionContext) {
 	const telemetryReporter = new TelemetryClientWrapper("IoTHub.");
+
 	const outputChannel = createAzExtOutputChannel(
 		"Azure IoT Hub",
 		"azure-iot-toolkit",
@@ -471,6 +472,7 @@ function initializeTreeView(context: vscode.ExtensionContext) {
 	registerUIExtensionVariables(uiExtensionVariables);
 
 	activateDps(context, outputChannel);
+
 	const azureIoTExplorer = activateIoTHub(context, outputChannel);
 
 	const deviceTree = new DeviceTree(context);
@@ -484,6 +486,7 @@ function activateDps(
 	outputChannel: vscode.OutputChannel,
 ) {
 	const dpsTreeItem = new DpsAccountTreeItem();
+
 	const dpsExtTreeDataProvider = new AzExtTreeDataProvider(
 		dpsTreeItem,
 		"azure-iot-dps.loadMore",
@@ -527,6 +530,7 @@ function activateIoTHub(
 	outputChannel: vscode.OutputChannel,
 ) {
 	const iotHubTreeItem = new IoTHubAccountTreeItem();
+
 	const iotHubExtTreeDataProvider = new AzExtTreeDataProvider(
 		iotHubTreeItem,
 		"azure-iot-hub.loadMore",

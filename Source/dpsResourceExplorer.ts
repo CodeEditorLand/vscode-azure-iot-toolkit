@@ -41,10 +41,13 @@ export class DpsResourceExplorer extends BaseExplorer {
 		}
 
 		const client: IotDpsClient = createAzureClient(node.root, IotDpsClient);
+
 		const matchResult = Constants.DpsResourceGroupNameRegex.exec(
 			node.fullId,
 		);
+
 		let dpsInfo: IotDpsModels.ProvisioningServiceDescription = null;
+
 		if (matchResult != null) {
 			const resourecGroupName = matchResult[1];
 			dpsInfo = await client.iotDpsResource.get(

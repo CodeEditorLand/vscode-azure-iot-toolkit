@@ -99,6 +99,7 @@ export class LocalServer {
 				"Origin, X-Requested-With, Content-Type, Accept, Authorization",
 			);
 			res.setHeader("Access-Control-Allow-Credentials", "true");
+
 			if (req.method === "OPTIONS") {
 				res.end();
 			} else {
@@ -128,7 +129,9 @@ export class LocalServer {
 	) {
 		try {
 			const data = req.body;
+
 			const cancel = data.cancel;
+
 			if (cancel) {
 				await this._simulator.cancel();
 			}
@@ -159,6 +162,7 @@ export class LocalServer {
 	) {
 		try {
 			const data = req.body;
+
 			const result = data.status === "Succeeded" ? true : false;
 			this._simulator.telemetry(
 				Constants.SimulatorSendEvent,
@@ -191,6 +195,7 @@ export class LocalServer {
 	) {
 		try {
 			const status: SendStatus = this._simulator.getStatus();
+
 			const result = {
 				numberOfSentMessage: status ? await status.getSent() : 0,
 				numberOfSuccessfulMessage: status
@@ -200,6 +205,7 @@ export class LocalServer {
 				numberOfTotalMessage: status ? await status.getTotal() : 0,
 				isProcessing: this._simulator.isProcessing(),
 			};
+
 			return res.status(200).json(result);
 		} catch (err) {
 			next(err);
@@ -213,6 +219,7 @@ export class LocalServer {
 	) {
 		try {
 			const list = await this._simulator.getInputDeviceList();
+
 			return res.status(200).json(list);
 		} catch (err) {
 			next(err);
@@ -241,17 +248,25 @@ export class LocalServer {
 	) {
 		try {
 			const data = req.body;
+
 			const messageType = data.messageType;
+
 			const messageBodyType = data.messageBodyType;
+
 			const deviceConnectionStrings: string[] =
 				data.deviceConnectionStrings;
+
 			const template: string = data.message;
+
 			const numbers: number = Number(data.numbers);
+
 			const interval: number = Number(data.interval);
+
 			switch (messageType) {
 				case "File Upload":
 					// TODO: File Upload
 					break;
+
 				case "Text Content":
 					switch (messageBodyType) {
 						case "Dummy Json":
@@ -262,7 +277,9 @@ export class LocalServer {
 								numbers,
 								interval,
 							);
+
 							break;
+
 						case "Plain Text":
 							await this._simulator.sendD2CMessage(
 								deviceConnectionStrings,
@@ -271,10 +288,12 @@ export class LocalServer {
 								numbers,
 								interval,
 							);
+
 						default:
 							break;
 					}
 					break;
+
 				default:
 					break;
 			}
@@ -289,9 +308,12 @@ export class LocalServer {
 		next: express.NextFunction,
 	) {
 		const data = req.body;
+
 		const template = data.template;
+
 		try {
 			const message = dummyjson.parse(template);
+
 			return res.status(200).json(message);
 		} catch (err) {
 			return res.sendStatus(400);

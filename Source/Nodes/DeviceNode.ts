@@ -13,6 +13,7 @@ import { ModuleLabelNode } from "./ModuleLabelNode";
 export class DeviceNode implements INode {
 	public readonly deviceId: string;
 	public readonly connectionString: string;
+
 	constructor(public deviceItem: DeviceItem) {
 		this.deviceId = deviceItem.deviceId;
 		this.connectionString = deviceItem.connectionString;
@@ -28,6 +29,7 @@ export class DeviceNode implements INode {
 	): Promise<INode[]> {
 		const nodeList: INode[] = [];
 		nodeList.push(new ModuleLabelNode(this));
+
 		if (
 			this.deviceItem.contextValue === "device" &&
 			iotHubConnectionString.toLowerCase().indexOf("azure-devices.cn;") <
@@ -39,6 +41,7 @@ export class DeviceNode implements INode {
 			Constants.IoTHubAILoadLabelInDeviceTreeDoneEvent,
 			{ Result: "Success" },
 		);
+
 		return nodeList;
 	}
 }

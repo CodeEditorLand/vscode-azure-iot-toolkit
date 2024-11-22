@@ -7,6 +7,7 @@ import { QuickPickItem } from "vscode";
 export class ResourceGroupItem implements QuickPickItem {
 	public readonly label: string;
 	public readonly description: string;
+
 	constructor(
 		public readonly resourceGroup: ResourceManagementModels.ResourceGroup,
 	) {

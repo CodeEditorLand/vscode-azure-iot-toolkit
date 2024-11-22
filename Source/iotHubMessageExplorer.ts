@@ -17,6 +17,7 @@ import { Utility } from "./utility";
 export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 	private _eventHubCompatibleEndpointConnectionString: string;
 	private _eventHubClient: EventHubConsumerClient;
+
 	constructor(outputChannel: vscode.OutputChannel) {
 		super(
 			outputChannel,
@@ -30,6 +31,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			deviceItem,
 			Constants.IoTHubAIMessageStartEvent,
 		);
+
 		if (!deviceItem || !deviceItem.connectionString) {
 			return;
 		}
@@ -42,10 +44,12 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			.then((message: string) => {
 				if (message !== undefined) {
 					this._outputChannel.show();
+
 					try {
 						const client = clientFromConnectionString(
 							deviceConnectionString,
 						);
+
 						const stringify = Utility.getConfig<boolean>(
 							Constants.IoTHubD2CMessageStringifyKey,
 						);
@@ -74,6 +78,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 				Constants.IoTHubMonitorLabel,
 				"There is a running job to monitor built-in event endpoint. Please stop it first.",
 			);
+
 			return;
 		}
 
@@ -83,15 +88,18 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			true,
 			"iot-hub-event-hub-connection-string.md",
 		);
+
 		if (!connectionString) {
 			return;
 		}
 		const config = Utility.getConfiguration();
+
 		const consumerGroup = config.get<string>(Constants.IoTHubConsumerGroup);
 
 		try {
 			this._eventHubCompatibleEndpointConnectionString = connectionString;
 			this._outputChannel.show();
+
 			const deviceLabel = deviceItem
 				? `device [${deviceItem.deviceId}]`
 				: "all devices";
@@ -137,13 +145,16 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 				consumerGroup,
 				this._eventHubCompatibleEndpointConnectionString,
 			);
+
 			const monitorD2CBeforeNowInMinutes =
 				Utility.getConfiguration().get<number>(
 					"monitorD2CBeforeNowInMinutes",
 				);
+
 			const startAfterTime = new Date(
 				Date.now() - 1000 * 60 * monitorD2CBeforeNowInMinutes,
 			);
+
 			const partitionIds = await this._eventHubClient.getPartitionIds();
 			partitionIds.forEach((partitionId) => {
 				this.outputLine(
@@ -167,6 +178,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 	private printError(label: string) {
 		return async (err) => {
 			this.outputLine(label, err.message);
+
 			if (this._isMonitoring) {
 				await this._eventHubClient.close();
 				this.outputLine(
@@ -183,14 +195,18 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			messages.forEach((message) => {
 				const deviceId =
 					message.systemProperties["iothub-connection-device-id"];
+
 				const moduleId =
 					message.systemProperties["iothub-connection-module-id"];
+
 				if (deviceItem && deviceItem.deviceId !== deviceId) {
 					return;
 				}
 				const result = Utility.getMessageFromEventData(message);
+
 				const timeMessage =
 					Utility.getTimeMessageFromEventData(message);
+
 				const messageSource = moduleId
 					? `${deviceId}/${moduleId}`
 					: deviceId;

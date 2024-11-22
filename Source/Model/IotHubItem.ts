@@ -9,6 +9,7 @@ import { Utility } from "../utility";
 export class IotHubItem implements QuickPickItem {
 	public readonly label: string;
 	public readonly description: string;
+
 	constructor(
 		public readonly iotHubDescription: IotHubModels.IotHubDescription,
 	) {

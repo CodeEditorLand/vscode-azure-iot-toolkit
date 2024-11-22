@@ -46,6 +46,7 @@ export class IoTHubMessageBaseExplorer extends BaseExplorer {
 	) {
 		TelemetryClient.sendEvent(aiEvent);
 		this._outputChannel.show();
+
 		if (this._isMonitoring) {
 			this.outputLine(label, `Stopping ${endpointType} monitoring...`);
 			this._monitorStatusBarItem.hide();

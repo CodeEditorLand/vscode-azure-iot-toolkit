@@ -30,6 +30,7 @@ export class IoTHubSubscriptionTreeItem extends SubscriptionTreeItemBase {
 		}
 
 		const client: IotHubClient = createAzureClient(this.root, IotHubClient);
+
 		const iotHubCollection: IotHubModels.IotHubDescriptionListResult =
 			this._nextLink === undefined
 				? await client.iotHubResource.listBySubscription()
@@ -37,6 +38,7 @@ export class IoTHubSubscriptionTreeItem extends SubscriptionTreeItemBase {
 						this._nextLink,
 					);
 		this._nextLink = iotHubCollection.nextLink;
+
 		return iotHubCollection.map(
 			(iotHub: IotHubModels.IotHubDescription) =>
 				new IoTHubResourceTreeItem(this, iotHub),

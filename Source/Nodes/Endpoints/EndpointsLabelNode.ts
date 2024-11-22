@@ -32,9 +32,11 @@ export class EndpointsLabelNode implements INode {
 
 		try {
 			const accountApi = Utility.getAzureAccountApi();
+
 			const subscriptionId = Constants.ExtensionContext.globalState.get(
 				Constants.StateKeySubsID,
 			);
+
 			if (!subscriptionId || !(await accountApi.waitForLogin())) {
 				return [this.getSelectIoTHubCommandNode()];
 			}
@@ -43,6 +45,7 @@ export class EndpointsLabelNode implements INode {
 				(element) =>
 					element.subscription.subscriptionId === subscriptionId,
 			);
+
 			const client = createAzureClient(
 				{
 					credentials: subscription.session.credentials2,
@@ -51,7 +54,9 @@ export class EndpointsLabelNode implements INode {
 				},
 				IotHubClient,
 			);
+
 			const iotHubs = await client.iotHubResource.listBySubscription();
+
 			const iothub = iotHubs.find(
 				(element) =>
 					element.id ===
@@ -95,6 +100,7 @@ export class EndpointsLabelNode implements INode {
 					[Constants.errorProperties.Message]: err.message,
 				},
 			);
+
 			return Utility.getErrorMessageTreeItems("endpoints", err.message);
 		}
 	}

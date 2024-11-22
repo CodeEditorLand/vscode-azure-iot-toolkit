@@ -21,10 +21,12 @@ export class DeviceExplorer extends BaseExplorer {
 
 	public async listDevice() {
 		const label = "Device";
+
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
@@ -52,11 +54,13 @@ export class DeviceExplorer extends BaseExplorer {
 		outputChannel: vscode.OutputChannel = this._outputChannel,
 	) {
 		const label = "Device";
+
 		if (!iotHubConnectionString) {
 			iotHubConnectionString = await Utility.getConnectionString(
 				Constants.IotHubConnectionStringKey,
 				Constants.IotHubConnectionStringTitle,
 			);
+
 			if (!iotHubConnectionString) {
 				return;
 			}
@@ -68,11 +72,13 @@ export class DeviceExplorer extends BaseExplorer {
 			false,
 			iotHubConnectionString,
 		);
+
 		if (!deviceItem) {
 			return;
 		}
 
 		const hostName = Utility.getHostName(iotHubConnectionString);
+
 		const registry = iothub.Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
@@ -82,6 +88,7 @@ export class DeviceExplorer extends BaseExplorer {
 			`Querying device [${deviceItem.deviceId}]...`,
 			outputChannel,
 		);
+
 		return new Promise((resolve, reject) => {
 			registry.get(
 				deviceItem.deviceId,
@@ -108,13 +115,16 @@ export class DeviceExplorer extends BaseExplorer {
 				Constants.IotHubConnectionStringKey,
 				Constants.IotHubConnectionStringTitle,
 			);
+
 			if (!iotHubConnectionString) {
 				return;
 			}
 		}
 
 		const label: string = edgeDevice ? "Edge Device" : "Device";
+
 		const hostName: string = Utility.getHostName(iotHubConnectionString);
+
 		const registry: iothub.Registry = iothub.Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
@@ -122,6 +132,7 @@ export class DeviceExplorer extends BaseExplorer {
 		const deviceId: string = await this.promptForDeviceId(
 			`Enter ${label} ID to create`,
 		);
+
 		if (!deviceId) {
 			return;
 		}
@@ -129,6 +140,7 @@ export class DeviceExplorer extends BaseExplorer {
 		const device: any = {
 			deviceId,
 		};
+
 		if (edgeDevice) {
 			device.capabilities = {
 				iotEdge: true,
@@ -141,6 +153,7 @@ export class DeviceExplorer extends BaseExplorer {
 			`Creating ${label} '${device.deviceId}'`,
 			outputChannel,
 		);
+
 		return new Promise((resolve, reject) => {
 			registry.create(
 				device,
@@ -159,10 +172,12 @@ export class DeviceExplorer extends BaseExplorer {
 
 	public async deleteDevice(deviceItem?: DeviceItem) {
 		const label = "Device";
+
 		const iotHubConnectionString = await Utility.getConnectionString(
 			Constants.IotHubConnectionStringKey,
 			Constants.IotHubConnectionStringTitle,
 		);
+
 		if (!iotHubConnectionString) {
 			return;
 		}
@@ -174,12 +189,14 @@ export class DeviceExplorer extends BaseExplorer {
 			deviceItem,
 			"AZ.Device.Delete.Start",
 		);
+
 		if (deviceItem && deviceItem.label) {
 			const result = await vscode.window.showWarningMessage(
 				`${Constants.DeleteMessage} "${deviceItem.label}"?`,
 				{ modal: true },
 				Constants.DeleteLabel,
 			);
+
 			if (result === Constants.DeleteLabel) {
 				return this.deleteDeviceById(deviceItem.label, label, registry);
 			}
@@ -188,8 +205,10 @@ export class DeviceExplorer extends BaseExplorer {
 
 	private async promptForDeviceId(prompt: string): Promise<string> {
 		let deviceId: string = await vscode.window.showInputBox({ prompt });
+
 		if (deviceId !== undefined) {
 			deviceId = deviceId.trim();
+
 			if (!deviceId) {
 				vscode.window.showErrorMessage("Device ID cannot be empty");
 			}
@@ -205,6 +224,7 @@ export class DeviceExplorer extends BaseExplorer {
 	) {
 		this._outputChannel.show();
 		this.outputLine(label, `Deleting device '${deviceId}'`);
+
 		return new Promise((resolve, reject) => {
 			registry.delete(
 				deviceId,
@@ -224,6 +244,7 @@ export class DeviceExplorer extends BaseExplorer {
 	) {
 		return (err, deviceInfo, res) => {
 			const eventName = `AZ.${label.replace(/\s/g, ".")}.${op}`;
+
 			if (err) {
 				TelemetryClient.sendEvent(
 					eventName,
@@ -239,8 +260,10 @@ export class DeviceExplorer extends BaseExplorer {
 			}
 			if (res) {
 				let result = "Fail";
+
 				if (res.statusCode < 300) {
 					result = "Success";
+
 					if (op === "Create" || op === "Delete") {
 						// Workaround for https://github.com/microsoft/vscode-azure-iot-toolkit/issues/331
 						setTimeout(() => {

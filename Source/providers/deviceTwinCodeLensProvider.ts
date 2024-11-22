@@ -11,10 +11,12 @@ export class DeviceTwinCodeLensProvider implements vscode.CodeLensProvider {
 		token: vscode.CancellationToken,
 	): Promise<vscode.CodeLens[]> {
 		const range = new vscode.Range(0, 0, 0, 0);
+
 		const cmd: vscode.Command = {
 			title: "Update Device Twin",
 			command: "azure-iot-toolkit.updateDeviceTwin",
 		};
+
 		return Promise.resolve([new vscode.CodeLens(range, cmd)]);
 	}
 }

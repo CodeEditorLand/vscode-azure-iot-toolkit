@@ -15,6 +15,7 @@ export class IoTHubResourceTreeItem extends AzureTreeItem {
 	private static contextValue: string = "IotHub";
 	public readonly contextValue: string = IoTHubResourceTreeItem.contextValue;
 	public readonly iotHub: IotHubModels.IotHubDescription;
+
 	constructor(
 		parent: AzureParentTreeItem,
 		iotHub: IotHubModels.IotHubDescription,

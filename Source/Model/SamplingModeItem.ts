@@ -8,6 +8,7 @@ export class SamplingModeItem implements QuickPickItem {
 	public readonly description: string;
 	public readonly picked: boolean;
 	public readonly distributedTracingEnabled: boolean;
+
 	constructor(mode: boolean) {
 		this.label = mode ? "Enable" : "Disable";
 		this.description = mode

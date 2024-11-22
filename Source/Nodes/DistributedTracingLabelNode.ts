@@ -11,6 +11,7 @@ import { TwinNode } from "./TwinNode";
 
 export class DistributedTracingLabelNode implements INode {
 	private readonly label: string;
+
 	constructor(public readonly deviceNode: DeviceNode) {
 		this.label = "Distributed Tracing Setting (Preview)";
 	}
@@ -37,6 +38,7 @@ export class DistributedTracingLabelNode implements INode {
 				this.deviceNode,
 			),
 		);
+
 		return twinNodeList;
 	}
 }

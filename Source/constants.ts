@@ -253,6 +253,7 @@ export class Constants {
 
 	public static initialize(context: vscode.ExtensionContext) {
 		Constants.ExtensionContext = context;
+
 		const directory = context.storagePath
 			? context.storagePath
 			: os.tmpdir();

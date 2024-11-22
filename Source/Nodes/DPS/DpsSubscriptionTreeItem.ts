@@ -33,6 +33,7 @@ export class DpsSubscriptionTreeItem extends SubscriptionTreeItemBase {
 		}
 
 		const client: IotDpsClient = createAzureClient(this.root, IotDpsClient);
+
 		const dpsCollection: IotDpsModels.ProvisioningServiceDescriptionListResult =
 			this._nextLink === undefined
 				? await client.iotDpsResource.listBySubscription()
@@ -40,6 +41,7 @@ export class DpsSubscriptionTreeItem extends SubscriptionTreeItemBase {
 						this._nextLink,
 					);
 		this._nextLink = dpsCollection.nextLink;
+
 		return dpsCollection.map(
 			(dps: IotDpsModels.ProvisioningServiceDescription) =>
 				new DpsResourceTreeItem(this, dps),

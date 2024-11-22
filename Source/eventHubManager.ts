@@ -36,6 +36,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 				Constants.IoTHubMonitorLabel,
 				"There is a running job to monitor custom Event Hub endpoint. Please stop it first.",
 			);
+
 			return;
 		}
 
@@ -76,6 +77,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 					eventHubItem.eventHubProperty.connectionString,
 				),
 			);
+
 			const partitionIds = await this._eventHubClient.getPartitionIds();
 			this.updateMonitorStatus(true);
 			partitionIds.forEach((partitionId) => {
@@ -116,6 +118,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 	private onMessage = async (messages: ReceivedEventData[]) => {
 		messages.forEach((message) => {
 			const result = Utility.getMessageFromEventData(message);
+
 			const timeMessage = Utility.getTimeMessageFromEventData(message);
 			this.outputLine(
 				Constants.EventHubMonitorLabel,
@@ -131,6 +134,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 
 	private getNamespacefromConnectionString(connectionString: string): string {
 		const result = /^Endpoint=sb:\/\/([^.]+)\./.exec(connectionString);
+
 		return result ? result[1] : "";
 	}
 
@@ -138,6 +142,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 		connectionString: string,
 	): string {
 		const result = /EntityPath=(.+)$/.exec(connectionString);
+
 		return result ? result[1] : "";
 	}
 }
