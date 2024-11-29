@@ -41,13 +41,18 @@ export class BaseExplorer {
 		return (err, result) => {
 			if (err) {
 				this.outputLine(label, `Failed to send message to [${target}]`);
+
 				this.outputLine(label, err.toString());
+
 				TelemetryClient.sendEvent(aiEventName, { Result: "Fail" });
 			}
+
 			if (result) {
 				this.outputLine(label, `[Success] Message sent to [${target}]`);
+
 				TelemetryClient.sendEvent(aiEventName, { Result: "Success" });
 			}
+
 			client.close(() => {
 				return;
 			});

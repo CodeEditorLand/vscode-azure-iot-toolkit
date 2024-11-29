@@ -29,38 +29,61 @@ export class Simulator {
 				Simulator.instance = new Simulator(context);
 			}
 		}
+
 		return Simulator.instance;
 	}
 
 	private static instance: Simulator;
+
 	private readonly context: vscode.ExtensionContext;
+
 	private readonly outputChannel: vscode.OutputChannel;
+
 	private iotHubConnectionString: string;
+
 	private processing: boolean;
+
 	private cancelToken: boolean;
+
 	private totalStatus: SendStatus;
+
 	private closeDuration: number;
+
 	private persistedInputs: {
 		hostName: string;
+
 		deviceConnectionStrings: string[];
+
 		numbers: string;
+
 		interval: string;
+
 		intervalUnit: string;
+
 		messageBodyType: string;
+
 		plainTextArea: string;
+
 		dummyJsonArea: string;
+
 		inputDeviceList: string[];
 	};
 
 	private constructor(context: vscode.ExtensionContext) {
 		this.context = context;
+
 		this.outputChannel = vscode.window.createOutputChannel(
 			Constants.SimulatorOutputChannelTitle,
 		);
+
 		this.processing = false;
+
 		this.cancelToken = false;
+
 		this.closeDuration = 0;
+
 		this.iotHubConnectionString = undefined;
+
 		this.persistedInputs = {
 			hostName: "",
 			deviceConnectionStrings: [],
@@ -78,6 +101,7 @@ export class Simulator {
 		const _IoTHubResourceExplorer = new IoTHubResourceExplorer(
 			this.outputChannel,
 		);
+
 		await _IoTHubResourceExplorer.selectIoTHub();
 	}
 
@@ -162,9 +186,13 @@ export class Simulator {
 
 		if (this.isProcessing()) {
 			this.closeDuration = 3500;
+
 			await this.showWebview(false);
+
 			this.telemetry(Constants.SimulatorLaunchEvent, true);
+
 			await this.delay(this.closeDuration);
+
 			this.closeDuration = 0;
 		} else {
 			this.iotHubConnectionString = await Utility.getConnectionString(
@@ -179,10 +207,12 @@ export class Simulator {
 				).HostName;
 
 				const hostNamePersisted = this.persistedInputs.hostName;
+
 				deviceConnectionStrings.push(deviceItem.connectionString);
 
 				const deviceConnectionStringsPersisted =
 					this.persistedInputs.deviceConnectionStrings;
+
 				await this.showWebview(
 					hostName !== hostNamePersisted ||
 						deviceConnectionStrings !==
@@ -190,25 +220,30 @@ export class Simulator {
 					hostName,
 					deviceConnectionStrings,
 				);
+
 				this.telemetry(Constants.SimulatorLaunchEvent, true);
 			} else {
 				// Exit when no connection string found or the connection string is invalid.
 				if (!this.iotHubConnectionString) {
 					const errorMessage =
 						"Failed to launch Send D2C Messages webview: No IoT Hub Connection String Found.";
+
 					vscode.window.showErrorMessage(errorMessage);
+
 					this.telemetry(Constants.SimulatorLaunchEvent, false, {
 						error: errorMessage,
 					});
 
 					return;
 				}
+
 				try {
 					const deviceList: vscode.TreeItem[] =
 						await Utility.getDeviceList(
 							this.iotHubConnectionString,
 							Constants.ExtensionContext,
 						);
+
 					deviceList.map(
 						(item) => new DeviceNode(item as DeviceItem),
 					);
@@ -217,6 +252,7 @@ export class Simulator {
 						"Failed to launch Send D2C Messages webview: " +
 							err.message,
 					);
+
 					this.telemetry(Constants.SimulatorLaunchEvent, false, {
 						error:
 							"Failed to launch Send D2C Messages webview: " +
@@ -225,6 +261,7 @@ export class Simulator {
 
 					return;
 				}
+
 				const hostName = ConnectionString.parse(
 					this.iotHubConnectionString,
 				).HostName;
@@ -233,14 +270,17 @@ export class Simulator {
 
 				const deviceConnectionStringsPersisted =
 					this.persistedInputs.deviceConnectionStrings;
+
 				await this.showWebview(
 					hostName !== hostNamePersisted ||
 						deviceConnectionStringsPersisted.length !== 0,
 					hostName,
 					deviceConnectionStrings,
 				);
+
 				this.telemetry(Constants.SimulatorLaunchEvent, true);
 			}
+
 			vscode.commands.executeCommand("azure-iot-toolkit.refresh");
 		}
 	}
@@ -254,6 +294,7 @@ export class Simulator {
 	) {
 		if (!this.processing) {
 			this.processing = true;
+
 			await this.sendD2CMessageFromMultipleDevicesRepeatedly(
 				deviceConnectionStrings,
 				template,
@@ -261,6 +302,7 @@ export class Simulator {
 				numbers,
 				interval,
 			);
+
 			this.processing = false;
 			// The cancel token can only be re-initialized out of any send() or delay() functions.
 			this.cancelToken = false;
@@ -303,11 +345,13 @@ export class Simulator {
 		if (hostName) {
 			await this.setPreSelectedHostName(hostName);
 		}
+
 		if (deviceConnectionStrings) {
 			await this.setPreSelectedDeviceConnectionStrings(
 				deviceConnectionStrings,
 			);
 		}
+
 		await simulatorwebview.showWebview(forceReload);
 
 		return;
@@ -330,12 +374,16 @@ export class Simulator {
 
 			if (err) {
 				await status.addFailed();
+
 				await totalStatus.addFailed();
 			}
+
 			if (result) {
 				await status.addSucceed();
+
 				await totalStatus.addSucceed();
 			}
+
 			const sum = await status.sum();
 
 			if (sum === total) {
@@ -387,6 +435,7 @@ export class Simulator {
 				milliSecond -= 1000;
 			}
 		}
+
 		if (milliSecond > 0) {
 			await this.delay(milliSecond);
 		}
@@ -408,7 +457,9 @@ export class Simulator {
 
 			return;
 		}
+
 		const startTime = new Date();
+
 		this.output(
 			`Start sending messages from ${deviceCount} device(s) to IoT Hub.`,
 		);
@@ -418,20 +469,24 @@ export class Simulator {
 		const statuses = [];
 
 		const ids = [];
+
 		this.totalStatus = new SendStatus("Total", total);
 
 		for (let i = 0; i < deviceCount; i++) {
 			clients.push(
 				await clientFromConnectionString(deviceConnectionStrings[i]),
 			);
+
 			statuses.push(
 				new SendStatus(
 					ConnectionString.parse(deviceConnectionStrings[i]).DeviceId,
 					numbers,
 				),
 			);
+
 			ids.push(i);
 		}
+
 		for (let i = 0; i < numbers; i++) {
 			// No await here, beacause the interval should begin as soon as it called send(), not after it sent.
 			ids.map((j) => {
@@ -439,6 +494,7 @@ export class Simulator {
 				const generatedMessage = isTemplate
 					? dummyjson.parse(template)
 					: template;
+
 				this.sendD2CMessageCore(
 					clients[j],
 					generatedMessage,
@@ -446,17 +502,21 @@ export class Simulator {
 					this.totalStatus,
 				);
 			});
+
 			this.totalStatus.addSent(deviceCount);
 
 			if (this.cancelToken) {
 				break;
 			}
+
 			if (i < numbers - 1) {
 				// There won"t be a delay after the last iteration.
 				await this.cancellableDelay(interval);
 			}
 		}
+
 		const endTime = new Date();
+
 		this.output(
 			this.cancelToken
 				? `User aborted.`
@@ -472,6 +532,7 @@ export class Simulator {
 		) {
 			await this.delay(500);
 		}
+
 		this.output(
 			`${await this.totalStatus.getSucceed()} succeeded, and ${await this.totalStatus.getFailed()} failed.`,
 		);

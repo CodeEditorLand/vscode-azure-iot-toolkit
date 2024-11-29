@@ -8,6 +8,7 @@ import { AzureSession } from "../azure-account.api";
 
 export class SubscriptionItem implements QuickPickItem {
 	public readonly label: string;
+
 	public readonly description: string;
 
 	constructor(
@@ -15,6 +16,7 @@ export class SubscriptionItem implements QuickPickItem {
 		public readonly session: AzureSession,
 	) {
 		this.label = subscription.displayName;
+
 		this.description = subscription.subscriptionId;
 	}
 }

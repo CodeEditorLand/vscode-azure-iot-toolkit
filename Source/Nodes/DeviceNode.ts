@@ -12,10 +12,12 @@ import { ModuleLabelNode } from "./ModuleLabelNode";
 
 export class DeviceNode implements INode {
 	public readonly deviceId: string;
+
 	public readonly connectionString: string;
 
 	constructor(public deviceItem: DeviceItem) {
 		this.deviceId = deviceItem.deviceId;
+
 		this.connectionString = deviceItem.connectionString;
 	}
 
@@ -28,6 +30,7 @@ export class DeviceNode implements INode {
 		iotHubConnectionString: string,
 	): Promise<INode[]> {
 		const nodeList: INode[] = [];
+
 		nodeList.push(new ModuleLabelNode(this));
 
 		if (
@@ -37,6 +40,7 @@ export class DeviceNode implements INode {
 		) {
 			nodeList.push(new DistributedTracingLabelNode(this));
 		}
+
 		TelemetryClient.sendEvent(
 			Constants.IoTHubAILoadLabelInDeviceTreeDoneEvent,
 			{ Result: "Success" },

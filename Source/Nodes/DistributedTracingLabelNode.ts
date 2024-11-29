@@ -26,12 +26,14 @@ export class DistributedTracingLabelNode implements INode {
 
 	public getChildren(): INode[] {
 		const twinNodeList: INode[] = [];
+
 		twinNodeList.push(
 			new TwinNode(
 				new TwinItem("Desired", DeviceTwinPropertyType.Desired),
 				this.deviceNode,
 			),
 		);
+
 		twinNodeList.push(
 			new TwinNode(
 				new TwinItem("Reported", DeviceTwinPropertyType.Reported),

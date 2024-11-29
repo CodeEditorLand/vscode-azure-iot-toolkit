@@ -26,6 +26,7 @@ export class SnippetManager extends BaseExplorer {
 		if (!event.contentChanges[0]) {
 			return;
 		}
+
 		const changedText = event.contentChanges[0].text;
 
 		if (
@@ -37,9 +38,11 @@ export class SnippetManager extends BaseExplorer {
 			if (!editor) {
 				return;
 			}
+
 			const document = editor.document;
 
 			const text = document.getText();
+
 			this.connectionStringKeys.forEach(async (connectionStringKey) => {
 				const connectionStringValue =
 					await Utility.getConnectionStringWithId(
@@ -71,11 +74,13 @@ export class SnippetManager extends BaseExplorer {
 								),
 								connectionStringValue,
 							);
+
 							TelemetryClient.sendEvent(
 								`Snippet.ReplaceConnectionString`,
 								{ Type: connectionStringKey },
 							);
 						});
+
 						offset = text.indexOf(
 							connectionStringKeyWithAngleBracket,
 							offset + 1,

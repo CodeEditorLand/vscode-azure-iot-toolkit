@@ -43,11 +43,14 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 		const registry = iothub.Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
+
 		this._outputChannel.show();
+
 		this.outputLine(
 			Constants.IoTHubDeviceTwinLabel,
 			`Get Device Twin for [${deviceId}]...`,
 		);
+
 		registry.getTwin(deviceId, (err, twin) => {
 			if (err) {
 				this.outputLine(
@@ -59,7 +62,9 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 					Constants.IoTHubDeviceTwinLabel,
 					`Device Twin retrieved successfully`,
 				);
+
 				Utility.writeJson(Constants.DeviceTwinJosnFilePath, twin);
+
 				vscode.workspace
 					.openTextDocument(Constants.DeviceTwinJosnFilePath)
 					.then((document: vscode.TextDocument) => {
@@ -68,6 +73,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 								.showWarningMessage(`Your ${Constants.DeviceTwinJosnFileName} has unsaved changes. \
                         Please close or save the file. Then try again.`);
 						}
+
 						vscode.window.showTextDocument(document);
 					});
 			}
@@ -96,7 +102,9 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 			if (!deviceTwinContent) {
 				return;
 			}
+
 			const deviceTwinJson = JSON.parse(deviceTwinContent);
+
 			this.outputLine(
 				Constants.IoTHubDeviceTwinLabel,
 				`Update Device Twin for [${deviceTwinJson.deviceId}]...`,
@@ -105,6 +113,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 			const registry = iothub.Registry.fromConnectionString(
 				iotHubConnectionString,
 			);
+
 			registry.updateTwin(
 				deviceTwinJson.deviceId,
 				deviceTwinContent,
@@ -120,6 +129,7 @@ export class IotHubDeviceTwinExplorer extends BaseExplorer {
 							Constants.IoTHubDeviceTwinLabel,
 							`Device Twin updated successfully`,
 						);
+
 						this.getDeviceTwinById(deviceTwinJson.deviceId);
 					}
 				},

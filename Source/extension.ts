@@ -34,7 +34,9 @@ import { TelemetryClientWrapper } from "./telemetryClientWrapper";
 
 export function activate(context: vscode.ExtensionContext) {
 	Constants.initialize(context);
+
 	TelemetryClient.initialize(context);
+
 	TelemetryClient.sendEvent("extensionActivated");
 
 	const { azureIoTExplorer, deviceTree } = initializeTreeView(context);
@@ -47,6 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
 			new ModuleTwinCodeLensProvider(),
 		),
 	);
+
 	context.subscriptions.push(
 		vscode.languages.registerCodeLensProvider(
 			{ pattern: `**/${Constants.DeviceTwinJosnFileName}` },
@@ -326,6 +329,7 @@ export function activate(context: vscode.ExtensionContext) {
 					Constants.IoTHubAIShowWelcomePagetEvent,
 					{ trigger: "manual" },
 				);
+
 				azureIoTExplorer.showWelcomePage();
 			},
 		),
@@ -413,6 +417,7 @@ export function activate(context: vscode.ExtensionContext) {
 				TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, {
 					entry: "built-in-events",
 				});
+
 				vscode.commands.executeCommand(
 					"azure-iot-toolkit.startMonitorIoTHubMessage",
 				);
@@ -431,23 +436,41 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(sendD2CMessage);
+
 	context.subscriptions.push(startMonitorIoTHubMessage);
+
 	context.subscriptions.push(stopMonitorIoTHubMessage);
+
 	context.subscriptions.push(sendC2DMessage);
+
 	context.subscriptions.push(startMonitorC2DMessage);
+
 	context.subscriptions.push(stopMonitorC2DMessage);
+
 	context.subscriptions.push(listDevice);
+
 	context.subscriptions.push(createDevice);
+
 	context.subscriptions.push(deleteDevice);
+
 	context.subscriptions.push(invokeDeviceMethod);
+
 	context.subscriptions.push(getDeviceTwin);
+
 	context.subscriptions.push(updateDeviceTwin);
+
 	context.subscriptions.push(selectIoTHub);
+
 	context.subscriptions.push(copyIoTHubConnectionString);
+
 	context.subscriptions.push(copyDeviceConnectionString);
+
 	context.subscriptions.push(createDeployment);
+
 	context.subscriptions.push(updateDistributedTracingSetting);
+
 	context.subscriptions.push(editDistributedTracingMode);
+
 	context.subscriptions.push(editDistributedTracingSamplingRate);
 
 	return { azureIoTExplorer };
@@ -469,6 +492,7 @@ function initializeTreeView(context: vscode.ExtensionContext) {
 		reporter: telemetryReporter,
 		ui: new AzureUserInput(context.globalState),
 	};
+
 	registerUIExtensionVariables(uiExtensionVariables);
 
 	activateDps(context, outputChannel);
@@ -476,6 +500,7 @@ function initializeTreeView(context: vscode.ExtensionContext) {
 	const azureIoTExplorer = activateIoTHub(context, outputChannel);
 
 	const deviceTree = new DeviceTree(context);
+
 	vscode.window.registerTreeDataProvider("iotHubDevices", deviceTree);
 
 	return { azureIoTExplorer, deviceTree };
@@ -493,6 +518,7 @@ function activateDps(
 	);
 
 	context.subscriptions.push(dpsTreeItem);
+
 	context.subscriptions.push(
 		vscode.window.createTreeView("iotDpsExplorer", {
 			treeDataProvider: dpsExtTreeDataProvider,
@@ -511,12 +537,14 @@ function activateDps(
 			await azureDpsExplorer.viewProperties(actionContext, node);
 		},
 	);
+
 	registerCommand(
 		"azure-iot-dps.loadMore",
 		async (actionContext: IActionContext, node: AzureTreeItem) => {
 			await azureDpsExplorer.loadMore(actionContext, node);
 		},
 	);
+
 	registerCommand(
 		"azure-iot-dps.refresh",
 		async (actionContext: IActionContext, node: AzureTreeItem) => {

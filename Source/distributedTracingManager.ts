@@ -99,6 +99,7 @@ export class DistributedTracingManager extends BaseExplorer {
 						twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME]
 					) {
 						mode = Utility.parseDesiredSamplingMode(twin);
+
 						samplingRate = Utility.parseDesiredSamplingRate(twin);
 					}
 
@@ -130,6 +131,7 @@ export class DistributedTracingManager extends BaseExplorer {
 			if (!selectedItem) {
 				return;
 			}
+
 			mode = selectedItem.distributedTracingEnabled;
 		}
 
@@ -159,6 +161,7 @@ export class DistributedTracingManager extends BaseExplorer {
 						iotHubConnectionString,
 						deviceIds,
 					);
+
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAIUpdateDistributedSettingDoneEvent,
 						{
@@ -180,7 +183,9 @@ export class DistributedTracingManager extends BaseExplorer {
 							"\nDetailed information are shown as below:\n" +
 							JSON.stringify(result, null, 2);
 					}
+
 					this._outputChannel.show();
+
 					this.outputLine(
 						Constants.IoTHubDistributedTracingSettingLabel,
 						`Update distributed tracing setting for device [${deviceIds.join(",")}] complete!` +
@@ -219,7 +224,9 @@ export class DistributedTracingManager extends BaseExplorer {
 						},
 						iotHubConnectionString,
 					);
+
 					this._outputChannel.show();
+
 					this.outputLine(
 						Constants.IoTHubDistributedTracingSettingLabel,
 						`Failed to get or update distributed setting: ${err.message}`,
@@ -266,6 +273,7 @@ export class DistributedTracingManager extends BaseExplorer {
 			const registry = iothub.Registry.fromConnectionString(
 				iotHubConnectionString,
 			);
+
 			await registry.updateTwin(
 				deviceIds[0],
 				JSON.stringify(twinPatch),
@@ -328,6 +336,7 @@ export class DistributedTracingManager extends BaseExplorer {
 						result.jobStatus.status === "cancelled"
 					) {
 						clearInterval(jobMonitorInterval);
+
 						resolve(result.jobStatus);
 					}
 				} catch (err) {
@@ -366,6 +375,7 @@ export class DistributedTracingManager extends BaseExplorer {
 					if (!value) {
 						return "Sampling rate cannot be empty";
 					}
+
 					const containsOnlyNumber = /^\d+$/.test(value);
 
 					const floatValue: number = parseFloat(value);
@@ -378,6 +388,7 @@ export class DistributedTracingManager extends BaseExplorer {
 					) {
 						return "Sampling rate should be an integer within [0, 100]";
 					}
+
 					return undefined;
 				} else {
 					return "Sampling rate cannot be empty";

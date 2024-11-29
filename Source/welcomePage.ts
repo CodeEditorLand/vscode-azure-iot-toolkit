@@ -23,7 +23,9 @@ export class WelcomePage {
 			TelemetryClient.sendEvent(Constants.IoTHubAIShowWelcomePagetEvent, {
 				trigger: "auto",
 			});
+
 			this.show();
+
 			this.context.globalState.update(Constants.IsWelcomePageShown, true);
 		}
 	}
@@ -31,6 +33,7 @@ export class WelcomePage {
 	public show() {
 		if (!this.panel) {
 			const startTime = new Date();
+
 			this.panel = vscode.window.createWebviewPanel(
 				"welcomePage",
 				"Welcome to Azure IoT Hub Extension",
@@ -48,6 +51,7 @@ export class WelcomePage {
 				),
 				"utf8",
 			);
+
 			html = html.replace(
 				/{{root}}/g,
 				this.panel.webview
@@ -56,16 +60,20 @@ export class WelcomePage {
 					)
 					.toString(),
 			);
+
 			this.panel.webview.html = html;
+
 			this.panel.onDidDispose(() => {
 				this.panel = undefined;
 
 				const duration =
 					(new Date().getTime() - startTime.getTime()) / 1000;
+
 				TelemetryClient.sendEvent("General.WelcomePage.Close", {
 					duration: duration.toString(),
 				});
 			});
+
 			this.panel.webview.onDidReceiveMessage((message) => {
 				TelemetryClient.sendEvent("General.WelcomePage.Click", {
 					href: message.href,

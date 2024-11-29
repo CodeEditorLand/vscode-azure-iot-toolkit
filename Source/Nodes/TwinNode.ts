@@ -16,6 +16,7 @@ import iothub = require("azure-iothub");
 export class TwinNode implements INode {
 	private readonly DISTRIBUTED_TRACING_ENABLED_PROPERTY: string =
 		"Enable Distributed Tracing: ";
+
 	private readonly DISTRIBUTED_TRACING_SAMPLING_RATE: string =
 		"Sampling Rate: ";
 
@@ -57,6 +58,7 @@ export class TwinNode implements INode {
 			if (this.twinItem.type === DeviceTwinPropertyType.Desired) {
 				if (twin.properties.desired[Constants.DISTRIBUTED_TWIN_NAME]) {
 					samplingRate = Utility.parseDesiredSamplingRate(twin);
+
 					enabled = Utility.parseDesiredSamplingMode(twin);
 
 					items.push(
@@ -70,6 +72,7 @@ export class TwinNode implements INode {
 							this.deviceNode,
 						),
 					);
+
 					items.push(
 						new DistributedTracingSettingNode(
 							this.DISTRIBUTED_TRACING_SAMPLING_RATE +
@@ -91,6 +94,7 @@ export class TwinNode implements INode {
 							this.deviceNode,
 						),
 					);
+
 					items.push(
 						new DistributedTracingSettingNode(
 							this.DISTRIBUTED_TRACING_SAMPLING_RATE +
@@ -104,6 +108,7 @@ export class TwinNode implements INode {
 			} else if (this.twinItem.type === DeviceTwinPropertyType.Reported) {
 				if (twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME]) {
 					samplingRate = Utility.parseReportedSamplingRate(twin);
+
 					enabled = Utility.parseReportedSamplingMode(twin);
 
 					items.push(
@@ -117,6 +122,7 @@ export class TwinNode implements INode {
 							this.deviceNode,
 						),
 					);
+
 					items.push(
 						new DistributedTracingSettingNode(
 							this.DISTRIBUTED_TRACING_SAMPLING_RATE +
@@ -138,6 +144,7 @@ export class TwinNode implements INode {
 							this.deviceNode,
 						),
 					);
+
 					items.push(
 						new DistributedTracingSettingNode(
 							this.DISTRIBUTED_TRACING_SAMPLING_RATE +
@@ -149,6 +156,7 @@ export class TwinNode implements INode {
 					);
 				}
 			}
+
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAILoadDistributedTracingSettingTreeDoneEvent,
 				{ Result: "Success" },

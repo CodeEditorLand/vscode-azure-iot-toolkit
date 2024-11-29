@@ -42,12 +42,14 @@ export class ModuleLabelNode implements INode {
 						this.deviceNode.deviceItem,
 						context,
 					);
+
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAILoadEdgeModuleTreeDoneEvent,
 					{ Result: "Success" },
 				);
 
 				const moduleNodeList: INode[] = [];
+
 				moduleList.forEach((item) => {
 					moduleNodeList.push(
 						new ModuleItemNode(item as ModuleItem, this),
@@ -78,6 +80,7 @@ export class ModuleLabelNode implements INode {
 						this.deviceNode.deviceItem,
 						context,
 					);
+
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAILoadModuleTreeDoneEvent,
 					{ Result: "Success" },
@@ -88,6 +91,7 @@ export class ModuleLabelNode implements INode {
 				}
 
 				const moduleNodeList: INode[] = [];
+
 				moduleList.forEach((item) => {
 					moduleNodeList.push(
 						new ModuleItemNode(item as ModuleItem, this),

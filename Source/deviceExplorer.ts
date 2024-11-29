@@ -34,11 +34,16 @@ export class DeviceExplorer extends BaseExplorer {
 		const registry = iothub.Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
+
 		this._outputChannel.show();
+
 		this.outputLine(label, "Querying devices...");
+
 		TelemetryClient.sendEvent(`AZ.${label}.List`);
+
 		registry.list((err, deviceList) => {
 			this.outputLine(label, `${deviceList.length} device(s) found`);
+
 			deviceList.forEach((device, index) => {
 				this.outputLine(
 					`${label}#${index + 1}`,
@@ -82,7 +87,9 @@ export class DeviceExplorer extends BaseExplorer {
 		const registry = iothub.Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
+
 		outputChannel.show();
+
 		this.outputLine(
 			label,
 			`Querying device [${deviceItem.deviceId}]...`,
@@ -148,6 +155,7 @@ export class DeviceExplorer extends BaseExplorer {
 		}
 
 		outputChannel.show();
+
 		this.outputLine(
 			label,
 			`Creating ${label} '${device.deviceId}'`,
@@ -181,6 +189,7 @@ export class DeviceExplorer extends BaseExplorer {
 		if (!iotHubConnectionString) {
 			return;
 		}
+
 		const registry = iothub.Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
@@ -223,6 +232,7 @@ export class DeviceExplorer extends BaseExplorer {
 		registry: iothub.Registry,
 	) {
 		this._outputChannel.show();
+
 		this.outputLine(label, `Deleting device '${deviceId}'`);
 
 		return new Promise((resolve, reject) => {
@@ -251,13 +261,16 @@ export class DeviceExplorer extends BaseExplorer {
 					{ Result: "Fail" },
 					iotHubConnectionString,
 				);
+
 				this.outputLine(
 					label,
 					`[${op}] error: ${err.toString()}`,
 					outputChannel,
 				);
+
 				reject(err);
 			}
+
 			if (res) {
 				let result = "Fail";
 
@@ -273,17 +286,20 @@ export class DeviceExplorer extends BaseExplorer {
 						}, 500);
 					}
 				}
+
 				TelemetryClient.sendEvent(
 					eventName,
 					{ Result: result },
 					iotHubConnectionString,
 				);
+
 				this.outputLine(
 					label,
 					`[${op}][${result}] status: ${res.statusCode} ${res.statusMessage}`,
 					outputChannel,
 				);
 			}
+
 			if (deviceInfo) {
 				if (deviceInfo.authentication.SymmetricKey.primaryKey != null) {
 					deviceInfo.connectionString =
@@ -293,6 +309,7 @@ export class DeviceExplorer extends BaseExplorer {
 							deviceInfo.authentication.SymmetricKey.primaryKey,
 						);
 				}
+
 				if (
 					deviceInfo.authentication.x509Thumbprint
 						.primaryThumbprint != null
@@ -303,13 +320,16 @@ export class DeviceExplorer extends BaseExplorer {
 							deviceInfo.deviceId,
 						);
 				}
+
 				this.outputLine(
 					label,
 					`[${op}] device info: ${JSON.stringify(deviceInfo, null, 2)}`,
 					outputChannel,
 				);
+
 				resolve(deviceInfo);
 			}
+
 			resolve();
 		};
 	}

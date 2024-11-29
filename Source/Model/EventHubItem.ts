@@ -12,6 +12,7 @@ export class EventHubItem extends TreeItem {
 		public readonly eventHubProperty: IotHubModels.RoutingEventHubProperties,
 	) {
 		super(eventHubProperty.name);
+
 		this.contextValue = "event-hub";
 	}
 }

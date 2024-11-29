@@ -38,6 +38,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 		);
 
 		this._outputChannel.show();
+
 		this.outputLine(
 			label,
 			`Querying module [${moduleItem.deviceId}/${moduleItem.moduleId}]...`,
@@ -49,6 +50,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 			(err: Error, module?: iothub.Module) => {
 				if (err) {
 					this.outputLine(label, `Error: ${err.message}`);
+
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAIDGetModuleDoneEvent,
 						{
@@ -57,11 +59,13 @@ export class IotHubModuleExplorer extends BaseExplorer {
 						},
 					);
 				}
+
 				if (module) {
 					this.outputLine(
 						label,
 						`Module info: ${JSON.stringify(module, null, 2)}`,
 					);
+
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAIDGetModuleDoneEvent,
 						{ Result: "Success" },
@@ -106,6 +110,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 		}
 
 		this._outputChannel.show();
+
 		this.outputLine(label, `Creating '${moduleId}'`);
 
 		registry.addModule(
@@ -113,6 +118,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 			(err, module) => {
 				if (err) {
 					this.outputLine(label, `Error: ${err.message}`);
+
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAICreateModuleDoneEvent,
 						{
@@ -125,10 +131,12 @@ export class IotHubModuleExplorer extends BaseExplorer {
 						label,
 						`Created: ${JSON.stringify(module, null, 2)}`,
 					);
+
 					vscode.commands.executeCommand(
 						"azure-iot-toolkit.refresh",
 						deviceNode,
 					);
+
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAICreateModuleDoneEvent,
 						{ Result: "Success" },
@@ -175,6 +183,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 		);
 
 		this._outputChannel.show();
+
 		this.outputLine(
 			label,
 			`Deleting '${moduleItemNode.moduleItem.moduleId}'`,
@@ -186,6 +195,7 @@ export class IotHubModuleExplorer extends BaseExplorer {
 			(err) => {
 				if (err) {
 					this.outputLine(label, `Error: ${err.message}`);
+
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAIDeleteModuleDoneEvent,
 						{
@@ -198,10 +208,12 @@ export class IotHubModuleExplorer extends BaseExplorer {
 						label,
 						`Deleted '${moduleItemNode.moduleItem.moduleId}'`,
 					);
+
 					vscode.commands.executeCommand(
 						"azure-iot-toolkit.refresh",
 						moduleItemNode.moduleLabelNode,
 					);
+
 					TelemetryClient.sendEvent(
 						Constants.IoTHubAIDeleteModuleDoneEvent,
 						{ Result: "Success" },

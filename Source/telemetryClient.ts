@@ -67,7 +67,9 @@ export class TelemetryClient {
 		aiKey,
 		true,
 	);
+
 	private static _extensionContext: vscode.ExtensionContext;
+
 	private static _isInternal: boolean = TelemetryClient.isInternalUser();
 
 	private static async addCommonProperties(
@@ -94,6 +96,7 @@ export class TelemetryClient {
 
 			if (iotHubHostName) {
 				newProperties.IoTHubHostName = Utility.hash(iotHubHostName);
+
 				newProperties.IoTHubHostNamePostfix =
 					Utility.getPostfixFromHostName(iotHubHostName);
 			}

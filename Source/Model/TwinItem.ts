@@ -11,8 +11,11 @@ export class TwinItem extends TreeItem {
 		public readonly type: DeviceTwinPropertyType,
 	) {
 		super(propertyLabel);
+
 		this.type = type;
+
 		this.contextValue = type + "-distributed-twin-properies";
+
 		this.collapsibleState = TreeItemCollapsibleState.Expanded;
 	}
 }

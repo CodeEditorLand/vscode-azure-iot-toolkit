@@ -53,7 +53,9 @@ export class NSAT {
 		}
 
 		const sessionCount = globalState.get(SESSION_COUNT_KEY, 0) + 1;
+
 		await globalState.update(LAST_SESSION_DATE_KEY, date);
+
 		await globalState.update(SESSION_COUNT_KEY, sessionCount);
 
 		if (sessionCount < SESSION_COUNT_THRESHOLD) {
@@ -80,14 +82,18 @@ export class NSAT {
 			title: "Take Survey",
 			run: async () => {
 				TelemetryClient.sendEvent("nsat.survey/takeShortSurvey");
+
 				commands.executeCommand(
 					"vscode.open",
 					Uri.parse(
 						`${NSAT_SURVEY_URL}?o=${encodeURIComponent(process.platform)}&v=${encodeURIComponent(extensionVersion)}`,
 					),
 				);
+
 				await globalState.update(IS_CANDIDATE_KEY, false);
+
 				await globalState.update(SKIP_VERSION_KEY, extensionVersion);
+
 				await globalState.update(TAKE_SURVEY_DATE_KEY, date);
 			},
 		};
@@ -96,6 +102,7 @@ export class NSAT {
 			title: "Remind Me Later",
 			run: async () => {
 				TelemetryClient.sendEvent("nsat.survey/remindMeLater");
+
 				await globalState.update(SESSION_COUNT_KEY, 0);
 			},
 		};
@@ -104,11 +111,15 @@ export class NSAT {
 			title: "Don't Show Again",
 			run: async () => {
 				TelemetryClient.sendEvent("nsat.survey/dontShowAgain");
+
 				await globalState.update(IS_CANDIDATE_KEY, false);
+
 				await globalState.update(SKIP_VERSION_KEY, extensionVersion);
+
 				await globalState.update(DONT_SHOW_DATE_KEY, date);
 			},
 		};
+
 		TelemetryClient.sendEvent("nsat.survey/userAsked");
 
 		const button = await window.showInformationMessage(
@@ -117,6 +128,7 @@ export class NSAT {
 			remind,
 			never,
 		);
+
 		await (button || remind).run();
 	}
 }

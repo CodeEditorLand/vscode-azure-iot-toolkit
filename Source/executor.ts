@@ -14,7 +14,9 @@ export class Executor {
 		if (this.terminals[terminal] === undefined) {
 			this.terminals[terminal] = vscode.window.createTerminal(terminal);
 		}
+
 		this.terminals[terminal].show();
+
 		this.terminals[terminal].sendText(command);
 	}
 

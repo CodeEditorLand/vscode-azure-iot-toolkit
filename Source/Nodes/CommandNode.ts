@@ -26,6 +26,7 @@ export class CommandNode implements INode {
 		args: any[],
 	): vscode.TreeItem {
 		const commandItem = new vscode.TreeItem(label);
+
 		commandItem.command = {
 			command,
 			title: "",

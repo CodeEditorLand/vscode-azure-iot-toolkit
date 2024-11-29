@@ -14,14 +14,17 @@ import { Utility } from "./utility";
 export class DeviceTree implements vscode.TreeDataProvider<INode> {
 	public _onDidChangeTreeData: vscode.EventEmitter<INode | undefined> =
 		new vscode.EventEmitter<INode | undefined>();
+
 	public readonly onDidChangeTreeData: vscode.Event<INode | undefined> =
 		this._onDidChangeTreeData.event;
+
 	private autoRefreshIntervalID: NodeJS.Timer;
 
 	constructor(private context: vscode.ExtensionContext) {}
 
 	public refresh(element): void {
 		this._onDidChangeTreeData.fire(element);
+
 		TelemetryClient.sendEvent("AZ.Refresh");
 	}
 
@@ -37,6 +40,7 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
 			vscode.window.showInformationMessage(
 				`${Constants.IotHubConnectionStringTitle} is updated.`,
 			);
+
 			this._onDidChangeTreeData.fire(undefined);
 		}
 	}
@@ -71,6 +75,7 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
 		if (this.autoRefreshIntervalID) {
 			clearInterval(this.autoRefreshIntervalID);
 		}
+
 		this.autoRefreshIntervalID = this.generateAutoRefreshInterval();
 
 		return [
@@ -95,6 +100,7 @@ export class DeviceTree implements vscode.TreeDataProvider<INode> {
 				this._onDidChangeTreeData.fire(undefined);
 			}, treeViewAutoRefreshIntervalInSeconds * 1000);
 		}
+
 		return undefined;
 	}
 }

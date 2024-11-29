@@ -41,8 +41,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 		if (input instanceof DeviceNode) {
 			deviceItem = input.deviceItem;
+
 			from = "device";
 		}
+
 		deviceItem = await Utility.getInputDevice(deviceItem, null, true);
 
 		if (!deviceItem) {
@@ -53,8 +55,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 		if (input instanceof vscode.Uri) {
 			filePath = input.fsPath;
+
 			from = "file";
 		}
+
 		const deploymentJson = await this.getDeploymentJson(filePath);
 
 		if (!deploymentJson) {
@@ -126,6 +130,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			if (!moduleTwinContent) {
 				return;
 			}
+
 			const moduleTwinJson = JSON.parse(moduleTwinContent);
 
 			if (moduleTwinJson.moduleId.startsWith("$")) {
@@ -133,24 +138,29 @@ export class IoTEdgeExplorer extends BaseExplorer {
 					"Azure IoT Edge system modules are readonly and cannot be modified. Changes can be submitted via deploying a configuration.",
 				);
 			}
+
 			this.outputLine(
 				Constants.IoTHubModuleTwinLabel,
 				`Update Module Twin for [${moduleTwinJson.deviceId}][${moduleTwinJson.moduleId}]...`,
 			);
+
 			await Utility.updateModuleTwin(
 				iotHubConnectionString,
 				moduleTwinJson.deviceId,
 				moduleTwinJson.moduleId,
 				moduleTwinContent,
 			);
+
 			this.outputLine(
 				Constants.IoTHubModuleTwinLabel,
 				`Module Twin updated successfully`,
 			);
+
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAIUpdateModuleTwinDoneEvent,
 				{ Result: "Success" },
 			);
+
 			await this.getModuleTwinById(
 				moduleTwinJson.deviceId,
 				moduleTwinJson.moduleId,
@@ -160,6 +170,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				Constants.IoTHubModuleTwinLabel,
 				`Failed to update Module Twin: ${error}`,
 			);
+
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAIUpdateModuleTwinDoneEvent,
 				{ Result: "Fail", [Constants.errorProperties.Message]: error },
@@ -172,6 +183,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			.data;
 
 		const ajv = new Ajv({ allErrors: true, schemaId: "id" });
+
 		ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-04.json"));
 
 		const valid = ajv.validate(schema, json);
@@ -203,7 +215,9 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 					for (
 						let i = 1;
+
 						i < Constants.CREATE_OPTIONS_MAX_CHUNKS;
+
 						i++
 					) {
 						const extendedCreateOptions =
@@ -212,6 +226,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 						if (!extendedCreateOptions) {
 							break;
 						}
+
 						createOptions += extendedCreateOptions;
 					}
 
@@ -227,6 +242,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				}
 			}
 		}
+
 		return true;
 	}
 
@@ -235,6 +251,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			if (json.trim().charAt(0) !== "{") {
 				throw new Error("not a valid JSON string");
 			}
+
 			JSON.parse(json);
 		}
 	}
@@ -263,6 +280,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				deviceId,
 				moduleId,
 			);
+
 			Utility.writeJson(Constants.ModuleTwinJosnFilePath, twin);
 
 			const document = await vscode.workspace.openTextDocument(
@@ -274,17 +292,21 @@ export class IoTEdgeExplorer extends BaseExplorer {
 					`Your ${Constants.ModuleTwinJosnFileName} has unsaved changes. Please close or save the file. Then try again.`,
 				);
 			}
+
 			vscode.window.showTextDocument(document);
+
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAIGetModuleTwinDoneEvent,
 				{ Result: "Success" },
 			);
 		} catch (error) {
 			this._outputChannel.show();
+
 			this.outputLine(
 				Constants.IoTHubModuleTwinLabel,
 				`Failed to get Module Twin: ${error}`,
 			);
+
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAIGetModuleTwinDoneEvent,
 				{ Result: "Fail", [Constants.errorProperties.Message]: error },
@@ -306,6 +328,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			if (!filePathUri) {
 				return "";
 			}
+
 			filePath = filePathUri[0].fsPath;
 		}
 
@@ -324,6 +347,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			// Backward compatibility for old schema using 'moduleContent'
 			if (!contentJson.modulesContent && contentJson.moduleContent) {
 				contentJson.modulesContent = contentJson.moduleContent;
+
 				delete contentJson.moduleContent;
 			}
 
@@ -365,7 +389,9 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		from: string,
 	) {
 		const label = Constants.IoTHubEdgeLabel;
+
 		this._outputChannel.show();
+
 		this.outputLine(label, `Start deployment to device [${deviceId}]`);
 
 		const entry = from === "none" ? "commandPalette" : "contextMenu";
@@ -376,11 +402,14 @@ export class IoTEdgeExplorer extends BaseExplorer {
 			);
 
 			const deploymentJsonObject = JSON.parse(deploymentJson);
+
 			await registry.applyConfigurationContentOnDevice(
 				deviceId,
 				deploymentJsonObject,
 			);
+
 			this.outputLine(label, "Deployment succeeded.");
+
 			TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, {
 				Result: "Success",
 				entry,
@@ -393,8 +422,10 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 			if (err && err.responseBody) {
 				detailedMessage = err.responseBody;
+
 				this.outputLine(label, err.responseBody);
 			}
+
 			TelemetryClient.sendEvent(Constants.IoTHubAIEdgeDeployDoneEvent, {
 				Result: "Fail",
 				[Constants.errorProperties.Message]: err,
@@ -421,6 +452,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		) {
 			modulesContent = deploymentJsonObject.content.modulesContent;
 		}
+
 		if (!modulesContent) {
 			vscode.window.showWarningMessage("Deployment manifest is invalid.");
 
@@ -435,12 +467,15 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				if (!value) {
 					return "The value should not be empty.";
 				}
+
 				if (value.length > 128) {
 					return "Up to 128 characters are allowed.";
 				}
+
 				if (!/^[a-z0-9-:+%_#*?!(),=@;']+$/.test(value)) {
 					return "Lowercase letters, numbers and the following characters are allowed [ -:+%_#*?!(),=@;' ].";
 				}
+
 				return undefined;
 			},
 		});
@@ -458,11 +493,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				if (!value) {
 					return "The value should not be empty.";
 				}
+
 				if (!Utility.isValidTargetCondition(value)) {
 					return "Valid conditions specify a either a deviceId (e.g. deviceId='{id}'), \
                     one or more device twin tag criteria (e.g. tags.environment = 'prod' AND tags.location = 'westus'), \
                     or reported property criteria (e.g. properties.reported.lastStatus='200').";
 				}
+
 				return undefined;
 			},
 		});
@@ -479,11 +516,13 @@ export class IoTEdgeExplorer extends BaseExplorer {
 				if (!value) {
 					return "The value should not be empty.";
 				}
+
 				const floatValue = parseFloat(value);
 
 				if (!Number.isInteger(floatValue) || floatValue < 0) {
 					return "Deployment priority should be a positive integer";
 				}
+
 				return undefined;
 			},
 		});
@@ -503,7 +542,9 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		};
 
 		const label = Constants.IoTHubEdgeLabel;
+
 		this._outputChannel.show();
+
 		this.outputLine(
 			label,
 			`Start deployment with deployment id [${deploymentId}] and target condition [${targetCondition}]`,
@@ -512,12 +553,14 @@ export class IoTEdgeExplorer extends BaseExplorer {
 		const registry = iothub.Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
+
 		registry.addConfiguration(deploymentConfiguration, (err) => {
 			if (err) {
 				this.outputLine(
 					label,
 					`Deployment with deployment id [${deploymentId}] failed. ${err}`,
 				);
+
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAIEdgeDeployAtScaleDoneEvent,
 					{
@@ -530,6 +573,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 					label,
 					`Deployment with deployment id [${deploymentId}] succeeded.`,
 				);
+
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAIEdgeDeployAtScaleDoneEvent,
 					{ Result: "Success" },

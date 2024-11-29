@@ -64,6 +64,7 @@ export class EndpointsLabelNode implements INode {
 						Constants.StateKeyIoTHubID,
 					),
 			);
+
 			TelemetryClient.sendEvent(
 				Constants.IoTHubAILoadEndpointsTreeDoneEvent,
 				{ Result: "Success" },

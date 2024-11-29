@@ -32,6 +32,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 	) {
 		if (this._isMonitoring) {
 			this._outputChannel.show();
+
 			this.outputLine(
 				Constants.IoTHubMonitorLabel,
 				"There is a running job to monitor custom Event Hub endpoint. Please stop it first.",
@@ -42,7 +43,9 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 
 		try {
 			TelemetryClient.sendEvent(Constants.IoTHubAIEHStartMonitorEvent);
+
 			this._outputChannel.show();
+
 			this.outputLine(
 				Constants.EventHubMonitorLabel,
 				`Start monitoring message arrived in custom Event Hub endpoint [${eventHubItem.eventHubProperty.name}] ...`,
@@ -70,6 +73,7 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 					"RootManageSharedAccessKey",
 				)
 			).primaryConnectionString;
+
 			this._eventHubClient = new EventHubConsumerClient(
 				"$Default",
 				connectionString,
@@ -79,12 +83,15 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 			);
 
 			const partitionIds = await this._eventHubClient.getPartitionIds();
+
 			this.updateMonitorStatus(true);
+
 			partitionIds.forEach((partitionId) => {
 				this.outputLine(
 					Constants.EventHubMonitorLabel,
 					`Created partition receiver [${partitionId}]`,
 				);
+
 				this._eventHubClient.subscribe(
 					partitionId,
 					{
@@ -98,7 +105,9 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 			});
 		} catch (error) {
 			this.updateMonitorStatus(false);
+
 			this.outputLine(Constants.EventHubMonitorLabel, error);
+
 			TelemetryClient.sendEvent(Constants.IoTHubAIEHStartMonitorEvent, {
 				Result: "Exception",
 				[Constants.errorProperties.Message]: error,
@@ -120,10 +129,12 @@ export class EventHubManager extends IoTHubMessageBaseExplorer {
 			const result = Utility.getMessageFromEventData(message);
 
 			const timeMessage = Utility.getTimeMessageFromEventData(message);
+
 			this.outputLine(
 				Constants.EventHubMonitorLabel,
 				`${timeMessage}Message received:`,
 			);
+
 			this._outputChannel.appendLine(JSON.stringify(result, null, 2));
 		});
 	};

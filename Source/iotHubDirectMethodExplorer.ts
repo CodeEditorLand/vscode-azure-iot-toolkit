@@ -52,6 +52,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 		}
 
 		TelemetryClient.sendEvent(Constants.IoTHubAIInvokeModuleMethodEvent);
+
 		this.invokeDirectMethod(
 			iotHubConnectionString,
 			moduleItem.deviceId,
@@ -75,6 +76,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 				if (methodName === undefined) {
 					return;
 				}
+
 				vscode.window
 					.showInputBox({
 						prompt: `Enter [Payload] sent to ${target}`,
@@ -84,9 +86,11 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 						if (payload === undefined) {
 							return;
 						}
+
 						try {
 							payload = JSON.parse(payload);
 						} catch (e) {}
+
 						const methodParams: DeviceMethodParams = {
 							methodName,
 							payload,
@@ -98,11 +102,14 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 							ServiceClient.fromConnectionString(
 								iotHubConnectionString,
 							);
+
 						this._outputChannel.show();
+
 						this.outputLine(
 							Constants.IoTHubDirectMethodLabel,
 							`Invoking Direct Method [${methodName}] to ${target} ...`,
 						);
+
 						serviceClient.open((error) => {
 							if (error) {
 								this.outputLine(
@@ -125,6 +132,7 @@ export class IotHubDirectMethodExplorer extends BaseExplorer {
 												Constants.IoTHubDirectMethodLabel,
 												`Response from ${target}:`,
 											);
+
 											this._outputChannel.appendLine(
 												JSON.stringify(result, null, 2),
 											);

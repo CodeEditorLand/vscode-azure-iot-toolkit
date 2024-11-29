@@ -50,6 +50,7 @@ export class Utility {
 		if (!connectionString && askForConnectionString) {
 			return this.setConnectionString(id, name, helpfile);
 		}
+
 		return connectionString;
 	}
 
@@ -64,9 +65,13 @@ export class Utility {
 			let value: string | PromiseLike<string>;
 
 			const input = vscode.window.createInputBox();
+
 			input.prompt = name;
+
 			input.placeholder = Constants.ConnectionStringFormat[id];
+
 			input.ignoreFocusOut = true;
+
 			input.onDidAccept(async () => {
 				value = input.value;
 
@@ -74,6 +79,7 @@ export class Utility {
 					TelemetryClient.sendEvent("General.SetConfig.Done", {
 						Result: "Success",
 					});
+
 					await CredentialStore.setPassword(id, value);
 
 					if (id === Constants.IotHubConnectionStringKey) {
@@ -81,14 +87,18 @@ export class Utility {
 							Constants.IotHubEventHubConnectionStringKey,
 							undefined,
 						);
+
 						await Utility.deleteIoTHubInfo();
 					}
+
 					resolve(value);
+
 					input.dispose();
 				} else {
 					TelemetryClient.sendEvent("General.SetConfig.Done", {
 						Result: "Fail",
 					});
+
 					vscode.commands.executeCommand(
 						"markdown.showPreview",
 						vscode.Uri.file(
@@ -97,17 +107,21 @@ export class Utility {
 							),
 						),
 					);
+
 					input.validationMessage = `The format should be "${Constants.ConnectionStringFormat[id]}"`;
 				}
 			});
+
 			input.onDidHide(() => {
 				resolve();
+
 				input.dispose();
 
 				if (!value) {
 					this.showIoTHubInformationMessage();
 				}
 			});
+
 			input.show();
 		});
 	}
@@ -118,9 +132,11 @@ export class Utility {
 		if (!configValue) {
 			configValue = Utility.getConfiguration().get<string>(id);
 		}
+
 		if (!this.isValidConnectionString(id, configValue)) {
 			return null;
 		}
+
 		return configValue;
 	}
 
@@ -196,6 +212,7 @@ export class Utility {
 		if (os.platform() !== "win32") {
 			return filePath;
 		}
+
 		const windowsShell = vscode.workspace
 			.getConfiguration("terminal")
 			.get<string>("integrated.shell.windows");
@@ -203,6 +220,7 @@ export class Utility {
 		if (!windowsShell) {
 			return filePath;
 		}
+
 		const terminalRoot =
 			Utility.getConfiguration().get<string>("terminalRoot");
 
@@ -214,6 +232,7 @@ export class Utility {
 				)
 				.replace(/\\/g, "/");
 		}
+
 		const winshellLowercase = windowsShell.toLowerCase();
 
 		if (
@@ -225,6 +244,7 @@ export class Utility {
 				.replace(/^([A-Za-z]):/, (match, p1) => `/${p1.toLowerCase()}`)
 				.replace(/\\/g, "/");
 		}
+
 		if (
 			winshellLowercase.indexOf("bash") > -1 &&
 			winshellLowercase.indexOf("windows") > -1
@@ -237,6 +257,7 @@ export class Utility {
 				)
 				.replace(/\\/g, "/");
 		}
+
 		return filePath;
 	}
 
@@ -264,6 +285,7 @@ export class Utility {
 
 				return;
 			}
+
 			vscode.window.showTextDocument(filePath);
 		});
 	}
@@ -334,6 +356,7 @@ export class Utility {
 						module.connectionState = "Connected";
 					}
 				}
+
 				const state = isConnected ? "on" : "off";
 
 				const iconPath = context.asAbsolutePath(
@@ -383,6 +406,7 @@ export class Utility {
 						);
 					}
 				}
+
 				const moduleType = module.moduleId.startsWith("$")
 					? "edge-module"
 					: "module";
@@ -428,6 +452,7 @@ export class Utility {
 											.primaryKey,
 									);
 							}
+
 							return module;
 						}),
 					);
@@ -462,6 +487,7 @@ export class Utility {
 		const registry: Registry = Registry.fromConnectionString(
 			iotHubConnectionString,
 		);
+
 		await registry.updateModuleTwin(deviceId, moduleId, twin, "*");
 	}
 
@@ -479,7 +505,9 @@ export class Utility {
 
 			return "";
 		}
+
 		const document = activeTextEditor.document;
+
 		await document.save();
 
 		return document.getText();
@@ -491,6 +519,7 @@ export class Utility {
 		if (!fs.existsSync(directory)) {
 			fs.mkdirSync(directory);
 		}
+
 		fs.writeFileSync(filePath, `${JSON.stringify(data, null, 4)}`);
 	}
 
@@ -506,6 +535,7 @@ export class Utility {
 					entry: "commandPalette",
 				});
 			}
+
 			if (!iotHubConnectionString) {
 				iotHubConnectionString = await Utility.getConnectionString(
 					Constants.IotHubConnectionStringKey,
@@ -522,6 +552,7 @@ export class Utility {
 					iotHubConnectionString,
 					onlyEdgeDevice,
 				);
+
 			deviceItem = await vscode.window.showQuickPick(deviceList, {
 				placeHolder: "Select an IoT Hub device",
 			});
@@ -534,6 +565,7 @@ export class Utility {
 					deviceType: deviceItem.contextValue,
 				});
 			}
+
 			return deviceItem;
 		}
 	}
@@ -557,16 +589,20 @@ export class Utility {
 
 			if (edgeDeviceIdSet.has(device.deviceId)) {
 				deviceType = "edge";
+
 				device.contextValue = "edge";
+
 				device.tooltip = "";
 			} else {
 				deviceType = "device";
 			}
+
 			if (context) {
 				device.iconPath = context.asAbsolutePath(
 					path.join("resources", `${deviceType}-${state}.svg`),
 				);
 			}
+
 			return device;
 		});
 	}
@@ -613,18 +649,21 @@ export class Utility {
 		TelemetryClient.sendEvent("General.Load.DefaultTreeItems");
 
 		const items = [];
+
 		items.push(
 			new CommandNode(
 				"-> Set IoT Hub Connection String",
 				"azure-iot-toolkit.setIoTHubConnectionString",
 			),
 		);
+
 		items.push(
 			new CommandNode(
 				"-> Select IoT Hub",
 				"azure-iot-toolkit.selectIoTHub",
 			),
 		);
+
 		items.push(
 			new CommandNode(
 				"-> Create IoT Hub",
@@ -640,9 +679,13 @@ export class Utility {
 		error: string,
 	): INode[] {
 		const items = [];
+
 		items.push(new InfoNode(`Failed to list ${item}`));
+
 		items.push(new InfoNode(`Error: ${error}`));
+
 		items.push(new InfoNode(`Try another IoT Hub?`));
+
 		items.push(...this.getDefaultTreeItems());
 
 		return items;
@@ -658,6 +701,7 @@ export class Utility {
 		) {
 			return undefined;
 		}
+
 		return (
 			twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME]
 				.sampling_mode.value === 1
@@ -671,6 +715,7 @@ export class Utility {
 		if (reportedDistributedTwinObject.sampling_rate === undefined) {
 			return undefined;
 		}
+
 		return twin.properties.reported[Constants.DISTRIBUTED_TWIN_NAME]
 			.sampling_rate.value;
 	}
@@ -737,6 +782,7 @@ export class Utility {
 		} else {
 			result = body;
 		}
+
 		return result;
 	}
 
@@ -756,6 +802,7 @@ export class Utility {
 			Constants.StateKeySubsID,
 			subscriptionId,
 		);
+
 		await Constants.ExtensionContext.globalState.update(
 			Constants.StateKeyIoTHubID,
 			iotHubDescription.id,
@@ -767,6 +814,7 @@ export class Utility {
 			Constants.StateKeySubsID,
 			"",
 		);
+
 		await Constants.ExtensionContext.globalState.update(
 			Constants.StateKeyIoTHubID,
 			"",
@@ -834,6 +882,7 @@ export class Utility {
 				source = String.fromCharCode.apply(null, source);
 			} catch (e) {}
 		}
+
 		return source;
 	}
 
@@ -881,6 +930,7 @@ export class Utility {
 									device.deviceId,
 								);
 						}
+
 						devices.push(
 							new DeviceItem(
 								device.deviceId,
@@ -891,6 +941,7 @@ export class Utility {
 							),
 						);
 					});
+
 					resolve(
 						devices.sort((a: DeviceItem, b: DeviceItem) => {
 							return a.deviceId.localeCompare(b.deviceId);
@@ -914,6 +965,7 @@ export class Utility {
 		for (const edgeDevice of edgeDevices) {
 			set.add(edgeDevice.deviceId);
 		}
+
 		return set;
 	}
 
@@ -944,6 +996,7 @@ export class Utility {
 			const GoToAzureIoTHubPage = "Go to Azure IoT Hub page";
 
 			const DoNotShowAgain = "Don't show again";
+
 			vscode.window
 				.showInformationMessage(
 					"Don't have Azure IoT Hub? Register a free Azure account to get a free one.",
@@ -960,6 +1013,7 @@ export class Utility {
 									`https://azure.microsoft.com/en-us/free/?WT.mc_id=${Constants.CampaignID}`,
 								),
 							);
+
 							TelemetryClient.sendEvent(
 								"General.Open.AzureRegistrationPage",
 							);
@@ -973,6 +1027,7 @@ export class Utility {
 									`https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-get-started?WT.mc_id=${Constants.CampaignID}`,
 								),
 							);
+
 							TelemetryClient.sendEvent(
 								"General.Open.AzureIoTHubPage",
 							);
@@ -985,6 +1040,7 @@ export class Utility {
 								false,
 								true,
 							);
+
 							TelemetryClient.sendEvent(
 								"General.IoTHubInfo.DoNotShowAgain",
 							);
@@ -1001,6 +1057,7 @@ export class Utility {
 		if (!value) {
 			return false;
 		}
+
 		return Constants.ConnectionStringRegex[id].test(value);
 	}
 

@@ -49,6 +49,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 	public async startMonitorC2DMessage(deviceItem?: DeviceItem) {
 		if (this._isMonitoring) {
 			this._outputChannel.show();
+
 			this.outputLine(
 				Constants.IoTHubC2DMessageMonitorLabel,
 				"There is a running job to receive C2D message. Please stop it first.",
@@ -67,13 +68,17 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 		}
 
 		const deviceConnectionString: string = deviceItem.connectionString;
+
 		this._outputChannel.show();
+
 		this._deviceClient = clientFromConnectionString(deviceConnectionString);
+
 		this._deviceClient.open(this.connectCallback(deviceConnectionString));
 	}
 
 	public stopMonitorC2DMessage() {
 		TelemetryClient.sendEvent(Constants.IoTHubAIStopMonitorC2DEvent);
+
 		this._outputChannel.show();
 
 		if (this._isMonitoring) {
@@ -81,7 +86,9 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 				Constants.IoTHubC2DMessageMonitorLabel,
 				"C2D receiving stopped.",
 			);
+
 			this._monitorStatusBarItem.hide();
+
 			this._deviceClient.close(() => {
 				this.updateMonitorStatus(false);
 			});
@@ -104,7 +111,9 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 					const serviceClient = ServiceClient.fromConnectionString(
 						iotHubConnectionString,
 					);
+
 					this._outputChannel.show();
+
 					serviceClient.open((err) => {
 						if (err) {
 							this.outputLine(
@@ -113,6 +122,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 							);
 						} else {
 							const message = new Message(messageBody);
+
 							serviceClient.send(
 								deviceId,
 								message.getData(),
@@ -133,6 +143,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 		return (err) => {
 			if (err) {
 				this.outputLine(Constants.IoTHubC2DMessageMonitorLabel, err);
+
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAIStartMonitorC2DEvent,
 					{
@@ -146,13 +157,16 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 				const deviceId = ConnectionString.parse(
 					deviceConnectionString,
 				).DeviceId;
+
 				this.outputLine(
 					Constants.IoTHubC2DMessageMonitorLabel,
 					`Start receiving C2D message for [${deviceId}]...`,
 				);
+
 				TelemetryClient.sendEvent(
 					Constants.IoTHubAIStartMonitorC2DEvent,
 				);
+
 				this._deviceClient.on("message", (msg) => {
 					this.outputLine(
 						Constants.IoTHubC2DMessageMonitorLabel,
@@ -165,6 +179,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 						msg.properties.propertyList.length > 0
 					) {
 						this._outputChannel.appendLine("Properties:");
+
 						this._outputChannel.appendLine(
 							JSON.stringify(
 								msg.properties.propertyList,
@@ -173,6 +188,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 							),
 						);
 					}
+
 					this._deviceClient.complete(msg, this.printResult);
 				});
 			}
@@ -186,6 +202,7 @@ export class IotHubC2DMessageExplorer extends IoTHubMessageBaseExplorer {
 				"Error: " + err.toString(),
 			);
 		}
+
 		if (res) {
 			this.outputLine(
 				Constants.IoTHubC2DMessageMonitorLabel,

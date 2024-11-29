@@ -19,14 +19,19 @@ export class SimulatorWebview {
 	public static getInstance(context: vscode.ExtensionContext) {
 		if (!SimulatorWebview.instance) {
 			SimulatorWebview.instance = new SimulatorWebview(context);
+
 			SimulatorWebview.simulator = Simulator.getInstance();
 		}
+
 		return SimulatorWebview.instance;
 	}
 
 	private static simulator: Simulator;
+
 	private static instance: SimulatorWebview;
+
 	private panel: vscode.WebviewPanel;
+
 	private localServer: LocalServer;
 
 	private constructor(private context: vscode.ExtensionContext) {
@@ -36,6 +41,7 @@ export class SimulatorWebview {
 	public async showWebview(forceReload: boolean) {
 		if (forceReload && this.panel) {
 			this.panel.dispose();
+
 			SimulatorWebview.simulator.telemetry(
 				Constants.SimulatorCloseEvent,
 				true,
@@ -44,12 +50,14 @@ export class SimulatorWebview {
 				},
 			);
 		}
+
 		await this.openSimulatorWebviewPage();
 	}
 
 	private async openSimulatorWebviewPage(): Promise<any> {
 		if (!this.panel) {
 			this.localServer.startServer();
+
 			this.panel = vscode.window.createWebviewPanel(
 				simulatorWebviewPanelViewType,
 				simulatorWebviewPanelViewTitle,
@@ -67,6 +75,7 @@ export class SimulatorWebview {
 				),
 				"utf8",
 			);
+
 			html = html
 				.replace(
 					/{{root}}/g,
@@ -77,7 +86,9 @@ export class SimulatorWebview {
 						.toString(),
 				)
 				.replace(/{{endpoint}}/g, this.localServer.getServerUri());
+
 			this.panel.webview.html = html;
+
 			this.panel.onDidDispose(() => {
 				SimulatorWebview.simulator.telemetry(
 					Constants.SimulatorCloseEvent,
@@ -86,7 +97,9 @@ export class SimulatorWebview {
 						reload: "False",
 					},
 				);
+
 				this.panel = undefined;
+
 				this.localServer.stopServer();
 			});
 		} else {

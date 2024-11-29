@@ -16,6 +16,7 @@ import { Utility } from "./utility";
 
 export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 	private _eventHubCompatibleEndpointConnectionString: string;
+
 	private _eventHubClient: EventHubConsumerClient;
 
 	constructor(outputChannel: vscode.OutputChannel) {
@@ -35,7 +36,9 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 		if (!deviceItem || !deviceItem.connectionString) {
 			return;
 		}
+
 		const deviceConnectionString: string = deviceItem.connectionString;
+
 		vscode.window
 			.showInputBox({
 				prompt: `Enter message to send to ${Constants.IoTHub}`,
@@ -53,6 +56,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 						const stringify = Utility.getConfig<boolean>(
 							Constants.IoTHubD2CMessageStringifyKey,
 						);
+
 						client.sendEvent(
 							new Message(
 								stringify ? JSON.stringify(message) : message,
@@ -74,6 +78,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 	public async startMonitorIoTHubMessage(deviceItem?: DeviceItem) {
 		if (this._isMonitoring) {
 			this._outputChannel.show();
+
 			this.outputLine(
 				Constants.IoTHubMonitorLabel,
 				"There is a running job to monitor built-in event endpoint. Please stop it first.",
@@ -92,33 +97,41 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 		if (!connectionString) {
 			return;
 		}
+
 		const config = Utility.getConfiguration();
 
 		const consumerGroup = config.get<string>(Constants.IoTHubConsumerGroup);
 
 		try {
 			this._eventHubCompatibleEndpointConnectionString = connectionString;
+
 			this._outputChannel.show();
 
 			const deviceLabel = deviceItem
 				? `device [${deviceItem.deviceId}]`
 				: "all devices";
+
 			this.outputLine(
 				Constants.IoTHubMonitorLabel,
 				`Start monitoring message arrived in built-in endpoint for ${deviceLabel} ...`,
 			);
+
 			TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, {
 				deviceType: deviceItem ? deviceItem.contextValue : "",
 			});
+
 			await this.startMonitor(
 				Constants.IoTHubMonitorLabel,
 				consumerGroup,
 				deviceItem,
 			);
+
 			this.updateMonitorStatus(true);
 		} catch (e) {
 			this.updateMonitorStatus(false);
+
 			this.outputLine(Constants.IoTHubMonitorLabel, e);
+
 			TelemetryClient.sendEvent(Constants.IoTHubAIStartMonitorEvent, {
 				Result: "Exception",
 				[Constants.errorProperties.Message]: e,
@@ -156,11 +169,13 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 			);
 
 			const partitionIds = await this._eventHubClient.getPartitionIds();
+
 			partitionIds.forEach((partitionId) => {
 				this.outputLine(
 					label,
 					`Created partition receiver [${partitionId}] for consumerGroup [${consumerGroup}]`,
 				);
+
 				this._eventHubClient.subscribe(
 					partitionId,
 					{
@@ -181,10 +196,12 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 
 			if (this._isMonitoring) {
 				await this._eventHubClient.close();
+
 				this.outputLine(
 					label,
 					"Message monitoring stopped. Please try to start monitoring again or use a different consumer group to monitor.",
 				);
+
 				this.updateMonitorStatus(false);
 			}
 		};
@@ -202,6 +219,7 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 				if (deviceItem && deviceItem.deviceId !== deviceId) {
 					return;
 				}
+
 				const result = Utility.getMessageFromEventData(message);
 
 				const timeMessage =
@@ -210,10 +228,12 @@ export class IoTHubMessageExplorer extends IoTHubMessageBaseExplorer {
 				const messageSource = moduleId
 					? `${deviceId}/${moduleId}`
 					: deviceId;
+
 				this.outputLine(
 					label,
 					`${timeMessage}Message received from [${messageSource}]:`,
 				);
+
 				this._outputChannel.appendLine(JSON.stringify(result, null, 2));
 			});
 		};

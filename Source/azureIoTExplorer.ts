@@ -35,18 +35,31 @@ import { WelcomePage } from "./welcomePage";
 
 export class AzureIoTExplorer {
 	private _iotHubC2DMessageExplorer: IotHubC2DMessageExplorer;
+
 	private _iotHubMessageExplorer: IoTHubMessageExplorer;
+
 	private _deviceExplorer: DeviceExplorer;
+
 	private _snippetManager: SnippetManager;
+
 	private _iotHubDirectMethodExplorer: IotHubDirectMethodExplorer;
+
 	private _iotHubDeviceTwinExplorer: IotHubDeviceTwinExplorer;
+
 	private _iotHubResourceExplorer: IoTHubResourceExplorer;
+
 	private _iotEdgeExplorer: IoTEdgeExplorer;
+
 	private _welcomePage: WelcomePage;
+
 	private _codeManager: CodeManager;
+
 	private _iotHubModuleExplorer: IotHubModuleExplorer;
+
 	private _distributedTracingManager: DistributedTracingManager;
+
 	private _eventHubManager: EventHubManager;
+
 	private _simulator: Simulator;
 
 	constructor(
@@ -57,27 +70,40 @@ export class AzureIoTExplorer {
 		this._iotHubC2DMessageExplorer = new IotHubC2DMessageExplorer(
 			outputChannel,
 		);
+
 		this._iotHubMessageExplorer = new IoTHubMessageExplorer(outputChannel);
+
 		this._deviceExplorer = new DeviceExplorer(outputChannel);
+
 		this._distributedTracingManager = new DistributedTracingManager(
 			outputChannel,
 		);
+
 		this._snippetManager = new SnippetManager(outputChannel);
+
 		this._iotHubDirectMethodExplorer = new IotHubDirectMethodExplorer(
 			outputChannel,
 		);
+
 		this._iotHubDeviceTwinExplorer = new IotHubDeviceTwinExplorer(
 			outputChannel,
 		);
+
 		this._iotHubResourceExplorer = new IoTHubResourceExplorer(
 			outputChannel,
 			iotHubTreeDataProvider,
 		);
+
 		this._iotEdgeExplorer = new IoTEdgeExplorer(outputChannel);
+
 		this._welcomePage = new WelcomePage(this.context);
+
 		this._codeManager = new CodeManager(this.context);
+
 		this._iotHubModuleExplorer = new IotHubModuleExplorer(outputChannel);
+
 		this._eventHubManager = new EventHubManager(outputChannel);
+
 		this._simulator = Simulator.getInstance(this.context);
 	}
 

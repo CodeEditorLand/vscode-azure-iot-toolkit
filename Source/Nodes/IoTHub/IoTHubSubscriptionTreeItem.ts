@@ -13,6 +13,7 @@ import { IoTHubResourceTreeItem } from "./IoTHubResourceTreeItem";
 // Represents an Azure sbuscription
 export class IoTHubSubscriptionTreeItem extends SubscriptionTreeItemBase {
 	public readonly childTypeLabel: string = "IoT Hub";
+
 	private _nextLink: string | undefined;
 
 	public hasMoreChildrenImpl(): boolean {
@@ -37,6 +38,7 @@ export class IoTHubSubscriptionTreeItem extends SubscriptionTreeItemBase {
 				: await client.iotHubResource.listBySubscriptionNext(
 						this._nextLink,
 					);
+
 		this._nextLink = iotHubCollection.nextLink;
 
 		return iotHubCollection.map(

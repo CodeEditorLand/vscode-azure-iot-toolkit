@@ -6,6 +6,7 @@ import { TreeItem } from "vscode";
 export class CustomEndpointItem extends TreeItem {
 	constructor(name: string) {
 		super(name);
+
 		this.contextValue = "custom-endpoint";
 	}
 }

@@ -40,6 +40,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		private iotHubTreeDataProvider?: AzExtTreeDataProvider,
 	) {
 		super(outputChannel);
+
 		this.accountApi = Utility.getAzureAccountApi();
 	}
 
@@ -70,8 +71,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 			if (!resourceGroupItem) {
 				return;
 			}
+
 			resourceGroupName = resourceGroupItem.resourceGroup.name;
+
 			outputChannel.show();
+
 			outputChannel.appendLine(
 				`Resource Group selected: ${resourceGroupName}`,
 			);
@@ -88,7 +92,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		if (!locationItem) {
 			return;
 		}
+
 		outputChannel.show();
+
 		outputChannel.appendLine(`Location selected: ${locationItem.label}`);
 
 		const skuMap = {
@@ -109,6 +115,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		if (!sku) {
 			return;
 		}
+
 		outputChannel.appendLine(`Pricing and scale tier selected: ${sku}`);
 
 		const name = await this.getIoTHubName(subscriptionItem);
@@ -154,6 +161,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 					.createOrUpdate(resourceGroupName, name, iotHubCreateParams)
 					.then(async (iotHubDescription) => {
 						clearInterval(intervalID);
+
 						outputChannel.appendLine("");
 
 						const newIotHubConnectionString =
@@ -163,11 +171,13 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 								subscriptionItem.session.environment,
 								iotHubDescription,
 							);
+
 						outputChannel.appendLine(
 							`IoT Hub '${name}' is created.`,
 						);
 						(iotHubDescription as any).iotHubConnectionString =
 							newIotHubConnectionString;
+
 						TelemetryClient.sendEvent(
 							Constants.IoTHubAICreateDoneEvent,
 							{ Result: "Success" },
@@ -178,6 +188,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 					})
 					.catch((err) => {
 						clearInterval(intervalID);
+
 						outputChannel.appendLine("");
 
 						let errorMessage: string;
@@ -190,7 +201,9 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 							errorMessage =
 								"Error occurred when creating IoT Hub.";
 						}
+
 						outputChannel.appendLine(errorMessage);
+
 						TelemetryClient.sendEvent(
 							Constants.IoTHubAICreateDoneEvent,
 							{
@@ -215,6 +228,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		if (!(await this.waitForLogin())) {
 			return;
 		}
+
 		TelemetryClient.sendEvent("General.Select.Subscription.Start");
 
 		const subscriptionItem = await this.getOrSelectSubscriptionItem(
@@ -225,12 +239,14 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		if (!subscriptionItem) {
 			return;
 		}
+
 		TelemetryClient.sendEvent("General.Select.Subscription.Done");
 
 		const iotHubItem = await this.selectIoTHubItem(subscriptionItem);
 
 		if (iotHubItem) {
 			outputChannel.show();
+
 			outputChannel.appendLine(`IoT Hub selected: ${iotHubItem.label}`);
 
 			const iotHubConnectionString = await this.updateAndStoreIoTHubInfo(
@@ -241,6 +257,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 			);
 			(iotHubItem.iotHubDescription as any).iotHubConnectionString =
 				iotHubConnectionString;
+
 			TelemetryClient.sendEvent(
 				"AZ.Select.IoTHub.Done",
 				undefined,
@@ -262,9 +279,13 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 					context,
 				);
 		}
+
 		this._outputChannel.show();
+
 		this._outputChannel.appendLine(`IoT Hub selected: ${node.iotHub.name}`);
+
 		vscode.commands.executeCommand("iotHubDevices.focus");
+
 		await this.updateAndStoreIoTHubInfo(
 			node.root.credentials,
 			node.root.subscriptionId,
@@ -364,18 +385,23 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 			connectionString,
 			parseFloat(expiryInHours),
 		);
+
 		await vscode.env.clipboard.writeText(sasToken);
+
 		this._outputChannel.show();
+
 		this.outputLine(
 			"SASToken",
 			`SAS token for [${target}] is generated and copied to clipboard:`,
 		);
+
 		this._outputChannel.appendLine(sasToken);
 	}
 
 	private async waitForLogin(): Promise<boolean> {
 		if (!(await this.accountApi.waitForLogin())) {
 			TelemetryClient.sendEvent("General.AskForAzureLogin");
+
 			await vscode.commands.executeCommand("azure-account.askForLogin");
 
 			return this.accountApi.waitForLogin();
@@ -391,6 +417,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 			(filter) =>
 				new SubscriptionItem(filter.subscription, filter.session),
 		);
+
 		TelemetryClient.sendEvent("General.Load.Subscription", {
 			SubscriptionCount: subscriptionItems.length.toString(),
 		});
@@ -400,6 +427,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 				"No subscription found, click an Azure account at the bottom left corner and choose Select All.",
 			);
 		}
+
 		return subscriptionItems;
 	}
 
@@ -420,8 +448,11 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		);
 
 		const iotHubs = await client.iotHubResource.listBySubscription();
+
 		iotHubItems.push(...iotHubs.map((iotHub) => new IotHubItem(iotHub)));
+
 		iotHubItems.sort((a, b) => a.label.localeCompare(b.label));
+
 		TelemetryClient.sendEvent("General.Load.IoTHub", {
 			IoTHubCount: iotHubItems.length.toString(),
 		});
@@ -441,6 +472,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		// Workaround here to add retry logic
 		do {
 			const start = new Date().getTime();
+
 			iotHubItem = await vscode.window.showQuickPick(iotHubItems, {
 				placeHolder: "Select IoT Hub",
 				ignoreFocusOut: true,
@@ -479,16 +511,20 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 			environment,
 			iotHubDescription,
 		);
+
 		await this.updateIoTHubEventHubConnectionString(
 			eventHubConnectionString,
 		);
+
 		await this.updateIoTHubConnectionString(iotHubConnectionString);
+
 		vscode.commands.executeCommand("azure-iot-toolkit.refresh");
 
 		await Utility.storeIoTHubInfo(subscriptionId, iotHubDescription);
 
 		return iotHubConnectionString;
 	}
+
 	private async updateIoTHubEventHubConnectionString(
 		eventHubConnectionString: string,
 	) {
@@ -530,6 +566,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 				return `HostName=${iotHubDescription.properties.hostName};SharedAccessKeyName=${result.keyName};SharedAccessKey=${result.primaryKey}`;
 			});
 	}
+
 	private async getEventHubConnectionString(
 		credentials: any,
 		subscriptionId: string,
@@ -580,6 +617,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 
 			if (subscriptionItem) {
 				outputChannel.show();
+
 				outputChannel.appendLine(
 					`Subscription selected: ${subscriptionItem.label}`,
 				);
@@ -587,6 +625,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 				return subscriptionItem;
 			}
 		}
+
 		return undefined;
 	}
 
@@ -614,6 +653,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 				}
 			}
 		}
+
 		return null;
 	}
 
@@ -717,15 +757,19 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		if (!name || name.length < min || name.length > max) {
 			return `The name must be between ${min} and ${max} characters long.`;
 		}
+
 		if (name.match(/[^a-zA-Z0-9-]/)) {
 			return "The name must contain only alphanumeric characters or -";
 		}
+
 		if (name.startsWith("-")) {
 			return "The name must not start with -";
 		}
+
 		if (name.endsWith("-")) {
 			return "The name must not end with -";
 		}
+
 		return null;
 	}
 
@@ -777,6 +821,7 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 				);
 			}
 		}
+
 		return null;
 	}
 
@@ -788,12 +833,15 @@ export class IoTHubResourceExplorer extends BaseExplorer {
 		if (!name || name.length < min || name.length > max) {
 			return `The name must be between ${min} and ${max} characters long.`;
 		}
+
 		if (name.match(/[^a-zA-Z0-9\.\_\-\(\)]/)) {
 			return "The name must contain only alphanumeric characters or the symbols ._-()";
 		}
+
 		if (name.endsWith(".")) {
 			return "The name must not end in a period.";
 		}
+
 		return null;
 	}
 }

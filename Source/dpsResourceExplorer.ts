@@ -25,6 +25,7 @@ export class DpsResourceExplorer extends BaseExplorer {
 		dpsTreeDataProvider: AzExtTreeDataProvider,
 	) {
 		super(outputChannel);
+
 		this._dpsTreeDataProvider = dpsTreeDataProvider;
 	}
 
@@ -50,6 +51,7 @@ export class DpsResourceExplorer extends BaseExplorer {
 
 		if (matchResult != null) {
 			const resourecGroupName = matchResult[1];
+
 			dpsInfo = await client.iotDpsResource.get(
 				node.dps.name,
 				resourecGroupName,
@@ -57,6 +59,7 @@ export class DpsResourceExplorer extends BaseExplorer {
 		} else {
 			dpsInfo = node.dps; // Fallback to use cached properties if regex match fails
 		}
+
 		const propertyInfo = {
 			label: dpsInfo.name + "-properties",
 			fullId: dpsInfo.id,

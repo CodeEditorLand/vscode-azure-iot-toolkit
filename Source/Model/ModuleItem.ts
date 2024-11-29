@@ -18,8 +18,11 @@ export class ModuleItem extends TreeItem {
 		public readonly contextValue: string,
 	) {
 		super(moduleId);
+
 		this.deviceId = deviceItem.deviceId;
+
 		this.tooltip = connectionState;
+
 		this.command = {
 			command: "azure-iot-toolkit.getModule",
 			title: "",

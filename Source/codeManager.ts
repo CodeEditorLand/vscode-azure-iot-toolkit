@@ -76,10 +76,12 @@ export class CodeManager {
 			for (const [key, value] of replacements) {
 				content = content.replace(key, value);
 			}
+
 			const textDocument = await vscode.workspace.openTextDocument({
 				content,
 				language: Constants.LanguageIds[language],
 			});
+
 			vscode.window.showTextDocument(textDocument);
 		} else {
 			const folderUri: vscode.Uri[] = await vscode.window.showOpenDialog({
@@ -90,13 +92,17 @@ export class CodeManager {
 			if (!folderUri) {
 				return;
 			}
+
 			const folder = folderUri[0].fsPath;
+
 			await fs.copy(template, folder);
+
 			await replace.replaceInFile({
 				files: `${folder}/**/*`,
 				from: [...replacements.keys()],
 				to: [...replacements.values()],
 			});
+
 			await vscode.commands.executeCommand(
 				"vscode.openFolder",
 				vscode.Uri.file(folder),
