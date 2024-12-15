@@ -215,9 +215,7 @@ export class IoTEdgeExplorer extends BaseExplorer {
 
 					for (
 						let i = 1;
-
 						i < Constants.CREATE_OPTIONS_MAX_CHUNKS;
-
 						i++
 					) {
 						const extendedCreateOptions =
