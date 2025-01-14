@@ -766,23 +766,23 @@
 		"body-parser": "1.20.3",
 		"dummy-json": "3.0.5",
 		"fs-extra": "11.2.0",
-		"glob": "11.0.0",
+		"glob": "11.0.1",
 		"iview": "3.5.4",
 		"jquery": "3.7.1",
 		"keytar": "7.9.0",
 		"replace-in-file": "8.3.0",
 		"strip-json-comments": "5.0.1",
-		"uuid": "11.0.4"
+		"uuid": "11.0.5"
 	},
 	"devDependencies": {
 		"@types/body-parser": "1.19.5",
 		"@types/fs-extra": "11.0.4",
 		"@types/keytar": "4.4.2",
-		"@types/node": "22.10.5",
+		"@types/node": "22.10.6",
 		"@types/node-fetch": "2.6.12",
 		"rimraf": "6.0.1",
 		"shebang-loader": "0.0.1",
-		"ts-loader": "9.5.1"
+		"ts-loader": "9.5.2"
 	},
 	"extensionDependencies": [
 		"ms-vscode.azure-account"
